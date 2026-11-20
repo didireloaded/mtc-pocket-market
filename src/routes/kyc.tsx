@@ -1,42 +1,44 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, IdCard, ScanFace, ShieldCheck, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft, ArrowRight, FileCheck2, IdCard, ShieldCheck, Store } from "lucide-react";
 import { Shell } from "@/components/Shell";
-import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/kyc")({
-  head: () => ({ meta: [{ title: "VERIFI Identity Check — MTC Store" }, { name: "description", content: "Verify your National ID and selfie to apply for an MTC contract." }, { property: "og:title", content: "VERIFI Identity Check — MTC Store" }, { property: "og:description", content: "Verify your National ID and selfie to apply for an MTC contract." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
-  component: Kyc,
+  head: () => ({ meta: [
+    { title: "Contract verification — MTC Pocket Market" },
+    { name: "description", content: "Understand the required identity checks before applying for an MTC device contract." },
+    { property: "og:title", content: "Contract verification" },
+    { property: "og:type", content: "website" },
+  ] }),
+  component: VerificationInformation,
 });
-const steps = ["National ID — front", "National ID — back", "Selfie check"];
-function Kyc() {
-  const { setExtra, extra } = useStore();
-  const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [busy, setBusy] = useState(false);
-  const done = step >= steps.length;
-  const capture = () => { setBusy(true); setTimeout(() => { setBusy(false); const n = step + 1; setStep(n); if (n >= steps.length) setExtra((e) => ({ ...e, kyc: "pending" })); }, 1800); };
-  const selfie = step === 2;
+
+function VerificationInformation() {
   return (
-    <Shell nav={false}>
+    <Shell>
       <div className="px-5 pt-6 pb-10">
-        <button aria-label="Back" onClick={() => router.history.back()} className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></button>
-        <div className="mt-6 flex items-center gap-2"><ShieldCheck className="size-4 text-mint" /><p className="text-xs font-semibold uppercase tracking-widest text-mint">VERIFI · secure KYC</p></div>
-        <h1 className="text-3xl font-bold">{done ? (extra.kyc === "approved" ? "Identity verified" : "Under review") : steps[step]}</h1>
-        <div className="mt-4 flex gap-2">{steps.map((s, i) => <div key={s} className={"h-1.5 flex-1 rounded-full " + (i < step ? "bg-mint" : i === step ? "bg-primary" : "bg-surface-2")} />)}</div>
-        {!done ? (<>
-          <div className={"relative mx-auto mt-8 overflow-hidden border-2 border-dashed border-mint/60 bg-card " + (selfie ? "size-64 rounded-full" : "aspect-[1.58] w-full rounded-[20px]")}>
-            <div className="absolute inset-0 grid place-items-center text-muted-foreground">{selfie ? <ScanFace className="size-20" /> : <IdCard className="size-20" />}</div>
-            {busy && <div className="scanline absolute inset-x-4 h-0.5 bg-mint glow-mint" />}
-          </div>
-          <p className="mt-4 text-center text-sm text-muted-foreground">{selfie ? "Center your face, remove glasses, and blink slowly." : "Place your Namibian ID inside the frame on a dark surface."}</p>
-          <button disabled={busy} onClick={capture} className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground disabled:opacity-60">
-            {busy ? <><Loader2 className="size-5 animate-spin" />{selfie ? "Matching face…" : "Reading document…"}</> : selfie ? "Take selfie" : "Capture"}</button>
-        </>) : (
-          <div className="mt-10 text-center"><div className="mx-auto grid size-24 place-items-center rounded-full bg-mint/15"><ShieldCheck className="size-12 text-mint" /></div>
-            <p className="mt-4 text-muted-foreground">{extra.kyc === "approved" ? "Face match 98.7% · ID valid. You're approved for contract plans." : "Documents submitted to VERIFI. Review usually takes under a minute — you can keep shopping."}</p>
-            <Link to="/cart" className="mt-6 block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Continue to bag</Link></div>
-        )}
+        <Link to="/" aria-label="Back to Home" className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></Link>
+        <div className="mt-8 flex size-16 items-center justify-center rounded-[20px] bg-card"><ShieldCheck className="size-8 text-mint" /></div>
+        <p className="mt-6 text-xs font-bold uppercase tracking-[0.15em] text-mint">Step 3 · Verify</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight">Your identity. Verified securely.</h1>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">Applying for a device contract requires MTC's authorised identity and eligibility checks. Pocket Market's concept preview does not yet connect to MTC VERIFI.</p>
+        <div className="mt-6 rounded-[22px] border border-[#90B2CC]/40 bg-[#E4EFF8] p-4 text-xs leading-5 text-[#1D4666]">
+          <strong>No real verification is taking place.</strong> This demo does not capture your ID or selfie, approve applications, or create an MTC account. Do not upload sensitive identity documents here.
+        </div>
+        <h2 className="mt-8 text-lg font-bold">How official verification will work</h2>
+        <div className="mt-3 space-y-3">
+          {[
+            { Icon: IdCard, title: "Provide required identification", detail: "The official service will confirm acceptable documents and required details." },
+            { Icon: ShieldCheck, title: "Complete authorised VERIFI checks", detail: "Identity capture and matching happen through an approved integration, not inside an unverified demo." },
+            { Icon: FileCheck2, title: "Track your application", detail: "Only actual application responses will show submitted, approved or declined statuses." },
+          ].map(({ Icon, title, detail }, i) => (
+            <div key={title} className="flex items-start gap-3 rounded-[20px] bg-card p-4 shadow-card">
+              <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-surface-2"><Icon className="size-5 text-mint" /></div>
+              <div><p className="text-sm font-semibold">{i + 1}. {title}</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{detail}</p></div>
+            </div>
+          ))}
+        </div>
+        <Link to="/find" className="mt-7 flex h-14 items-center justify-center gap-2 rounded-full bg-primary text-sm font-semibold text-primary-foreground">Continue exploring contracts <ArrowRight className="size-4" /></Link>
+        <Link to="/stores" className="mt-3 flex h-12 items-center justify-center gap-2 rounded-full border text-sm font-semibold"><Store className="size-4" />View MTC collection locations</Link>
       </div>
     </Shell>
   );
