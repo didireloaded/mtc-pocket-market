@@ -47,7 +47,7 @@ function Home() {
 
       <div className="space-y-9 px-6 pb-8 pt-6">
         <section aria-label="Featured device">
-          <div className="relative isolate min-h-[510px] overflow-hidden rounded-[28px] bg-[#202E39] px-5 pt-6 pb-5 text-white">
+          <div className="relative isolate min-h-[540px] overflow-hidden rounded-[28px] bg-[#202E39] px-5 pt-6 pb-5 text-white">
             <div className="flex items-center justify-center gap-2">
               <span className="size-2 rounded-full bg-[#DD2A1B]" />
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80">Featured on Pocket Market</p>
@@ -56,9 +56,9 @@ function Home() {
               Make space for something better.
             </h1>
 
-            <div className="absolute inset-x-5 bottom-[89px] h-[242px] rounded-[27px] bg-white text-[#202E39]">
+            <div className="absolute inset-x-5 bottom-[89px] h-[265px] rounded-[27px] bg-white text-[#202E39]">
               <img src={featured.image} alt={featured.name} loading="eager" decoding="async"
-                className="pointer-events-none absolute inset-x-0 -top-[88px] mx-auto h-[215px] w-[86%] object-contain drop-shadow-[0_18px_15px_rgba(32,46,57,0.12)]" />
+                className="pointer-events-none absolute inset-x-0 -top-[12px] mx-auto h-[195px] w-[85%] object-contain drop-shadow-[0_18px_15px_rgba(32,46,57,0.12)]" />
               <div className="absolute inset-x-3 bottom-5 text-center">
                 <p className="line-clamp-2 text-[15px] font-semibold leading-[20px]">{featured.name}</p>
                 <p className="mt-2 text-[21px] font-bold tracking-[-0.04em] tabular-nums">{nad(featured.cash)}</p>
