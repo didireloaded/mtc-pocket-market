@@ -47,25 +47,27 @@ function Home() {
 
       <div className="space-y-9 px-6 pb-8 pt-6">
         <section aria-label="Featured device">
-          <div className="relative isolate min-h-[270px] overflow-hidden rounded-[17px] bg-[#DDE8EF]">
-            <div className="relative z-10 flex min-h-[270px] w-[64%] flex-col items-start p-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#31546D]">In focus</p>
-              <h1 className="mt-3 text-[22px] font-bold leading-[1.08] tracking-[-0.045em] text-[#202E39]">
-                {featured.name}
-              </h1>
-              <div className="mt-auto pt-5">
-                <p className="text-[12px] text-[#3B576A]">Outright price</p>
-                <p className="mt-1 text-[22px] font-bold leading-7 tracking-[-0.04em] tabular-nums text-[#202E39]">
-                  {nad(featured.cash)}
-                </p>
-                <Link to="/product/$id" params={{ id: featured.id }}
-                  className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-[11px] bg-primary px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#be2519] active:translate-y-px">
-                  View device <ArrowUpRight aria-hidden="true" className="size-4" />
-                </Link>
+          <div className="relative isolate min-h-[540px] overflow-hidden rounded-[28px] bg-[#202E39] px-5 pt-6 pb-5 text-white">
+            <div className="flex items-center justify-center gap-2">
+              <span className="size-2 rounded-full bg-[#DD2A1B]" />
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80">Featured on Pocket Market</p>
+            </div>
+            <h1 className="mx-auto mt-5 max-w-[290px] text-center text-[30px] font-bold leading-[1.08] tracking-[-0.055em] min-[390px]:text-[34px]">
+              Make space for something better.
+            </h1>
+
+            <div className="absolute inset-x-5 bottom-[89px] h-[265px] rounded-[27px] bg-white text-[#202E39]">
+              <img src={featured.image} alt={featured.name} loading="eager" decoding="async"
+                className="pointer-events-none absolute inset-x-0 -top-[12px] mx-auto h-[195px] w-[85%] object-contain drop-shadow-[0_18px_15px_rgba(32,46,57,0.12)]" />
+              <div className="absolute inset-x-3 bottom-5 text-center">
+                <p className="line-clamp-2 text-[15px] font-semibold leading-[20px]">{featured.name}</p>
+                <p className="mt-2 text-[21px] font-bold tracking-[-0.04em] tabular-nums">{nad(featured.cash)}</p>
               </div>
             </div>
-            <img src={featured.image} alt="" loading="eager" decoding="async"
-              className="pointer-events-none absolute -right-4 bottom-0 h-[84%] w-[45%] object-contain" />
+            <Link to="/product/$id" params={{ id: featured.id }}
+              className="absolute inset-x-5 bottom-5 flex h-[52px] items-center justify-center gap-2 rounded-full bg-white text-[14px] font-semibold text-[#202E39] transition-colors hover:bg-[#F0F1F0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+              Explore this device <ArrowUpRight aria-hidden="true" className="size-[18px]" />
+            </Link>
           </div>
         </section>
 
