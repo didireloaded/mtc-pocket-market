@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Smartphone, Gauge, QrCode } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 
 const slides = [
   { i: Smartphone, t: "Shop the latest devices", d: "Explore real device categories, compare cash prices and preview contract choices." },
@@ -18,7 +19,7 @@ export function Welcome() {
   if (splash) return (
     <div className="fixed inset-0 z-[60] grid place-items-center bg-background">
       <div className="text-center animate-in zoom-in-50 fade-in duration-700">
-        <div className="mx-auto grid size-24 place-items-center rounded-[28px] bg-primary text-4xl font-black italic lowercase tracking-tight text-primary-foreground">mtc</div>
+        <div className="mx-auto grid size-24 place-items-center rounded-[28px] bg-primary px-4"><img src={mtcLogo.url} alt="MTC" className="w-full" /></div>
         <p className="mt-4 text-sm italic text-muted-foreground">make the connection</p>
       </div>
     </div>

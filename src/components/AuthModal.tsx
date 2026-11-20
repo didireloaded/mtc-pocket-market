@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { cn } from "@/lib/utils";
+import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 
 export function AuthModal() {
   const { authOpen, setAuthOpen, browseGuest, guest } = useStore();
@@ -44,7 +45,7 @@ export function AuthModal() {
       <div className="relative w-full max-w-md rounded-t-[32px] border bg-card p-6 pb-10 animate-in slide-in-from-bottom">
         {guest && <button aria-label="Close" onClick={() => setAuthOpen(false)} className="absolute right-5 top-5 text-muted-foreground"><X className="size-5" /></button>}
         <div className="mx-auto mb-6 h-1 w-10 rounded-full bg-surface-2" />
-        <div className="flex items-center gap-2"><span className="rounded-md bg-primary px-2 py-0.5 text-sm font-black italic lowercase text-primary-foreground">mtc</span><span className="text-xs text-muted-foreground">Namibia</span></div>
+        <div className="flex items-center gap-2"><span className="grid h-8 w-20 place-items-center rounded-md bg-primary px-2"><img src={mtcLogo.url} alt="MTC" className="w-full" /></span><span className="text-xs text-muted-foreground">Namibia</span></div>
         {sent ? (<>
           <h2 className="mt-3 text-2xl font-bold">Check your email</h2>
           <p className="mt-2 text-sm text-muted-foreground">We sent a confirmation link to {email}. Open it to finish creating your account.</p>
