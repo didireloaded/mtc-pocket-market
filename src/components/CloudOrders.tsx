@@ -70,7 +70,7 @@ export function CloudOrders() {
           <div className="mt-3 border-t border-border pt-4">
             <p className="text-[12px] text-muted-foreground">Payment status: {order.payment_status}</p>
             {order.tracking && <p className="mt-2 text-[13px]">Tracking: {order.tracking}</p>}
-            {query.data?.events.filter((event) => event.order_id === order.id).length > 0 && <ol className="mt-4 space-y-3 border-l border-border pl-4">
+            {(query.data?.events.filter((event) => event.order_id === order.id).length ?? 0) > 0 && <ol className="mt-4 space-y-3 border-l border-border pl-4">
               {query.data?.events.filter((event) => event.order_id === order.id).map((event) => (
                 <li key={event.id}>
                   <p className="text-[13px] font-semibold">{statusLabel(event.stage)}</p>
