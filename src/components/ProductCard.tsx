@@ -7,7 +7,7 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /** Editorial retail tile: product first, one main action, no stacked card chrome. */
-export function ProductCard({ p }: { p: Product }) {
+export function ProductCard({ p, minimal = false }: { p: Product; minimal?: boolean }) {
   const { mode, add, saved, toggleSave } = useStore();
   const navigate = useNavigate();
   const isSaved = saved.includes(p.id);
@@ -25,6 +25,24 @@ export function ProductCard({ p }: { p: Product }) {
     });
     void navigate({ to: "/cart" });
   };
+
+  if (minimal) {
+    return (
+      <article className="min-w-0">
+        <Link to="/product/$id" params={{ id: p.id }} aria-label={`View ${p.name}, outright price ${nad(p.cash)}`}
+          className="group block rounded-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+          <ProductStage src={p.image} alt={p.name}
+            className="rounded-[14px] bg-stage p-4 transition-colors group-hover:bg-[#E6EAED]" />
+          <h3 className="mt-3 line-clamp-2 min-h-[42px] text-[14px] font-semibold leading-[21px] tracking-[-0.02em] text-foreground">
+            {p.name}
+          </h3>
+          <p className="mt-2 text-[19px] font-bold tracking-[-0.035em] tabular-nums text-foreground">
+            {nad(p.cash)}
+          </p>
+        </Link>
+      </article>
+    );
+  }
 
   return (
     <article className="group flex h-full min-w-0 flex-col">
