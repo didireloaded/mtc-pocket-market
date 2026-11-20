@@ -4,7 +4,7 @@ import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
 import { useStore } from "@/lib/store";
 import { products, nad, getProduct } from "@/lib/data";
-import mtcLogo from "@/assets/mtc-logo.png.asset.json";
+import { MtcLogo } from "@/components/MtcLogo";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -33,8 +33,8 @@ function Home() {
     <Shell>
       <header className="flex items-center justify-between bg-white px-6 pb-4 pt-[max(20px,env(safe-area-inset-top))]">
         <Link to="/" aria-label="Pocket Market home"
-          className="grid h-11 w-[100px] place-items-center rounded-[10px] bg-primary px-3 focus-visible:outline-offset-2">
-          <img src={mtcLogo.url} alt="MTC" className="h-7 max-w-full object-contain" />
+          className="inline-flex min-h-14 items-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2">
+          <MtcLogo className="size-[55px]" />
         </Link>
         <div className="flex items-center gap-1">
           <Link to="/shop" aria-label="Search devices"

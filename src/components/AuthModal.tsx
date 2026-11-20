@@ -6,7 +6,7 @@ import { lovable } from "@/integrations/lovable";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import mtcLogo from "@/assets/mtc-logo.png.asset.json";
+import { MtcLogo } from "@/components/MtcLogo";
 
 export function AuthModal() {
   const { authOpen, setAuthOpen, browseGuest } = useStore();
@@ -66,9 +66,7 @@ export function AuthModal() {
         className="fixed bottom-0 left-1/2 top-auto flex max-h-[92dvh] w-full max-w-md -translate-x-1/2 translate-y-0 flex-col gap-0 overflow-y-auto rounded-b-none rounded-t-[28px] border-border bg-card px-5 pb-[max(24px,env(safe-area-inset-bottom))] pt-7 shadow-lg sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:rounded-[28px]"
       >
         <div className="mb-5 flex items-center gap-2">
-          <span className="grid h-9 w-20 place-items-center rounded-[10px] bg-primary px-2">
-            <img src={mtcLogo.url} alt="MTC" className="w-full object-contain" />
-          </span>
+          <MtcLogo className="size-14" />
           <span className="text-[13px] text-muted-foreground">Pocket Market</span>
         </div>
 
