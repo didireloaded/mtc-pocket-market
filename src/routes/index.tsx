@@ -34,8 +34,8 @@ function Home() {
   const favourites = saved.map(getProduct).filter((p) => !!p).slice(0, 5);
   const unread = notices.filter((n) => !n.read).length;
   const bagCount = cart.reduce((count, item) => count + item.qty, 0);
-  const h = new Date().getHours();
-  const greeting = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  // A stable greeting avoids server/client timezone differences during hydration.
+  const greeting = "Welcome back";
   const firstName = user?.label?.split("@")[0]?.split(/[ ._-]/)[0];
 
   return <Shell>
