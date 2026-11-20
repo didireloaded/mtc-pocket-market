@@ -9,7 +9,8 @@ export type Product = {
 };
 const img = (f: string) => `https://www.mtc.com.na/uploads/shop/items/${f}`;
 const SHOP = "https://www.mtc.com.na/shop";
-const WHK = ["Maerua Mall", "Wernhill", "The Grove"];
+/** Collection stores as listed on MTC product pages ("Choose store for collection"). */
+export const MTC_STORES = ["Daniel Munamava (Windhoek)", "Divundu", "Dune Mall (Walvis Bay)", "Eenhana", "Eveline (Windhoek)", "Gobabis", "Grootfontein", "Hosea Kutako (Windhoek)", "HTTP NUST (Windhoek)", "Katima Mulilo", "Katutura (Windhoek)", "Keetmanshoop Main", "Klein Windhoek", "Lüderitz", "Maerua Mall (Windhoek)", "Mariental", "Nkurenkuru", "Okahandja", "Okuryangava (Windhoek)", "Olympia (Windhoek)", "Omuthiya", "Ondangwa Express", "Ondangwa Main", "Ongwediva", "Opuwo", "Oranjemund", "Oshakati Main", "Oshikango", "Otjiwarongo", "Outapi", "Rehoboth", "Rundu", "Swakopmund Main", "Swakopmund Platz am Meer", "The Grove (Windhoek)", "Tsumeb", "Walvis Bay", "Wernhill (Windhoek)"];
 type Seed = Omit<Product, "contract" | "colors" | "stock" | "contractable"> & Partial<Pick<Product, "colors" | "stock" | "contractable">>;
 const seed: Seed[] = [
   // Phones
@@ -48,15 +49,16 @@ const seed: Seed[] = [
   { id: "burtone-metal-tws", name: "Burtone Metal Series Earphones", tagline: "True wireless.", category: "Accessories", brand: "Burtone", cash: 570, image: img("burtone-metal-series-true-wireless_(002).png"), network: "None", contractable: false, source: `${SHOP}/accessories`, specs: [{ label: "Type", value: "True wireless" }] },
   { id: "dji-neo-fly-more", name: "DJI Neo Fly More Combo", tagline: "Palm-size drone.", category: "Accessories", brand: "DJI", cash: 6749, image: img("download_(3).jpg"), network: "None", contractable: false, source: `${SHOP}/accessories`, specs: [{ label: "Type", value: "Drone" }] },
 ];
-export const products: Product[] = seed.map((s, i) => ({
+export const products: Product[] = seed.map((s) => ({
   colors: ["Standard"], contractable: true,
-  stock: { warehouse: [12, 4, 0, 18, 7][i % 5]!, stores: i % 3 === 0 ? WHK : ["Oshakati Main", "Swakopmund Main"] },
+  stock: { warehouse: 1, stores: MTC_STORES },
   ...s, contract: 0,
 }));
 export const brands = [...new Set(products.map((p) => p.brand))].sort();
 export const accessoryIds = ["apple-20w-adapter", "airpods-4", "burtone-metal-tws"];
 export const TERMS = [12, 24, 36, 48] as const;
-export const stockLabel = (p: Product) => p.stock.warehouse > 5 ? { tone: "ok", text: "In stock for delivery" } : p.stock.warehouse > 0 ? { tone: "low", text: `Only ${p.stock.warehouse} left for delivery` } : p.stock.stores.length ? { tone: "low", text: "Collect in store only" } : { tone: "out", text: "Out of stock" };
+/** MTC lists every shop item as orderable for collection at its stores; live stock levels are not published. */
+export const stockLabel = (p: Product) => p.stock.stores.length ? { tone: "ok", text: `Available to order · collect at ${p.stock.stores.length} MTC stores` } : { tone: "out", text: "Out of stock" };
 
 /** Real MTC contract packages (mtc.com.na/contract). Infinite plans let you build your own allowances. */
 export const plans = [

@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Bookmark, Share2, Check, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Shell, PriceToggle } from "@/components/Shell";
-import { getProduct, nad, plansFor, quote, stockLabel, TERMS } from "@/lib/data";
+import { Shell } from "@/components/Shell";
+import { getProduct, nad, plansFor, quote, stockLabel, TERMS, MTC_STORES, fromMonthly, CONNECTION_FEE } from "@/lib/data";
 import { ContractBreakdown } from "@/components/ContractBreakdown";
 import { useStore } from "@/lib/store";
 
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/product/$id")({
 function PDP() {
   const p = Route.useLoaderData();
   const router = useRouter();
-  const { mode, add, saved, toggleSave, kycDone, viewProduct } = useStore();
+  const { mode, setMode, add, saved, toggleSave, kycDone, viewProduct } = useStore();
   useEffect(() => { viewProduct(p.id); }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [months, setMonths] = useState<number>(24);
   const [upPct, setUpPct] = useState(0);
@@ -48,17 +48,25 @@ function PDP() {
           <span className="shrink-0 rounded-full bg-mint px-4 py-2 text-sm font-bold text-mint-foreground">{nad(price)}{contract && "/mo"}</span>
         </div>
         <p className="mt-1 text-muted-foreground">{p.tagline}</p>
-        <p className={"mt-2 text-xs font-medium " + (st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>● {st.text}{p.stock.stores.length > 0 && ` · In store: ${p.stock.stores.join(", ")}`}</p>
-        <div className="mt-4 flex items-center justify-between">{p.contractable ? <PriceToggle /> : <span className="rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground">Cash purchase only</span>}
+        <p className={"mt-2 text-xs font-medium " + (st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>● {st.text}</p>
+        {p.contractable && (
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button onClick={() => { setMode("cash"); setTab("overview"); }} className={"rounded-[20px] border p-3 text-left " + (!contract ? "border-mint bg-card" : "bg-card/50")}><p className="text-[11px] uppercase tracking-widest text-muted-foreground">Buy outright</p><p className="mt-1 text-lg font-bold">{nad(p.cash)}</p><p className="text-[11px] text-muted-foreground">Pay once</p></button>
+            <button onClick={() => { setMode("contract"); setTab("plans"); }} className={"rounded-[20px] border p-3 text-left " + (contract ? "border-mint bg-card" : "bg-card/50")}><p className="text-[11px] uppercase tracking-widest text-muted-foreground">On contract</p><p className="mt-1 text-lg font-bold">from {nad(fromMonthly(p))}<span className="text-xs font-normal">/mo</span></p><p className="text-[11px] text-muted-foreground">+ {nad(CONNECTION_FEE)} connection fee</p></button>
+          </div>)}
+        {p.category === "Laptops" && <Link to="/compare/macbooks" className="mt-3 block rounded-[20px] bg-surface-2 p-3 text-sm">Compare all MacBooks: outright vs Select plans <span className="text-mint">→</span></Link>}
+        <details className="mt-3 rounded-[20px] bg-card p-3 text-sm"><summary className="cursor-pointer font-semibold">Collect at {MTC_STORES.length} MTC stores</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
+        <div className="mt-4 flex items-center justify-between">{!p.contractable && <span className="rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground">Cash purchase only</span>}
           {p.colors.length > 1 && <div className="flex gap-2">{p.colors.map((c) => <button key={c} onClick={() => setColor(c)} className={"rounded-full border px-3 py-1 text-xs " + (color === c ? "border-mint text-mint" : "text-muted-foreground")}>{c}</button>)}</div>}
         </div>
         {p.contractable && <div className="mt-6 grid grid-cols-2 rounded-full bg-card p-1 text-xs font-bold tracking-widest">
           {(["overview", "plans"] as const).map((t) => <button key={t} onClick={() => setTab(t)} className={"rounded-full py-3 uppercase " + (tab === t ? "bg-mint text-mint-foreground" : "text-muted-foreground")}>{t}</button>)}
         </div>}
         {contract && tab === "overview" && <div className="mt-4"><ContractBreakdown p={p} plan={sel} opt={opt} /></div>}
-        {tab === "overview" ? (
-          <div className="mt-4 grid grid-cols-2 gap-3">{p.specs.map((s) => <div key={s.label} className="rounded-[20px] bg-card p-4"><p className="text-xs text-muted-foreground">{s.label}</p><p className="mt-1 text-lg font-bold">{s.value}</p></div>)}</div>
-        ) : (
+        {tab === "overview" ? (<>
+          <div className="mt-4 flex items-center justify-between text-xs"><span className="text-muted-foreground">Specs and cash price as listed by MTC</span><a href={p.source} target="_blank" rel="noreferrer" className="font-semibold text-mint">View on mtc.com.na ↗</a></div>
+          <div className="mt-3 grid grid-cols-2 gap-3">{p.specs.map((s) => <div key={s.label} className="rounded-[20px] bg-card p-4"><p className="text-xs text-muted-foreground">{s.label}</p><p className="mt-1 text-lg font-bold">{s.value}</p></div>)}</div>
+        </>) : (
           <div className="mt-4 space-y-3">
             {avail.map((pl) => (
               <button key={pl.id} onClick={() => setPlan(pl.id)} className={"flex w-full items-center justify-between rounded-[20px] border bg-card p-4 text-left " + (plan === pl.id ? "border-mint" : "")}>

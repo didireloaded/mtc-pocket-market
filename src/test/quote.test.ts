@@ -21,3 +21,10 @@ describe("contract quote (MTC device financing)", () => {
     expect(plansFor(getProduct("macbook-air-256gb")!).every((p) => p.name.startsWith("Select"))).toBe(true);
   });
 });
+
+describe("MacBook comparison", () => {
+  it("contract pay-today = upfront + N$218 connection fee", () => {
+    const q = quote({ cash: 14999 }, plans[1]!, { months: 36, upfrontPct: 0.1 });
+    expect(q.upfront + q.connection).toBe(1500 + 218);
+  });
+});

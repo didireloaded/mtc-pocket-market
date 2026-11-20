@@ -20,6 +20,7 @@ import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as StoresRouteImport } from './routes/stores'
+import { Route as CompareMacbooksRouteImport } from './routes/compare.macbooks'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -77,6 +78,11 @@ const StoresRoute = StoresRouteImport.update({
   path: '/stores',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareMacbooksRoute = CompareMacbooksRouteImport.update({
+  id: '/compare/macbooks',
+  path: '/compare/macbooks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
+  '/compare/macbooks': typeof CompareMacbooksRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
+  '/compare/macbooks': typeof CompareMacbooksRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
+  '/compare/macbooks': typeof CompareMacbooksRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shop'
     | '/stores'
+    | '/compare/macbooks'
     | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shop'
     | '/stores'
+    | '/compare/macbooks'
     | '/product/$id'
   id:
     | '__root__'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shop'
     | '/stores'
+    | '/compare/macbooks'
     | '/product/$id'
   fileRoutesById: FileRoutesById
 }
@@ -183,6 +195,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   ShopRoute: typeof ShopRoute
   StoresRoute: typeof StoresRoute
+  CompareMacbooksRoute: typeof CompareMacbooksRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoresRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare/macbooks': {
+      id: '/compare/macbooks'
+      path: '/compare/macbooks'
+      fullPath: '/compare/macbooks'
+      preLoaderRoute: typeof CompareMacbooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -287,6 +307,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   ShopRoute: ShopRoute,
   StoresRoute: StoresRoute,
+  CompareMacbooksRoute: CompareMacbooksRoute,
   ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
