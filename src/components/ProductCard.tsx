@@ -28,32 +28,47 @@ export function ProductCard({ p, minimal = false, catalog = false }: { p: Produc
 
   if (catalog) {
     return (
-      <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[22px] bg-white p-2.5">
-        <div className="relative">
-          <Link to="/product/$id" params={{ id: p.id }}
-            aria-label={`View ${p.name}`}
-            className="block rounded-[17px] outline-offset-2 focus-visible:outline-2 focus-visible:outline-mint">
-            <div className="grid aspect-[1/1.08] place-items-center overflow-hidden rounded-[17px] bg-[#F1F2F0] p-3">
-              <img src={p.image} alt={p.name} loading="lazy" decoding="async"
-                className="h-full max-h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04] motion-reduce:transform-none" />
-            </div>
+      <article className="group relative flex h-full min-w-0 flex-col pb-[22px] pt-10">
+        <div className="relative flex min-h-[224px] flex-1 flex-col items-center rounded-[28px] bg-white px-3 pb-10 pt-[114px] text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+          <Link to="/product/$id" params={{ id: p.id }} aria-label={`View ${p.name}`}
+            className="absolute inset-x-2 -top-10 z-10 flex h-[150px] items-center justify-center rounded-[18px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+            <img src={p.image} alt={p.name} loading="lazy" decoding="async"
+              className="h-full max-h-full w-[94%] object-contain drop-shadow-[0_10px_12px_rgba(32,46,57,0.12)] transition-transform duration-200 group-hover:scale-[1.035] motion-reduce:transform-none" />
           </Link>
-          {p.badge && <span className="absolute left-2 top-2 max-w-[calc(100%-56px)] truncate rounded-full bg-[#202E39] px-2.5 py-1 text-[11px] font-semibold text-white">{p.badge}</span>}
+          {p.badge && <span className="absolute right-2 top-2 z-20 max-w-[calc(100%-16px)] truncate rounded-full bg-[#202E39] px-2 py-1 text-[10px] font-semibold text-white">
+            {p.badge}
+          </span>}
+          <Link to="/product/$id" params={{ id: p.id }}
+            className="mt-auto line-clamp-2 min-h-[42px] max-w-full text-[14px] font-semibold leading-[21px] tracking-[-0.025em] text-foreground">
+            {p.name}
+          </Link>
+          <p className="mt-1 text-[18px] font-bold tracking-[-0.035em] tabular-nums text-foreground">
+            {estimate ? nad(fromMonthly(p)) : nad(p.cash)}
+            {estimate && <span className="ml-1 text-[11px] font-medium tracking-normal text-muted-foreground">/mo est.</span>}
+          </p>
+        </div>
+        <div className="absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-3">
           <button type="button" aria-pressed={isSaved}
             aria-label={isSaved ? `Remove ${p.name} from saved products` : `Save ${p.name}`}
             onClick={() => toggleSave(p.id)}
-            className="absolute bottom-2 right-2 grid size-11 place-items-center rounded-full bg-white text-foreground shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-colors hover:bg-[#F4F4F3] focus-visible:outline-2 focus-visible:outline-mint">
-            <Heart aria-hidden="true" strokeWidth={1.9}
-              className={cn("size-5", isSaved && "fill-primary text-primary")} />
+            className={cn("grid size-11 place-items-center rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint",
+              isSaved ? "bg-primary text-white" : "bg-white text-[#202E39]")}>
+            <Heart aria-hidden="true" strokeWidth={1.9} className={cn("size-[19px]", isSaved && "fill-current")} />
           </button>
+          {estimate ? (
+            <Link to="/product/$id" params={{ id: p.id }}
+              aria-label={`Choose a contract for ${p.name}`}
+              className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+              <ShoppingBag aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
+            </Link>
+          ) : (
+            <button type="button" onClick={addOutright}
+              aria-label={`Add ${p.name} to bag`}
+              className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+              <ShoppingBag aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
+            </button>
+          )}
         </div>
-        <Link to="/product/$id" params={{ id: p.id }} className="mt-3 min-h-[42px] rounded-md text-center text-[14px] font-semibold leading-[21px] tracking-[-0.025em] text-foreground line-clamp-2">
-          {p.name}
-        </Link>
-        <p className="mt-auto pt-1 text-center text-[18px] font-bold tracking-[-0.035em] tabular-nums text-foreground">
-          {estimate ? nad(fromMonthly(p)) : nad(p.cash)}
-          {estimate && <span className="ml-1 text-[11px] font-medium tracking-normal text-muted-foreground">/mo est.</span>}
-        </p>
       </article>
     );
   }
