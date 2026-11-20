@@ -48,6 +48,7 @@ function PDP() {
           <span className="shrink-0 rounded-full bg-mint px-4 py-2 text-sm font-bold text-mint-foreground">{nad(price)}{contract && "/mo"}</span>
         </div>
         <p className="mt-1 text-muted-foreground">{p.tagline}</p>
+        <p className="mt-2 rounded-xl bg-surface-2 px-3 py-2 text-xs leading-5 text-muted-foreground">Pocket Market concept preview. Contract instalments are indicative and require official MTC confirmation before application or payment.</p>
         <p className={"mt-2 text-xs font-medium " + (st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>● {st.text}</p>
         {p.contractable && (
           <div className="mt-4 grid grid-cols-2 gap-2">
@@ -55,7 +56,7 @@ function PDP() {
             <button onClick={() => { setMode("contract"); setTab("plans"); }} className={"rounded-[20px] border p-3 text-left " + (contract ? "border-mint bg-card" : "bg-card/50")}><p className="text-[11px] uppercase tracking-widest text-muted-foreground">On contract</p><p className="mt-1 text-lg font-bold">from {nad(fromMonthly(p))}<span className="text-xs font-normal">/mo</span></p><p className="text-[11px] text-muted-foreground">+ {nad(CONNECTION_FEE)} connection fee</p></button>
           </div>)}
         {p.category === "Laptops" && <Link to="/compare/macbooks" className="mt-3 block rounded-[20px] bg-surface-2 p-3 text-sm">Compare all MacBooks: outright vs Select plans <span className="text-mint">→</span></Link>}
-        <details className="mt-3 rounded-[20px] bg-card shadow-card p-3 text-sm"><summary className="cursor-pointer font-semibold">Collect at {MTC_STORES.length} MTC stores</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
+        <details className="mt-3 rounded-[20px] bg-card shadow-card p-3 text-sm"><summary className="cursor-pointer font-semibold">View potential collection locations</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">These branch names come from the published collection list. Inventory and reservation availability have not been verified.</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
         <div className="mt-4 flex items-center justify-between">{!p.contractable && <span className="rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground">Cash purchase only</span>}
           {p.colors.length > 1 && <div className="flex gap-2">{p.colors.map((c) => <button key={c} onClick={() => setColor(c)} className={"rounded-full border px-3 py-1 text-xs " + (color === c ? "border-mint text-mint" : "text-muted-foreground")}>{c}</button>)}</div>}
         </div>
