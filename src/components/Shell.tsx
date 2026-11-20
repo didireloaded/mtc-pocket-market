@@ -38,13 +38,14 @@ function BottomNav() {
   ];
   if (editing) return null;
   return (
-    <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-white px-2 pb-[max(8px,env(safe-area-inset-bottom))]">
-      <div className="grid grid-cols-5 gap-0 pt-1">
+    <nav aria-label="Main navigation"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-5 pb-[max(14px,env(safe-area-inset-bottom))]">
+      <div className="pointer-events-auto grid grid-cols-5 gap-1 rounded-full border border-[#E5E7E5] bg-white p-2 shadow-[0_5px_24px_rgba(32,46,57,0.10)]">
         {items.map(({ to, label, icon: Icon }) => (
           <Link key={to} to={to} activeOptions={{ exact: to === "/" }} aria-label={label}
-            className="group flex h-[58px] min-w-0 flex-col items-center justify-center gap-1 rounded-[10px] px-1 text-muted-foreground transition-colors data-[status=active]:text-primary">
-            <Icon className="size-5" strokeWidth={1.9} />
-            <span className="text-[12px] font-semibold leading-none">{label}</span>
+            className="group flex h-12 min-w-0 items-center justify-center rounded-full text-[#202E39] transition-colors hover:bg-[#F2F3F0] data-[status=active]:bg-[#202E39] data-[status=active]:text-white">
+            <Icon aria-hidden="true" className="size-[21px]" strokeWidth={1.9} />
+            <span className="sr-only">{label}</span>
           </Link>
         ))}
       </div>
