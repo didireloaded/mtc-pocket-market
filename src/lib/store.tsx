@@ -5,7 +5,7 @@ export type CartItem = { key: string; id: string; name: string; image?: string; 
 export type User = { label: string; method: "phone" | "email" };
 export type Order = { id: string; placedAt: number; items: { name: string; qty: number; kind: "physical" | "digital" }[]; total: number; address: string; tracking: string; shippedTotal: number; digitalTotal: number; esimEmail: string };
 export type Notice = { key: string; orderId: string; title: string; body: string; at: number; read: boolean };
-export type SavedAddress = { label: string; name: string; street: string; town: string; phone: string };
+export type SavedAddress = { label: string; name: string; street: string; town: string; region?: string; phone: string };
 export type Extra = {
   onboarded: boolean; recent: string[]; searches: string[]; addresses: SavedAddress[];
   kyc: "none" | "pending" | "approved" | "rejected"; prefs: { orders: boolean; priceDrops: boolean; lowBalance: boolean };
