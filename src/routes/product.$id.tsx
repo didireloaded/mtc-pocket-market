@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bookmark, Share2, Check, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bookmark, Share2, Check, ShieldCheck, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { getProduct, nad, plansFor, quote, stockLabel, TERMS, MTC_STORES, fromMonthly, CONNECTION_FEE } from "@/lib/data";
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/product/$id")({
 function PDP() {
   const p = Route.useLoaderData();
   const router = useRouter();
-  const { mode, setMode, add, saved, toggleSave, kycDone, viewProduct } = useStore();
+  const { mode, setMode, add, saved, toggleSave, viewProduct } = useStore();
   useEffect(() => { viewProduct(p.id); }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [months, setMonths] = useState<number>(24);
   const [upPct, setUpPct] = useState(0);
@@ -48,6 +48,7 @@ function PDP() {
           <span className="shrink-0 rounded-full bg-mint px-4 py-2 text-sm font-bold text-mint-foreground">{nad(price)}{contract && "/mo"}</span>
         </div>
         <p className="mt-1 text-muted-foreground">{p.tagline}</p>
+        <p className="mt-2 rounded-xl bg-surface-2 px-3 py-2 text-xs leading-5 text-muted-foreground">Pocket Market concept preview. Contract instalments are indicative and require official MTC confirmation before application or payment.</p>
         <p className={"mt-2 text-xs font-medium " + (st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>● {st.text}</p>
         {p.contractable && (
           <div className="mt-4 grid grid-cols-2 gap-2">
@@ -55,7 +56,7 @@ function PDP() {
             <button onClick={() => { setMode("contract"); setTab("plans"); }} className={"rounded-[20px] border p-3 text-left " + (contract ? "border-mint bg-card" : "bg-card/50")}><p className="text-[11px] uppercase tracking-widest text-muted-foreground">On contract</p><p className="mt-1 text-lg font-bold">from {nad(fromMonthly(p))}<span className="text-xs font-normal">/mo</span></p><p className="text-[11px] text-muted-foreground">+ {nad(CONNECTION_FEE)} connection fee</p></button>
           </div>)}
         {p.category === "Laptops" && <Link to="/compare/macbooks" className="mt-3 block rounded-[20px] bg-surface-2 p-3 text-sm">Compare all MacBooks: outright vs Select plans <span className="text-mint">→</span></Link>}
-        <details className="mt-3 rounded-[20px] bg-card shadow-card p-3 text-sm"><summary className="cursor-pointer font-semibold">Collect at {MTC_STORES.length} MTC stores</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
+        <details className="mt-3 rounded-[20px] bg-card shadow-card p-3 text-sm"><summary className="cursor-pointer font-semibold">View potential collection locations</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">These branch names come from the published collection list. Inventory and reservation availability have not been verified.</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
         <div className="mt-4 flex items-center justify-between">{!p.contractable && <span className="rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground">Cash purchase only</span>}
           {p.colors.length > 1 && <div className="flex gap-2">{p.colors.map((c) => <button key={c} onClick={() => setColor(c)} className={"rounded-full border px-3 py-1 text-xs " + (color === c ? "border-mint text-mint" : "text-muted-foreground")}>{c}</button>)}</div>}
         </div>
@@ -81,15 +82,16 @@ function PDP() {
             </div>
             <ContractBreakdown p={p} plan={sel} opt={opt} />
             <Link to="/kyc" className="flex items-center gap-3 rounded-[20px] bg-surface-2 p-4 text-sm">
-              <ShieldCheck className={kycDone ? "text-mint" : "text-primary"} />
-              <span className="flex-1">{kycDone ? "VERIFI identity verified — you're contract-ready" : "Contracts need a quick VERIFI ID check"}</span>
-              {!kycDone && <span className="font-semibold text-mint">Start</span>}
+              <ShieldCheck className="text-primary" />
+              <span className="flex-1">Official MTC identity verification is required before applying</span>
+              <span className="font-semibold text-mint">Learn more</span>
             </Link>
           </div>
         )}
       </div>
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md gap-3 border-t bg-background/90 p-4 backdrop-blur-xl">
         <button aria-label="Save" onClick={() => toggleSave(p.id)} className={"grid size-14 place-items-center rounded-2xl bg-card " + (saved.includes(p.id) ? "text-mint" : "")}><Bookmark className="size-5" fill={saved.includes(p.id) ? "currentColor" : "none"} /></button>
+        <Link to="/cart" aria-label="View shopping bag" className="grid size-14 place-items-center rounded-2xl bg-card"><ShoppingBag className="size-5" /></Link>
         <button onClick={() => { add({ id: p.id, name: p.name, image: p.image, variant: contract ? `${color} · ${sel.name} · ${months} mo · ${sel.data}` + (q.upfront ? ` · ${nad(q.upfront)} upfront` : "") : color, price, kind: "physical", mode: contract ? "contract" : "cash" }); setAdded(true); setTimeout(() => setAdded(false), 1500); }}
           disabled={st.tone === "out"} className="flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-primary disabled:opacity-40 font-semibold text-primary-foreground">{st.tone === "out" ? "Out of stock" : added ? <><Check className="size-5" /> Added</> : contract ? "Select plan & add" : "Add to Cart"}</button>
       </div>

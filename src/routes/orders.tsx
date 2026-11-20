@@ -22,7 +22,7 @@ function Orders() {
     <Shell>
       <div className="px-5 pt-6">
         <Link to="/mymtc" aria-label="Back" className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></Link>
-        <h1 className="mt-5 text-3xl font-bold">My orders</h1>
+        <h1 className="mt-5 text-3xl font-bold">My orders</h1><p className="mt-3 rounded-2xl border border-[#90B2CC]/40 bg-[#E4EFF8] p-3 text-xs leading-5 text-[#1D4666]">Demo orders only. The timeline below progresses automatically for preview and does not reflect real shipping, courier tracking or MTC fulfilment.</p>
         {!user && <button onClick={() => setAuthOpen(true)} className="mt-3 w-full rounded-2xl bg-card p-3 text-left text-sm text-muted-foreground">Browsing as guest — orders are saved on this device only. <span className="text-mint">Sign in</span></button>}
         {!orders.length && <div className="py-16 text-center text-muted-foreground">No orders yet.<Link to="/shop" className="mt-3 block font-semibold text-mint">Start shopping</Link></div>}
         <div className="mt-4 space-y-4">

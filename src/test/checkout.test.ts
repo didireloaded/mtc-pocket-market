@@ -36,3 +36,14 @@ describe("shipping and payment rules", () => {
     expect(s.errors).toContain("Bank transfer is only available for orders over N$5,000.");
   });
 });
+
+
+describe("contract checkout safety", () => {
+  it("does not charge estimated monthly contract amounts as a one-off payment", () => {
+    const contract: CartItem = { ...phone, key: "contract", price: 1250, mode: "contract" };
+    const summary = summarize([contract], { promo: null, addr, kycDone: true, esimEmail: "" });
+    expect(summary.recurringMonthly).toBe(1250);
+    expect(summary.total).toBe(0);
+    expect(summary.errors.some((error) => error.includes("Contract applications are not available"))).toBe(true);
+  });
+});

@@ -15,7 +15,7 @@ function Notifications() {
     <Shell>
       <div className="px-5 pt-6">
         <Link to="/" aria-label="Back" className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></Link>
-        <h1 className="mt-5 text-3xl font-bold">Notifications</h1>
+        <h1 className="mt-5 text-3xl font-bold">Notifications</h1><p className="mt-2 rounded-2xl bg-card p-3 text-xs leading-5 text-muted-foreground">This preview shows only locally generated demo order events. No push, SMS or delivery notifications are connected.</p>
         {!notices.length && <p className="py-16 text-center text-muted-foreground">No updates yet. We'll let you know when an order ships.</p>}
         <div className="mt-4 space-y-3">
           {notices.map((n) => (

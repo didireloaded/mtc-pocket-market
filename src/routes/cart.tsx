@@ -7,7 +7,7 @@ import { useStore, type CartItem } from "@/lib/store";
 import { summarize, PROMOS, PAYMENT_METHODS, FREE_SHIPPING_OVER, type Address, type PaymentId } from "@/lib/checkout";
 import { accessoryIds, getProduct } from "@/lib/data";
 const accessories = accessoryIds.map((id) => getProduct(id)!);
-import { EsimEmail } from "@/components/EsimEmail";
+
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "Your Bag — MTC Store" }, { name: "description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:title", content: "Your Bag — MTC Store" }, { property: "og:description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -53,10 +53,10 @@ function Cart() {
     setPaid({ hasEsim: digital.hasEsim, hasShipped: shipped.items.length > 0, email: esimEmail }); setTimeout(clear, 0);
   };
   if (paid) return (
-    <Shell><div className="px-5 pt-20 text-center"><CheckCircle2 className="mx-auto size-16 text-mint" /><h1 className="mt-4 text-2xl font-bold">Order confirmed</h1>
-      <p className="mt-1 text-xs text-muted-foreground">Order {orderId}</p>
-      {paid.hasShipped && <p className="mt-3 text-muted-foreground">Devices ship in 1–3 days. We'll notify you when they ship and when they're out for delivery.</p>}
-      {paid.hasEsim && <div className="mt-6 space-y-3"><EsimEmail initial={paid.email} autoSend /><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Activate your eSIM now</Link></div>}
+    <Shell><div className="px-5 pt-20 text-center"><CheckCircle2 className="mx-auto size-16 text-mint" /><h1 className="mt-4 text-2xl font-bold">Demo order saved</h1>
+      <p className="mt-1 text-xs text-muted-foreground">Local preview reference {orderId} · no payment made</p>
+      {paid.hasShipped && <p className="mt-3 text-muted-foreground">This is a demonstration order saved in this browser. No real delivery or fulfilment has been requested.</p>}
+      {paid.hasEsim && <div className="mt-6 space-y-3"><p className="rounded-2xl bg-card p-4 text-xs leading-5 text-muted-foreground">No activation email has been sent. Digital fulfilment requires a live MTC integration.</p><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Learn about eSIM activation</Link></div>}
       {paid.hasShipped && <Link to="/orders" className="mt-4 block h-14 rounded-full border pt-4 font-semibold text-mint">Track order</Link>}
       <Link to="/" className="mt-3 block text-sm text-muted-foreground">Back home</Link></div></Shell>
   );
@@ -96,19 +96,20 @@ function Cart() {
           <section className="space-y-2 rounded-[20px] bg-card shadow-card p-4 text-sm">
             {shipped.items.length > 0 && <Line k="Shipped devices" v={nad(shipped.total)} />}
             {digital.items.length > 0 && <Line k="Digital services" v={nad(digital.total)} />}
-            <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Total</span><span>{nad(s.total)}</span></div>
+            {s.recurringMonthly > 0 && <div className="flex justify-between gap-3 text-sm text-muted-foreground"><span>Estimated contract payments (not charged now)</span><span>{nad(s.recurringMonthly)}/month</span></div>}
+            <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Demo checkout total</span><span>{nad(s.total)}</span></div>
           </section>
-          <section className="rounded-[20px] bg-card shadow-card p-4"><p className="mb-2 text-sm font-semibold">Payment method</p>
+          <section className="rounded-[20px] bg-card shadow-card p-4"><p className="mb-2 text-sm font-semibold">Payment method · demonstration only</p>
             <div className="space-y-2">{PAYMENT_METHODS.map((m) => <label key={m.id} className={"flex cursor-pointer items-center gap-3 rounded-xl border p-3 " + (payment === m.id ? "border-mint" : "")}><input type="radio" name="pay" checked={payment === m.id} onChange={() => setPayment(m.id)} className="accent-[var(--mint)]" /><div><p className="text-sm font-medium">{m.label}</p><p className="text-xs text-muted-foreground">{m.hint}</p></div></label>)}</div>
           </section>
-          {!user && <p className="text-center text-xs text-muted-foreground">Checking out as guest — sign in to keep your order history.</p>}
+          <p className="rounded-2xl border border-[#90B2CC]/40 bg-[#E4EFF8] p-4 text-xs leading-5 text-[#1D4666]">Concept preview only. No real payment, order, stock reservation, airtime purchase or eSIM provision will occur. Sample promotional codes, shipping and payment options are not official MTC terms.</p>
+          {!user && <p className="text-center text-xs text-muted-foreground">Guest demo orders stay in this browser. Sign in does not sync them to MTC.</p>}
           {s.errors.length > 0 && (tried || cart.length > 0) && <ul role="alert" className="space-y-1 rounded-[20px] border border-primary/40 bg-primary/10 p-4 text-sm">{s.errors.map((e) => <li key={e}>• {e}</li>)}{!kycDone && cart.some((i) => i.mode === "contract") && <li><Link to="/kyc" className="font-semibold text-mint">Verify now →</Link></li>}</ul>}
         </div>
       )}
       {cart.length > 0 && (
         <div className="fixed inset-x-0 bottom-24 z-30 mx-auto flex max-w-md gap-2 px-4">
-          <button onClick={pay} className={"h-14 flex-1 rounded-full bg-primary font-semibold text-primary-foreground " + (s.errors.length ? "opacity-50" : "")}>Pay Now · {nad(s.total)}</button>
-          <button onClick={pay} className={"h-14 rounded-full bg-foreground px-5 font-semibold text-background " + (s.errors.length ? "opacity-50" : "")}>Apple Pay</button>
+          <button onClick={pay} disabled={s.errors.length > 0} className="h-14 flex-1 rounded-full bg-primary px-3 font-semibold text-primary-foreground disabled:opacity-40">Save demo order · {nad(s.total)}</button>
         </div>
       )}
     </Shell>
