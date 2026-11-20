@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, Loader2, Package, RefreshCw } from "lucide-react";
+import { ChevronDown, Package, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
 import { loadOperations, submitReturn } from "@/lib/operations.functions";
@@ -28,9 +28,18 @@ export function CloudOrders() {
     <Button type="button" onClick={() => setAuthOpen(true)} className="mt-5 min-h-12 rounded-full px-6">Sign in</Button>
   </div>;
 
-  if (query.isPending) return <p role="status" aria-live="polite" className="flex min-h-24 items-center justify-center gap-2 text-[14px] text-muted-foreground">
-    <Loader2 aria-hidden="true" className="size-5 animate-spin" />Loading requests…
-  </p>;
+  if (query.isPending) return <div role="status" aria-live="polite" aria-label="Loading account requests" className="space-y-3">
+    <span className="sr-only">Loading account requests…</span>
+    {[0, 1].map((index) => <div key={index} aria-hidden="true"
+      className="flex min-h-[112px] items-center gap-3 rounded-[20px] bg-white p-4">
+      <div className="size-12 shrink-0 animate-pulse rounded-[16px] bg-[#E8ECEF] motion-reduce:animate-none" />
+      <div className="min-w-0 flex-1 space-y-3">
+        <div className="h-4 w-3/4 animate-pulse rounded-full bg-[#E8ECEF] motion-reduce:animate-none" />
+        <div className="h-3 w-2/5 animate-pulse rounded-full bg-[#E8ECEF] motion-reduce:animate-none" />
+        <div className="h-3 w-1/3 animate-pulse rounded-full bg-[#E8ECEF] motion-reduce:animate-none" />
+      </div>
+    </div>)}
+  </div>;
 
   if (query.error) return <div role="alert" className="rounded-[20px] bg-white p-5">
     <p className="text-[14px] text-muted-foreground">Couldn't load your requests. Check your connection.</p>
