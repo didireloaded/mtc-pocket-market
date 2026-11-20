@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bookmark, Share2, Check, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bookmark, Share2, Check, ShieldCheck, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { getProduct, nad, plansFor, quote, stockLabel, TERMS, MTC_STORES, fromMonthly, CONNECTION_FEE } from "@/lib/data";
@@ -91,6 +91,7 @@ function PDP() {
       </div>
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md gap-3 border-t bg-background/90 p-4 backdrop-blur-xl">
         <button aria-label="Save" onClick={() => toggleSave(p.id)} className={"grid size-14 place-items-center rounded-2xl bg-card " + (saved.includes(p.id) ? "text-mint" : "")}><Bookmark className="size-5" fill={saved.includes(p.id) ? "currentColor" : "none"} /></button>
+        <Link to="/cart" aria-label="View shopping bag" className="grid size-14 place-items-center rounded-2xl bg-card"><ShoppingBag className="size-5" /></Link>
         <button onClick={() => { add({ id: p.id, name: p.name, image: p.image, variant: contract ? `${color} · ${sel.name} · ${months} mo · ${sel.data}` + (q.upfront ? ` · ${nad(q.upfront)} upfront` : "") : color, price, kind: "physical", mode: contract ? "contract" : "cash" }); setAdded(true); setTimeout(() => setAdded(false), 1500); }}
           disabled={st.tone === "out"} className="flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-primary disabled:opacity-40 font-semibold text-primary-foreground">{st.tone === "out" ? "Out of stock" : added ? <><Check className="size-5" /> Added</> : contract ? "Select plan & add" : "Add to Cart"}</button>
       </div>
