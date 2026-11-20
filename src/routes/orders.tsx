@@ -8,8 +8,10 @@ import { CloudOrders } from "@/components/CloudOrders";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/orders")({
-  validateSearch: (search: Record<string, unknown>): { tab?: "requests" | "previews" } =>
-    search["tab"] === "previews" || search["tab"] === "requests" ? { tab: search["tab"] } : {},
+  validateSearch: (search: Record<string, unknown>): { tab?: "requests" | "previews" } => {
+    const tab = search["tab"];
+    return tab === "requests" || tab === "previews" ? { tab } : {};
+  },
   head: () => ({ meta: [
     { title: "Orders — MTC Pocket Market" },
     { name: "description", content: "View account-linked order requests or shopping previews saved on this device." },
