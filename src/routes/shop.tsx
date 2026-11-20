@@ -36,28 +36,36 @@ function Shop() {
       && (!f.brands.length || f.brands.includes(p.brand))
       && (f.net === "Any" || p.network === f.net)
       && (f.storage === "Any" || p.storage === f.storage)
-      && (mode === "cash" || !p.contractable ? p.cash <= f.maxCash : fromMonthly(p) <= f.maxMonthly));
-    const price = (p: (typeof l)[number]) => (mode === "cash" || !p.contractable ? p.cash : fromMonthly(p));
+      && (mode === "cash" ? p.cash <= f.maxCash : p.contractable && fromMonthly(p) <= f.maxMonthly));
+    const price = (p: (typeof l)[number]) => (mode === "cash" ? p.cash : fromMonthly(p));
     return sort === "new" ? [...l].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)) : [...l].sort((a, b) => (sort === "low" ? price(a) - price(b) : price(b) - price(a)));
   }, [c, t, f, sort, mode]);
   const services = t ? bundles.filter((b) => (b.name + " aweh giga esim data bundle").toLowerCase().includes(t)) : [];
   const suggestions = t ? [...new Set([...products.map((p) => p.name), ...brands, ...bundles.map((b) => b.name)])].filter((x) => x.toLowerCase().includes(t)).slice(0, 5) : [];
   const commit = (v: string) => { setQ(v); setFocus(false); if (v.trim()) setExtra((e) => ({ ...e, searches: [v, ...e.searches.filter((x) => x !== v)].slice(0, 6) })); };
-  const activeCount = f.brands.length + (f.net !== "Any" ? 1 : 0) + (f.storage !== "Any" ? 1 : 0) + (f.maxCash < 40000 || f.maxMonthly < 4000 ? 1 : 0);
+  const activeCount = f.brands.length + (f.net !== "Any" ? 1 : 0) + (f.storage !== "Any" ? 1 : 0) + (mode === "cash" ? Number(f.maxCash < 40000) : Number(f.maxMonthly < 4000));
+  const resetDiscovery = () => {
+    setQ("");
+    setFocus(false);
+    setF({ brands: [], net: "Any", maxCash: 40000, maxMonthly: 4000, storage: "Any" });
+    void nav({ search: {} });
+  };
   return (
     <Shell>
       <div className="px-5 pt-8">
         <div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-widest text-mint">Pocket Market collection</p><h1 className="text-3xl font-bold">Shop</h1></div><Link to="/cart" className="rounded-full bg-card px-4 py-3 text-xs font-bold">Bag ({cart.reduce((n, item) => n + item.qty, 0)})</Link></div><div className="mt-3"><PriceToggle /></div>
         <div className="mt-4 flex items-center justify-between gap-2 rounded-[20px] bg-primary px-4 py-3 text-primary-foreground"><div><p className="font-semibold">Not sure which contract fits?</p><p className="text-xs text-primary-foreground/70">Start with your monthly budget.</p></div><Link to="/find" className="shrink-0 rounded-full bg-white px-4 py-2 text-xs font-bold text-primary">Find my plan</Link></div>
         <Link to="/compare" className="mt-2 flex items-center justify-between rounded-[18px] border bg-card px-4 py-3 text-sm font-semibold">Compare two devices <span className="text-mint">View comparison →</span></Link>
-        <div className="relative mt-5">
+        <div className="relative mt-5" onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocus(false);
+        }}>
           <label className="flex items-center gap-3 rounded-2xl bg-card px-4"><Search className="size-4 text-muted-foreground" />
-            <input value={q} onFocus={() => setFocus(true)} onBlur={() => setTimeout(() => setFocus(false), 150)} onKeyDown={(e) => e.key === "Enter" && commit(q)} onChange={(e) => setQ(e.target.value)} placeholder='Try "iPhone", "Samsung" or "Aweh"' className="h-12 flex-1 bg-transparent text-sm outline-none" />
-            {q && <button aria-label="Clear search" onClick={() => setQ("")}><X className="size-4 text-muted-foreground" /></button>}</label>
+            <input aria-label="Search products and bundles" autoComplete="off" enterKeyHint="search" type="search" value={q} onFocus={() => setFocus(true)} onKeyDown={(e) => { if (e.key === "Enter") commit(q); if (e.key === "Escape") setFocus(false); }} onChange={(e) => setQ(e.target.value)} placeholder='Try "iPhone", "Samsung" or "Aweh"' className="h-12 min-w-0 flex-1 bg-transparent text-[16px] outline-none" />
+            {q && <button type="button" aria-label="Clear search" onClick={() => { setQ(""); setFocus(false); }} className="grid size-11 place-items-center"><X className="size-4 text-muted-foreground" /></button>}</label>
           {focus && (suggestions.length > 0 || (!t && extra.searches.length > 0)) && (
             <div className="absolute inset-x-0 top-14 z-30 rounded-2xl border bg-card p-2 shadow-xl">
               {!t && <p className="px-2 py-1 text-[11px] uppercase tracking-widest text-muted-foreground">Recent</p>}
-              {(t ? suggestions : extra.searches).map((s) => <button key={s} onMouseDown={() => commit(s)} className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-sm hover:bg-surface-2">{t ? <Search className="size-3.5 text-muted-foreground" /> : <Clock className="size-3.5 text-muted-foreground" />}{s}</button>)}
+              {(t ? suggestions : extra.searches).map((suggestion) => <button key={suggestion} type="button" onPointerDown={(event) => event.preventDefault()} onClick={() => commit(suggestion)} className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[14px] hover:bg-surface-2">{t ? <Search className="size-4 text-muted-foreground" /> : <Clock className="size-4 text-muted-foreground" />}{suggestion}</button>)}
             </div>)}
         </div>
       </div>
@@ -94,11 +102,15 @@ function Shop() {
       {view === "grid" ? <div className="grid grid-cols-2 gap-3 px-5 pt-3">{list.map((p) => <ProductCard key={p.id} p={p} />)}</div> : (
         <div className="space-y-2 px-5 pt-2">{list.map((p) => { const st = stockLabel(p); return (
           <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-3">
-            <img src={p.image} alt={p.name} loading="lazy" className="size-16 rounded-xl object-cover" />
+            <img src={p.image} alt={p.name} loading="lazy" className="size-16 rounded-xl bg-stage object-contain" />
             <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{p.name}</p><p className="text-xs text-muted-foreground">{p.brand} · {p.network !== "None" ? p.network : p.category}{p.storage && ` · ${p.storage}`}</p><p className={cn("text-[11px]", st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>{st.text}</p></div>
-            <p className="text-sm font-bold">{mode === "cash" ? nad(p.cash) : nad(fromMonthly(p)) + "/mo"}</p>
+            <p className="text-sm font-bold">{mode === "cash" ? nad(p.cash) : p.contractable ? nad(fromMonthly(p)) + "/mo" : "Outright only"}</p>
           </Link>); })}</div>)}
-      {!list.length && <p className="py-16 text-center text-muted-foreground">No devices match. Try clearing filters.</p>}
+      {!list.length && <div role="status" className="mx-5 my-7 rounded-[22px] bg-card p-7 text-center">
+        <p className="text-[17px] font-semibold">No matching products</p>
+        <p className="mt-2 text-[14px] leading-6 text-muted-foreground">Try another category, a different budget, or remove your filters.</p>
+        <Button type="button" onClick={resetDiscovery} variant="outline" className="mt-5 h-12 rounded-full px-6 text-sm shadow-none">Clear search and filters</Button>
+      </div>}
     </Shell>
   );
 }
