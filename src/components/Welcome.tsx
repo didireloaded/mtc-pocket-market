@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { ArrowRight, CheckCircle2, ShoppingBag, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
-import mtcLogo from "@/assets/mtc-logo.png.asset.json";
+import { MtcLogo } from "@/components/MtcLogo";
 
 /** First-visit introduction. No timed splash or mandatory multi-screen onboarding. */
 export function Welcome() {
@@ -31,9 +31,7 @@ export function Welcome() {
       className="fixed inset-0 z-[60] overflow-y-auto bg-background">
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-6 pb-[max(24px,env(safe-area-inset-bottom))] pt-[max(32px,env(safe-area-inset-top))]">
         <div className="flex items-center justify-between gap-4">
-          <div className="grid h-12 w-24 place-items-center rounded-[14px] bg-primary px-3">
-            <img src={mtcLogo.url} alt="MTC" className="w-full object-contain" />
-          </div>
+          <MtcLogo className="size-16" />
           <span className="text-xs font-semibold tracking-wide text-muted-foreground">POCKET MARKET</span>
         </div>
 
