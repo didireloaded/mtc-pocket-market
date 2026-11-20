@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useReducedMotion } from "framer-motion";
-import { revealGroup, revealItem } from "@/lib/retail-motion";
+import { useRevealOnce } from "@/lib/retail-motion";
 import { ArrowRight, QrCode, Search, ShoppingBag } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
@@ -24,7 +23,7 @@ export const Route = createFileRoute("/")({
 const categories = ["Phones", "Laptops", "Wearables", "Tablets"] as const;
 
 function Home() {
-  const reduceMotion = useReducedMotion();
+  const carouselReveal = useRevealOnce<HTMLDivElement>();
   const { extra } = useStore();
   const featured = products.find((product) => product.featured) ?? products[0]!;
   const newArrivals = products.filter((product) => product.isNew);
@@ -86,15 +85,14 @@ function Home() {
               Shop all <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </div>
-          <motion.div initial={reduceMotion ? false : "hidden"} whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }} variants={revealGroup}
-            className="no-scrollbar -mx-6 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
-            {showcase.map((product) => (
-              <motion.div key={product.id} variants={revealItem} className="w-[152px] shrink-0 snap-start min-[390px]:w-[170px]">
+          <div ref={carouselReveal.ref} className="no-scrollbar -mx-6 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
+            {showcase.map((product, index) => (
+              <div key={product.id} style={{ animationDelay: `${index * 45}ms` }}
+                className={`w-[152px] shrink-0 snap-start min-[390px]:w-[170px] ${carouselReveal.visible ? "pocket-reveal" : "pocket-reveal-pending"}`}>
                 <ProductCard p={product} minimal />
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </section>
       </div>
       <p className="px-6 pb-8 text-center text-[12px] leading-5 text-muted-foreground">
