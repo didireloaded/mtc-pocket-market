@@ -29,7 +29,7 @@ export function NamibiaAddressFields({ value, onChange, prefix }: Props) {
     {fields.slice(0, 3).map(({ key, label, autocomplete, type }) => <div key={key}>
       <label htmlFor={`${prefix}-${key}`} className="mb-1.5 block text-[13px] font-semibold">{label}</label>
       <input id={`${prefix}-${key}`} type={type} autoComplete={autocomplete} required
-        maxLength={key === "name" ? 100 : 160}
+        maxLength={key === "name" ? 100 : key === "town" ? 100 : 160}
         value={value[key]} onChange={(event) => set(key, event.target.value)}
         placeholder={label} className="h-12 w-full rounded-[14px] border border-border bg-[#F4F5F7] px-4 text-[16px] outline-none focus-visible:ring-2 focus-visible:ring-primary" />
     </div>)}
