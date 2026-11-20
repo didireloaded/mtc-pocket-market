@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ArrowRight, CheckCircle2, ShoppingBag, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
@@ -6,7 +7,15 @@ import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 /** First-visit introduction. No timed splash or mandatory multi-screen onboarding. */
 export function Welcome() {
   const { ready, extra, setExtra, browseGuest, setAuthOpen, user, guest } = useStore();
-  if (!ready || extra.onboarded || user || guest) return null;
+  const visible = ready && !extra.onboarded && !user && !guest;
+  useEffect(() => {
+    if (!visible) return;
+    // Keep the underlying page out of keyboard and assistive-tech focus while the intro is open.
+    const elements = Array.from(document.querySelectorAll<HTMLElement>("#pocket-main, nav[aria-label=\"Main navigation\"]"));
+    elements.forEach((element) => element.setAttribute("inert", ""));
+    return () => elements.forEach((element) => element.removeAttribute("inert"));
+  }, [visible]);
+  if (!visible) return null;
 
   const continueAsGuest = () => {
     setExtra((current) => ({ ...current, onboarded: true }));
