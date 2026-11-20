@@ -1,15 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { STEP_MS, currentStage, timeline } from "@/lib/timeline";
+import { currentStage, timeline } from "@/lib/timeline";
 import type { Order } from "@/lib/store";
 
-const o: Order = { id: "MTC1", placedAt: 0, items: [{ name: "Nova", qty: 1, kind: "physical" }], total: 1, address: "Windhoek", tracking: "NP1", shippedTotal: 1, digitalTotal: 0, esimEmail: "" };
-describe("order timeline", () => {
-  it("moves processing → shipped → out for delivery", () => {
-    expect(currentStage(o, 0)).toBe("Processing");
-    expect(currentStage(o, STEP_MS)).toBe("Shipped");
-    expect(currentStage(o, STEP_MS * 2 + 5)).toBe("Out for delivery");
+const order: Order = {
+  id: "DEMO-1", placedAt: 12345,
+  items: [{ name: "Phone", qty: 1, kind: "physical" }],
+  total: 1000, address: "Windhoek", tracking: "", shippedTotal: 1000,
+  digitalTotal: 0, esimEmail: "",
+};
+
+describe("browser-local order timeline", () => {
+  it("never marks local demo orders shipped, delivered or paid", () => {
+    const statuses = timeline(order, Date.now() + 365 * 24 * 60 * 60 * 1000);
+    expect(statuses).toHaveLength(1);
+    expect(statuses[0]?.stage).toBe("Saved locally");
+    expect(statuses[0]?.note).toContain("No payment");
+    expect(currentStage(order, Date.now())).toBe("Saved locally");
   });
-  it("digital-only orders have no delivery timeline", () => {
-    expect(timeline({ ...o, items: [{ name: "eSIM", qty: 1, kind: "digital" }] }, 999999)).toEqual([]);
+
+  it("does not invent a delivery timeline for an eSIM preview", () => {
+    expect(timeline({
+      ...order, items: [{ name: "eSIM", qty: 1, kind: "digital" }],
+    }, Date.now())).toEqual([]);
   });
 });

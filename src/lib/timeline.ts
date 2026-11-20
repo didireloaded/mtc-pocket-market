@@ -1,20 +1,17 @@
 import type { Order } from "./store";
 
-export const STEP_MS = 120_000; // demo: each delivery stage advances every 2 minutes
-export const STAGES = ["Processing", "Shipped", "Out for delivery"] as const;
+/** Browser-local preview orders never advance to shipping or claim real fulfilment. */
+export const STAGES = ["Saved locally"] as const;
 export type Stage = (typeof STAGES)[number];
 
-/** Single source of truth for an order's delivery progress. */
-export function timeline(o: Order, now: number) {
-  if (!o.items.some((i) => i.kind === "physical")) return [];
-  const notes: Record<Stage, string> = {
-    Processing: "Payment received. Preparing your devices at MTC warehouse, Windhoek.",
-    Shipped: `Handed to courier · Tracking ${o.tracking}`,
-    "Out for delivery": `On the way to ${o.address}`,
-  };
-  return STAGES.map((stage, i) => {
-    const at = o.placedAt + i * STEP_MS;
-    return { stage, at, reached: now >= at, note: notes[stage] };
-  });
+export function timeline(order: Order, _now: number) {
+  if (!order.items.some((item) => item.kind === "physical")) return [];
+  return [{
+    stage: "Saved locally" as Stage,
+    at: order.placedAt,
+    reached: true,
+    note: "Saved on this device for demonstration only. No payment, courier dispatch or MTC fulfilment has occurred.",
+  }];
 }
-export const currentStage = (o: Order, now: number) => timeline(o, now).filter((e) => e.reached).at(-1)?.stage;
+
+export const currentStage = (order: Order, now: number) => timeline(order, now)[0]?.stage;

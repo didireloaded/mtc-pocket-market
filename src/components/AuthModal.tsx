@@ -1,72 +1,136 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { useStore } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 
 export function AuthModal() {
-  const { authOpen, setAuthOpen, browseGuest, guest } = useStore();
+  const { authOpen, setAuthOpen, browseGuest } = useStore();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  const [err, setErr] = useState("");
+  const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
-  if (!authOpen) return null;
 
-  const submit = async () => {
-    setErr("");
-    if (!/^\S+@\S+\.\S+$/.test(email)) return setErr("Enter a valid email address.");
-    if (pw.length < 6) return setErr("Password must be at least 6 characters.");
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setError("Enter a valid email address.");
+    if (pw.length < 6) return setError("Password must be at least six characters.");
+    if (typeof navigator !== "undefined" && !navigator.onLine) return setError("You're offline. Connect to the internet to sign in or create an account.");
+
     setBusy(true);
-    if (mode === "signup") {
-      const { data, error } = await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
+    try {
+      if (mode === "signup") {
+        const { data, error: authError } = await supabase.auth.signUp({
+          email: email.trim(), password: pw, options: { emailRedirectTo: window.location.origin },
+        });
+        if (authError) { setError(authError.message); return; }
+        if (!data.session) setSent(true);
+        else setAuthOpen(false);
+      } else {
+        const { error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pw });
+        if (authError) { setError(authError.message === "Invalid login credentials" ? "Email or password is incorrect." : authError.message); return; }
+        toast.success("You're signed in.");
+        setAuthOpen(false);
+      }
+    } catch {
+      setError("We couldn't connect to the account service. Check your connection and try again.");
+    } finally {
       setBusy(false);
-      if (error) return setErr(error.message);
-      if (!data.session) setSent(true);
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
-      setBusy(false);
-      if (error) return setErr(error.message === "Invalid login credentials" ? "Wrong email or password." : error.message);
-      toast.success("Welcome back!");
     }
   };
-  const social = async (p: "google" | "lovable") => {
-    setErr("");
-    const r = await lovable.auth.signInWithOAuth(p, { redirect_uri: window.location.origin });
-    if (r.error) setErr(r.error.message);
+
+  const social = async (provider: "google" | "lovable") => {
+    setError("");
+    if (typeof navigator !== "undefined" && !navigator.onLine) return setError("You're offline. Please connect before signing in.");
+    setBusy(true);
+    try {
+      const response = await lovable.auth.signInWithOAuth(provider, { redirect_uri: window.location.origin });
+      if (response.error) setError(response.error.message);
+    } catch {
+      setError("Sign-in could not start. Try again.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-background/80 backdrop-blur-md">
-      <div className="relative w-full max-w-md rounded-t-[32px] border bg-card p-6 pb-10 animate-in slide-in-from-bottom">
-        {guest && <button aria-label="Close" onClick={() => setAuthOpen(false)} className="absolute right-5 top-5 text-muted-foreground"><X className="size-5" /></button>}
-        <div className="mx-auto mb-6 h-1 w-10 rounded-full bg-surface-2" />
-        <div className="flex items-center gap-2"><span className="grid h-8 w-20 place-items-center rounded-md bg-primary px-2"><img src={mtcLogo.url} alt="MTC" className="w-full" /></span><span className="text-xs text-muted-foreground">Namibia</span></div>
-        {sent ? (<>
-          <h2 className="mt-3 text-2xl font-bold">Check your email</h2>
-          <p className="mt-2 text-sm text-muted-foreground">We sent a confirmation link to {email}. Open it to finish creating your account.</p>
-          <button onClick={() => { setSent(false); setMode("signin"); }} className="mt-5 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground">Back to sign in</button>
-        </>) : (<>
-          <h2 className="mt-3 text-2xl font-bold">{mode === "signin" ? "Sign in to Pocket Market" : "Create your account"}</h2>
-          <div className="mt-4 grid grid-cols-2 rounded-full bg-surface-2 p-1 text-sm font-semibold">
-            {(["signin", "signup"] as const).map((m) => <button key={m} onClick={() => { setMode(m); setErr(""); }} className={cn("rounded-full py-2", mode === m ? "bg-mint text-mint-foreground" : "text-muted-foreground")}>{m === "signin" ? "Sign in" : "Sign up"}</button>)}
-          </div>
-          <input aria-label="Email" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} placeholder="you@example.com" className="mt-4 h-14 w-full rounded-full bg-surface-2 px-4 outline-none" />
-          <input aria-label="Password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} value={pw} onChange={(e) => { setPw(e.target.value); setErr(""); }} placeholder="Password" className="mt-2 h-14 w-full rounded-full bg-surface-2 px-4 outline-none" />
-          <button disabled={busy} onClick={submit} className="mt-4 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground disabled:opacity-40">{busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}</button>
-          <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => social("google")} className="h-12 rounded-full border text-sm font-semibold">Google</button>
-            <button onClick={() => social("lovable")} className="h-12 rounded-full border text-sm font-semibold">Lovable</button>
-          </div>
-        </>)}
-        {err && <p role="alert" className="mt-3 text-sm text-destructive">{err}</p>}
-        <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">Pocket Market accounts are separate from MTC mobile-number accounts. Orders and preferences are currently stored in this browser.</p><button onClick={browseGuest} className="mt-4 h-12 w-full rounded-2xl border text-sm font-medium text-mint">Browse as Guest</button>
-      </div>
-    </div>
+    <Dialog open={authOpen} onOpenChange={(next) => { setAuthOpen(next); if (!next) setError(""); }}>
+      <DialogContent
+        className="fixed bottom-0 left-1/2 top-auto flex max-h-[92dvh] w-full max-w-md -translate-x-1/2 translate-y-0 flex-col gap-0 overflow-y-auto rounded-b-none rounded-t-[28px] border-border bg-card px-5 pb-[max(24px,env(safe-area-inset-bottom))] pt-7 shadow-lg sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:rounded-[28px]"
+      >
+        <div className="mb-5 flex items-center gap-2">
+          <span className="grid h-9 w-20 place-items-center rounded-[10px] bg-primary px-2">
+            <img src={mtcLogo.url} alt="MTC" className="w-full object-contain" />
+          </span>
+          <span className="text-[13px] text-muted-foreground">Pocket Market</span>
+        </div>
+
+        <DialogTitle className="pr-6 text-[25px] font-bold leading-tight tracking-tight">
+          {sent ? "Check your email" : mode === "signin" ? "Welcome back" : "Create your account"}
+        </DialogTitle>
+        <DialogDescription className="mt-2 text-[14px] leading-6">
+          {sent ? `We sent a confirmation link to ${email.trim()}. Open it to complete sign-up.`
+            : "Sign in to your Pocket Market account. This is not an MTC mobile-number login."}
+        </DialogDescription>
+
+        {sent ? (
+          <Button type="button" onClick={() => { setSent(false); setMode("signin"); setPw(""); }}
+            className="mt-6 h-13 w-full rounded-full text-[15px] font-semibold">Return to sign in</Button>
+        ) : (
+          <>
+            <div className="mt-6 grid grid-cols-2 rounded-[16px] bg-surface-2 p-1" role="group" aria-label="Account action">
+              {(["signin", "signup"] as const).map((option) => (
+                <button key={option} type="button" aria-pressed={mode === option}
+                  onClick={() => { setMode(option); setError(""); }}
+                  className={`min-h-11 rounded-[13px] px-3 text-[14px] font-semibold ${mode === option ? "bg-card text-foreground" : "text-muted-foreground"}`}>
+                  {option === "signin" ? "Sign in" : "Sign up"}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={submit} className="mt-5 space-y-3">
+              <div>
+                <label htmlFor="pocket-email" className="mb-2 block text-[14px] font-semibold">Email address</label>
+                <Input id="pocket-email" type="email" inputMode="email" autoComplete="email" required
+                  value={email} onChange={(event) => { setEmail(event.target.value); setError(""); }}
+                  placeholder="you@example.com" className="h-13 rounded-[15px] bg-background px-4 text-[16px]" />
+              </div>
+              <div>
+                <label htmlFor="pocket-password" className="mb-2 block text-[14px] font-semibold">Password</label>
+                <Input id="pocket-password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                  minLength={6} required value={pw} onChange={(event) => { setPw(event.target.value); setError(""); }}
+                  placeholder="At least six characters" className="h-13 rounded-[15px] bg-background px-4 text-[16px]" />
+              </div>
+              {error && <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-[14px] leading-5 text-destructive">{error}</p>}
+              <Button type="submit" disabled={busy} className="h-13 w-full rounded-full text-[15px] font-semibold shadow-none">
+                {busy ? "Connecting…" : mode === "signin" ? "Sign in" : "Create account"}
+              </Button>
+            </form>
+            <div className="my-5 flex items-center gap-3 text-[13px] text-muted-foreground">
+              <span className="h-px flex-1 bg-border" />Or use<span className="h-px flex-1 bg-border" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Button type="button" variant="outline" onClick={() => social("google")} disabled={busy}
+                className="h-12 rounded-full text-[14px] font-semibold shadow-none">Google</Button>
+              <Button type="button" variant="outline" onClick={() => social("lovable")} disabled={busy}
+                className="h-12 rounded-full text-[14px] font-semibold shadow-none">Lovable</Button>
+            </div>
+            <p className="mt-5 text-center text-[12px] leading-5 text-muted-foreground">
+              Account services and real MTC mobile numbers are not yet linked.
+            </p>
+          </>
+        )}
+
+        <Button type="button" variant="ghost" onClick={browseGuest}
+          className="mt-4 h-12 w-full rounded-full text-[14px] font-semibold">Continue shopping as guest</Button>
+      </DialogContent>
+    </Dialog>
   );
 }

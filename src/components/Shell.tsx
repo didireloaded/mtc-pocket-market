@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Home, ShoppingBag, Store, UserRound, Package } from "lucide-react";
+import { Home, Smartphone, Store, UserRound, Package } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -7,8 +8,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export function Shell({ children, nav = true }: { children: ReactNode; nav?: boolean }) {
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-background">
-      <div className={cn(nav && "pb-28")}>{children}</div>
+    <div className="mx-auto min-h-[100dvh] w-full max-w-md bg-background">
+      <main id="pocket-main" className={cn(nav && "pb-[calc(104px+env(safe-area-inset-bottom))]")}>{children}</main>
       {nav && <BottomNav />}
     </div>
   );
@@ -16,13 +17,26 @@ export function Shell({ children, nav = true }: { children: ReactNode; nav?: boo
 
 /** Five destinations cover the complete customer journey. The bag stays accessible from Home and Shop. */
 function BottomNav() {
+  const [editing, setEditing] = useState(false);
+  useEffect(() => {
+    const update = () => setEditing(Boolean(document.activeElement?.matches("input, textarea, select, [contenteditable='true']")));
+    const afterFocus = () => window.requestAnimationFrame(update);
+    document.addEventListener("focusin", update);
+    document.addEventListener("focusout", afterFocus);
+    update();
+    return () => {
+      document.removeEventListener("focusin", update);
+      document.removeEventListener("focusout", afterFocus);
+    };
+  }, []);
   const items = [
     { to: "/" as const, label: "Home", icon: Home },
     { to: "/shop" as const, label: "Shop", icon: Store },
-    { to: "/mymtc" as const, label: "My MTC", icon: ShoppingBag },
+    { to: "/mymtc" as const, label: "My MTC", icon: Smartphone },
     { to: "/orders" as const, label: "Orders", icon: Package },
     { to: "/settings" as const, label: "Account", icon: UserRound },
   ];
+  if (editing) return null;
   return (
     <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-3 pb-[max(12px,env(safe-area-inset-bottom))]">
       <div className="flex items-center gap-1 rounded-[24px] border bg-card/95 p-1.5 shadow-card backdrop-blur">
