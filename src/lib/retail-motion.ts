@@ -17,7 +17,7 @@ export function useRevealOnce<T extends HTMLElement>() {
         setVisible(true);
         observer.disconnect();
       }
-    }, { threshold: 0.08 });
+    }, { threshold: 0 });
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
