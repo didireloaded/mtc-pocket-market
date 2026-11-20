@@ -12,7 +12,7 @@ const accessories = accessoryIds.map((id) => getProduct(id)!);
 
 
 export const Route = createFileRoute("/cart")({
-  head: () => ({ meta: [{ title: "Your Bag — MTC Store" }, { name: "description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:title", content: "Your Bag — MTC Store" }, { property: "og:description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Your Bag — MTC Pocket Market" }, { name: "description", content: "Review devices, digital services and your Namibian delivery details before submitting an account request." }, { property: "og:title", content: "Your Bag — MTC Pocket Market" }, { property: "og:description", content: "Review products, estimate costs and prepare a Pocket Market request." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Cart,
 });
 function Row({ i }: { i: CartItem }) {
@@ -43,23 +43,23 @@ function Cart() {
   const [orderId, setOrderId] = useState("");
   const [addr, setAddr] = useState<Address>(() => { const a = extra.addresses[0]; return a ? { name: a.name, street: a.street, town: a.town, region: a.region ?? "", phone: a.phone } : { name: "", street: "", town: "", region: "", phone: "" }; });
   const [esimEmail, setEsimEmail] = useState(user?.method === "email" ? user.label : "");
-  const [paid, setPaid] = useState<null | { hasEsim: boolean; hasShipped: boolean; email: string }>(null);
+  const [savedPreview, setSavedPreview] = useState<null | { hasEsim: boolean; hasShipped: boolean; email: string }>(null);
   const [tried, setTried] = useState(false);
   const s = summarize(cart, { promo: null, addr, kycDone, esimEmail });
   const { shipped, digital } = s;
-  const pay = () => {
+  const savePreview = () => {
     setTried(true);
     if (s.errors.length || submittedRef.current) return;
     submittedRef.current = true;
     setOrderId(placeOrder({ items: cart.map((i) => ({ name: i.name, qty: i.qty, kind: i.kind })), total: s.total, shippedTotal: shipped.total, digitalTotal: digital.total, esimEmail, address: shipped.items.length ? `${addr.street}, ${addr.town}, ${addr.region}` : "" }));
-    setPaid({ hasEsim: digital.hasEsim, hasShipped: shipped.items.length > 0, email: esimEmail }); clear();
+    setSavedPreview({ hasEsim: digital.hasEsim, hasShipped: shipped.items.length > 0, email: esimEmail }); clear();
   };
-  if (paid) return (
+  if (savedPreview) return (
     <Shell><div className="px-5 pt-20 text-center"><CheckCircle2 className="mx-auto size-16 text-mint" /><h1 className="mt-4 text-2xl font-bold">Shopping preview saved</h1>
       <p className="mt-1 text-xs text-muted-foreground">Local reference {orderId}. No payment was made or MTC order submitted.</p>
-      {paid.hasShipped && <p className="mt-3 text-muted-foreground">This is a demonstration order saved in this browser. No real delivery or fulfilment has been requested.</p>}
-      {paid.hasEsim && <div className="mt-6 space-y-3"><p className="rounded-2xl bg-card p-4 text-xs leading-5 text-muted-foreground">No activation email has been sent. Digital fulfilment requires a live MTC integration.</p><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Learn about eSIM activation</Link></div>}
-      {paid.hasShipped && <Link to="/orders" className="mt-4 block h-14 rounded-full border pt-4 font-semibold text-mint">View demo history</Link>}
+      {savedPreview.hasShipped && <p className="mt-3 text-muted-foreground">This is a demonstration order saved in this browser. No real delivery or fulfilment has been requested.</p>}
+      {savedPreview.hasEsim && <div className="mt-6 space-y-3"><p className="rounded-2xl bg-card p-4 text-xs leading-5 text-muted-foreground">No activation email has been sent. Digital fulfilment requires a live MTC integration.</p><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Learn about eSIM activation</Link></div>}
+      {savedPreview.hasShipped && <Link to="/orders" className="mt-4 block h-14 rounded-full border pt-4 font-semibold text-mint">View demo history</Link>}
       <Link to="/" className="mt-3 block text-sm text-muted-foreground">Back home</Link></div></Shell>
   );
   const Line = ({ k, v, cls = "text-muted-foreground" }: { k: string; v: string; cls?: string }) => <div className={"flex justify-between " + cls}><span>{k}</span><span>{v}</span></div>;
@@ -118,7 +118,7 @@ function Cart() {
       )}
       {cart.length > 0 && (
         <div className="px-5 pb-9 pt-2">
-          <button type="button" onClick={pay}
+          <button type="button" onClick={savePreview}
             className="min-h-14 w-full rounded-full bg-primary px-5 text-[15px] font-semibold text-primary-foreground focus-visible:outline-offset-4">
             Save shopping preview · {nad(s.total)}
           </button>
