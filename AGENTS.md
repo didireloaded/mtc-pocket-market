@@ -89,3 +89,13 @@ For the three primary shopping surfaces, follow the user's supplied mobile comme
 - Keep the current independent-concept disclaimers, actual MTC catalogue images, contract calculator and routes. Never present order payments, identity verification, stock or eSIM activation as connected when they aren't.
 - Use charcoal #202E39, crimson #DD2A1B and off-white neutral surfaces; do not introduce the reference's furniture imagery, bright green or fictitious discount badges.
 - Avoid new card-heavy sections. Never bring the full contract builder, adviser or comparisons back onto Home.
+
+## Reference card overlap and background
+
+The Shop catalogue uses the user's image-first floating-product card reference.
+
+- The app canvas is a soft gray `#F4F5F7`. Catalogue cards are white with approximately `0 8px 30px rgba(0,0,0,0.04)` diffuse shadow and large, deliberate corner rounding.
+- Use the actual MTC catalogue images in `src/components/ProductCard.tsx`; the product image rises above the card edge. Never add fake product photography, random Unsplash items or made-up price reductions.
+- A save control and shopping-bag action float across each card's bottom edge. Cash uses `addOutright()`; monthly mode must open the product's contract configuration before adding a selected plan.
+- Selected category and purchase-mode pills use MTC crimson `#DD2A1B`. Home's dark featured section may use a restrained charcoal gradient but do not apply a heavy dark theme to all forms, checkout and My MTC by default.
+- Maintain image `object-contain`, accessible button labels, minimum 44px control targets, contract-estimate disclaimers, and comfortable vertical gaps so floating buttons never overlap the next row.
