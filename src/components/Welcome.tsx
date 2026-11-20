@@ -6,8 +6,8 @@ import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 
 /** First-visit introduction. No timed splash or mandatory multi-screen onboarding. */
 export function Welcome() {
-  const { ready, extra, setExtra, browseGuest, setAuthOpen, user, guest } = useStore();
-  const visible = ready && !extra.onboarded && !user && !guest;
+  const { ready, authReady, extra, setExtra, browseGuest, setAuthOpen, user, guest } = useStore();
+  const visible = ready && authReady && !extra.onboarded && !user && !guest;
   useEffect(() => {
     if (!visible) return;
     // Keep the underlying page out of keyboard and assistive-tech focus while the intro is open.
