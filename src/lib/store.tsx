@@ -1,6 +1,7 @@
 import type * as React from "react";
 import { toast } from "sonner";
 import { timeline } from "./timeline";
+import { supabase } from "@/integrations/supabase/client";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 export type CartItem = { key: string; id: string; name: string; image?: string; variant: string; price: number; qty: number; kind: "physical" | "digital"; mode?: "cash" | "contract" };
 export type User = { label: string; method: "phone" | "email" };
@@ -38,12 +39,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     try { const s = JSON.parse(localStorage.getItem("mtc") || "{}");
-      if (s.cart) setCart(s.cart); if (s.user?.label) setUser(s.user); if (s.orders) setOrders(s.orders.filter((o: Order) => o.tracking)); if (s.notices) setNotices(s.notices); if (s.extra) setExtraState({ ...defaultExtra, ...s.extra }); if (s.guest) setGuest(true); if (s.saved) setSaved(s.saved); if (s.kycDone) setKycDone(true);
-      if (!s.user && !s.guest && s.extra?.onboarded) setAuthOpen(true);
+      if (s.cart) setCart(s.cart); if (s.orders) setOrders(s.orders.filter((o: Order) => o.tracking)); if (s.notices) setNotices(s.notices); if (s.extra) setExtraState({ ...defaultExtra, ...s.extra }); if (s.guest) setGuest(true); if (s.saved) setSaved(s.saved); if (s.kycDone) setKycDone(true);
+      supabase.auth.getSession().then(({ data }) => { if (!data.session && !s.guest && s.extra?.onboarded) setAuthOpen(true); });
     } catch { /* first visit: welcome screens show first */ }
     setReady(true);
   }, []);
-  useEffect(() => { if (ready) localStorage.setItem("mtc", JSON.stringify({ cart, user, guest, saved, kycDone, orders, notices, extra })); }, [cart, user, guest, saved, kycDone, orders, notices, extra, ready]);
+  useEffect(() => { if (ready) localStorage.setItem("mtc", JSON.stringify({ cart, guest, saved, kycDone, orders, notices, extra })); }, [cart, guest, saved, kycDone, orders, notices, extra, ready]);
+  // Real accounts: the signed-in user always comes from the auth session.
+  useEffect(() => {
+    const apply = (u: { email?: string | null; user_metadata?: { full_name?: string } } | null | undefined) =>
+      setUser(u ? { label: u.email || u.user_metadata?.full_name || "MTC customer", method: "email" } : null);
+    supabase.auth.getSession().then(({ data }) => { apply(data.session?.user); if (data.session) { setGuest(false); setAuthOpen(false); } });
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      apply(session?.user);
+      if (event === "SIGNED_IN") { setGuest(false); setAuthOpen(false); }
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
   // Watch the order timeline and raise a notice the first time an order reaches Shipped / Out for delivery.
   useEffect(() => {
     if (!ready) return;
@@ -80,7 +92,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     extra, setExtra: setExtraState, viewProduct: (id) => setExtraState((e) => ({ ...e, recent: [id, ...e.recent.filter((x) => x !== id)].slice(0, 8) })),
     notices, markAllRead: () => setNotices((n) => n.map((x) => ({ ...x, read: true }))),
     login: (u) => { setUser(u); setGuest(false); setAuthOpen(false); }, browseGuest: () => { setGuest(true); setAuthOpen(false); },
-    logout: () => { setUser(null); setGuest(false); setAuthOpen(true); }, authOpen, setAuthOpen, saved,
+    logout: () => { void supabase.auth.signOut(); setUser(null); setGuest(false); setAuthOpen(true); }, authOpen, setAuthOpen, saved,
     toggleSave: (id) => setSaved((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id])), kycDone, setKycDone: (b) => { setKycDone(b); setExtraState((e) => ({ ...e, kyc: b ? "approved" : "none" })); } }}>{children}</Ctx.Provider>;
 }
 export const useStore = () => { const c = useContext(Ctx); if (!c) throw new Error("no store"); return c; };
