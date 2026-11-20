@@ -109,6 +109,41 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .retail-soft-surface { background-color: var(--surface-2); border-radius: 22px; }
 .retail-quiet-action { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; font-weight: 650; font-size: 14px; color: var(--mint); }
 .tabular-nums { font-variant-numeric: tabular-nums; }
+/* Short, GPU-friendly motion. The two cart animations run only after real cart additions. */
+@keyframes pocket-rise {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes pocket-cart-bounce {
+  0% { transform: scale(.82) rotate(-8deg); }
+  55% { transform: scale(1.14) rotate(7deg); }
+  78% { transform: scale(.96) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes pocket-badge-pop {
+  from { opacity: 0; transform: scale(.65); }
+  75% { opacity: 1; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+.pocket-reveal-pending { opacity: 0; }
+.pocket-reveal {
+  animation: pocket-rise 260ms cubic-bezier(.22, 1, .36, 1) both;
+}
+.pocket-cart-bounce {
+  animation: pocket-cart-bounce 360ms cubic-bezier(.22, 1, .36, 1) both;
+}
+.pocket-badge-pop {
+  animation: pocket-badge-pop 220ms cubic-bezier(.22, 1, .36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pocket-reveal-pending { opacity: 1; }
+  .pocket-reveal, .pocket-cart-bounce, .pocket-badge-pop {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
