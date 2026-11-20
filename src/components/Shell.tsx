@@ -3,6 +3,7 @@ import { Home, ShoppingBag, Store, UserRound, Package } from "lucide-react";
 import type { ReactNode } from "react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export function Shell({ children, nav = true }: { children: ReactNode; nav?: boolean }) {
   return (
@@ -29,7 +30,7 @@ function BottomNav() {
           <Link key={to} to={to} activeOptions={{ exact: to === "/" }} aria-label={label}
             className="group flex h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[18px] px-1 text-muted-foreground transition-colors data-[status=active]:bg-primary data-[status=active]:text-primary-foreground">
             <Icon className="size-[19px]" strokeWidth={1.9} />
-            <span className="text-[10px] font-semibold leading-none">{label}</span>
+            <span className="text-[12px] font-semibold leading-none">{label}</span>
           </Link>
         ))}
       </div>
@@ -39,14 +40,15 @@ function BottomNav() {
 
 export function PriceToggle() {
   const { mode, setMode } = useStore();
-  return (
-    <div className="inline-flex rounded-full border bg-card p-1 text-xs font-semibold" aria-label="Price display mode">
-      {(["cash", "contract"] as const).map((m) => (
-        <button key={m} onClick={() => setMode(m)} aria-pressed={mode === m}
-          className={cn("rounded-full px-4 py-2 capitalize transition-colors", mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>
-          {m === "cash" ? "Buy outright" : "Contract estimate"}
-        </button>
-      ))}
-    </div>
-  );
+  return <ToggleGroup type="single" value={mode} onValueChange={(value) => {
+    if (value === "cash" || value === "contract") setMode(value);
+  }} aria-label="Price display mode"
+    className="inline-grid grid-cols-2 gap-1 rounded-full border border-border/70 bg-card p-1">
+    <ToggleGroupItem value="cash" className="h-10 rounded-full px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
+      Buy outright
+    </ToggleGroupItem>
+    <ToggleGroupItem value="contract" className="h-10 rounded-full px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
+      Contract estimate
+    </ToggleGroupItem>
+  </ToggleGroup>;
 }
