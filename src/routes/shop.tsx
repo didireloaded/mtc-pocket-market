@@ -18,7 +18,7 @@ export const Route = createFileRoute("/shop")({
 function Shop() {
   const { c = "All" } = Route.useSearch();
   const nav = useNavigate({ from: "/shop" });
-  const { mode, extra, setExtra, add } = useStore();
+  const { mode, extra, setExtra, add, cart } = useStore();
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -43,7 +43,7 @@ function Shop() {
   return (
     <Shell>
       <div className="px-5 pt-8">
-        <div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-widest text-mint">Pocket Market collection</p><h1 className="text-3xl font-bold">Shop</h1></div><PriceToggle /></div>
+        <div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-widest text-mint">Pocket Market collection</p><h1 className="text-3xl font-bold">Shop</h1></div><Link to="/cart" className="rounded-full bg-card px-4 py-3 text-xs font-bold">Bag ({cart.reduce((n, item) => n + item.qty, 0)})</Link></div><div className="mt-3"><PriceToggle /></div>
         <div className="mt-4 flex items-center justify-between gap-2 rounded-[20px] bg-primary px-4 py-3 text-primary-foreground"><div><p className="font-semibold">Not sure which contract fits?</p><p className="text-xs text-primary-foreground/70">Start with your monthly budget.</p></div><Link to="/find" className="shrink-0 rounded-full bg-white px-4 py-2 text-xs font-bold text-primary">Find my plan</Link></div>
         <Link to="/compare" className="mt-2 flex items-center justify-between rounded-[18px] border bg-card px-4 py-3 text-sm font-semibold">Compare two devices <span className="text-mint">View comparison →</span></Link>
         <div className="relative mt-5">
