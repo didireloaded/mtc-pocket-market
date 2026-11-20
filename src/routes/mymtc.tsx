@@ -16,7 +16,7 @@ export const Route = createFileRoute("/mymtc")({
 function MyMTC() {
   const { user, logout, setAuthOpen, extra } = useStore();
   const isSignedIn = Boolean(user);
-  const firstName = user?.label && !user.label.includes("@") ? user.label.trim().split(/\s+/)[0] : null;
+  const firstName = user?.displayName?.trim().split(/\s+/)[0] ?? null;
 
   return (
     <Shell>
