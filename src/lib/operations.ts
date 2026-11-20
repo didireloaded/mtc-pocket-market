@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getProduct } from "./data";
-export const orderRequest = z.object({ items: z.array(z.object({ id: z.string(), qty: z.number().int().min(1).max(20) })).min(1).max(30), address: z.object({ name: z.string().trim().min(1).max(100), street: z.string().trim().min(1).max(200), town: z.string().trim().min(1).max(100), phone: z.string().trim().min(8).max(30) }) });
+import { NAMIBIA_REGIONS } from "./namibia";
+export const orderRequest = z.object({ items: z.array(z.object({ id: z.string(), qty: z.number().int().min(1).max(20) })).min(1).max(30), address: z.object({ name: z.string().trim().min(1).max(100), street: z.string().trim().min(1).max(200), town: z.string().trim().min(1).max(100), region: z.enum(NAMIBIA_REGIONS).optional(), phone: z.string().trim().min(8).max(30) }) });
 export function priceOrder(input: z.infer<typeof orderRequest>) {
   const items = input.items.map((i) => {
     const p = getProduct(i.id);

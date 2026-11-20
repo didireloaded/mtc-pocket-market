@@ -2,10 +2,10 @@ import type * as React from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 export type CartItem = { key: string; id: string; name: string; image?: string; variant: string; price: number; qty: number; kind: "physical" | "digital"; mode?: "cash" | "contract" };
-export type User = { label: string; method: "phone" | "email" };
+export type User = { label: string; method: "phone" | "email"; displayName?: string };
 export type Order = { id: string; placedAt: number; items: { name: string; qty: number; kind: "physical" | "digital" }[]; total: number; address: string; tracking: string; shippedTotal: number; digitalTotal: number; esimEmail: string };
 export type Notice = { key: string; orderId: string; title: string; body: string; at: number; read: boolean };
-export type SavedAddress = { label: string; name: string; street: string; town: string; phone: string };
+export type SavedAddress = { label: string; name: string; street: string; town: string; region?: string; phone: string };
 export type Extra = {
   onboarded: boolean; recent: string[]; searches: string[]; addresses: SavedAddress[];
   kyc: "none" | "pending" | "approved" | "rejected"; prefs: { orders: boolean; priceDrops: boolean; lowBalance: boolean };
@@ -47,7 +47,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   // Real accounts: the signed-in user always comes from the auth session.
   useEffect(() => {
     const apply = (u: { email?: string | null; user_metadata?: { full_name?: string } } | null | undefined) =>
-      setUser(u ? { label: u.email || u.user_metadata?.full_name || "MTC customer", method: "email" } : null);
+      setUser(u ? { label: u.email || u.user_metadata?.full_name || "Pocket Market customer", method: "email", displayName: u.user_metadata?.full_name || undefined } : null);
     supabase.auth.getSession()
       .then(({ data }) => { apply(data.session?.user); if (data.session) { setGuest(false); setAuthOpen(false); } })
       .catch(() => { /* Offline guests can still browse the local catalogue. */ })
