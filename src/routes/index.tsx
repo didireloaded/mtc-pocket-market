@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight, QrCode, Search, ShoppingBag } from "lucide-re
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
 import { useStore } from "@/lib/store";
-import { products, nad } from "@/lib/data";
+import { products, nad, getProduct } from "@/lib/data";
 import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -21,9 +21,13 @@ export const Route = createFileRoute("/")({
 const categories = ["Phones", "Laptops", "Wearables", "Tablets"] as const;
 
 function Home() {
+  const { extra } = useStore();
   const featured = products.find((product) => product.featured) ?? products[0]!;
   const newArrivals = products.filter((product) => product.isNew);
-  const showcase = (newArrivals.length ? newArrivals : products).slice(0, 6);
+  const recentlyViewed = extra.recent.map(getProduct).filter((product) => !!product);
+  // Personalise the one carousel, never add a second section to Home.
+  const showcase = (recentlyViewed.length ? recentlyViewed : newArrivals.length ? newArrivals : products).slice(0, 6);
+  const carouselTitle = recentlyViewed.length ? "Continue exploring" : "New arrivals";
 
   return (
     <Shell>
@@ -93,7 +97,7 @@ function Home() {
         <section aria-labelledby="arrivals-heading">
           <div className="flex items-center justify-between gap-3">
             <h2 id="arrivals-heading" className="text-[20px] font-bold tracking-[-0.04em]">
-              New arrivals
+              {carouselTitle}
             </h2>
             <Link to="/shop" className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-[13px] font-semibold text-mint">
               Shop all <ArrowRight aria-hidden="true" className="size-4" />
