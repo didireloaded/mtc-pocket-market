@@ -70,9 +70,21 @@
 
 /* Pocket Market's shared retail design language. Built on the existing shadcn/Radix primitives. */
 :root { color-scheme: light; }
-html { scroll-behavior: smooth; }
-body { min-width: 320px; }
-button, a, input, select { -webkit-tap-highlight-color: transparent; }
+html {
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: clip;
+  scroll-padding-bottom: calc(112px + env(safe-area-inset-bottom));
+}
+body {
+  min-width: 320px;
+  max-width: 100%;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+img { max-width: 100%; }
+input, textarea, select { max-width: 100%; }
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
   outline: 2px solid var(--mint);
   outline-offset: 3px;
