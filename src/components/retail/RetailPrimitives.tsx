@@ -23,7 +23,7 @@ export function SectionHeading({ title, description, to, action }: {
 }
 
 export function ConceptNotice({ children, className }: { children: ReactNode; className?: string }) {
-  return <div role="note" className={cn("flex gap-3 rounded-[20px] border border-[#b1c8dc] bg-[#e7f0f8] p-4 text-[#234761]", className)}>
+  return <div role="note" className={cn("flex gap-3 rounded-[13px] border border-[#c8d8e4] bg-[#edf4f7] p-4 text-[#234761]", className)}>
     <Info aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
     <p className="text-[13px] leading-[1.6]">{children}</p>
   </div>;
@@ -39,11 +39,11 @@ export function PriceRow({ label, value, emphasis = false }: { label: string; va
 export function ProductStage({ src, alt, priority = false, className }: {
   src: string; alt: string; priority?: boolean; className?: string;
 }) {
-  return <div className={cn("grid aspect-square place-items-center overflow-hidden rounded-[18px] bg-stage p-4", className)}>
+  return <div className={cn("grid aspect-square place-items-center overflow-hidden rounded-[15px] bg-stage p-4", className)}>
     <img src={src} alt={alt} loading={priority ? "eager" : "lazy"} decoding="async" className="h-full max-h-full w-full object-contain" />
   </div>;
 }
 
 export function RetailPanel({ children, className }: { children: ReactNode; className?: string }) {
-  return <Card className={cn("rounded-[24px] border-border/70 bg-card p-5 shadow-none", className)}>{children}</Card>;
+  return <Card className={cn("rounded-[15px] border-border bg-card p-5 shadow-none", className)}>{children}</Card>;
 }
