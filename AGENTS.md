@@ -127,10 +127,10 @@ The bottom navigation is exactly **Home, Shop, Cart, Orders, Profile**, in that 
 
 ## Premium motion system (November 2026)
 
-- The app uses `framer-motion` for short product-card reveals, restrained Home entrance and Cart dock feedback. The small shared variants live in `src/lib/retail-motion.ts`. Keep the animation budget under approximately 300 ms, with no endless loops or large scroll effects.
-- Stagger at most the first eight Shop cards during initial loading or category changes. Do not reanimate every card on every search keystroke. The Home discovery carousel may reveal once upon coming into view.
-- Use `useReducedMotion()` or appropriate CSS `motion-reduce:` to suppress entry movements and bouncing when the visitor requests reduced motion. Keep the UI usable before animation completes.
-- The Cart icon pulse is triggered by `StoreProvider.add()` via a non-persisted `cartPulse` counter. Do not animate existing browser cart contents on initial hydration, and never fake a successful add.
-- The plan selector uses existing **Vaul** accessibility, focus management and draggable sheet semantics. Framer Motion staggers the plan choices inside it; do not replace Vaul with an inaccessible overlay built from generic divs. The confirmed choice updates the existing quote builder, not a new pricing formula.
-- Prefer skeleton placeholders only while actual server data is loading. The local MTC product catalogue loads from imported data and does not need fake timed loading states.
-- Continue to treat payments, courier statuses and stock as unconnected. Visual polish must never imply an actual completed transaction.
+- Use the installed React/Tailwind/Vaul stack for motion, without external animation packages that are not present in the frozen Bun lockfile. Shared small visibility and press helpers live in `src/lib/retail-motion.ts`; CSS keyframes live in `src/styles.css`.
+- Keep UI animations roughly 200–300 ms. Use opacity and transform rather than layout animation. No endless loops or heavy glass effects.
+- Reveal Home cards once when scrolled into view. Limit initial Shop stagger to eight cards to avoid expensive cascades and reanimation on every search keystroke.
+- Use the `prefers-reduced-motion` media query to make all hidden/revealing content immediately visible without motion. Maintain touch targets and keyboard behaviour.
+- The Cart dock pulse uses the existing `StoreProvider.add()` through a non-persisted `cartPulse` counter. Do not animate cart hydration or fake an item addition.
+- The monthly plan selection uses the installed Vaul drawer with accessible title, close button, focus handling and swipe-down dismissal. Preserve the original contract calculations and user selection; do not create fictional MTC approval or payment states.
+- Use skeleton placeholders only for actual server fetches, not timed fake loading of the static catalogue.
