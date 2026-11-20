@@ -109,7 +109,7 @@ function Shop() {
               {!t && <p className="px-3 py-1 text-[12px] font-medium text-muted-foreground">Recent searches</p>}
               {(t ? suggestions : extra.searches).map((suggestion) => (
                 <button key={suggestion} type="button"
-                  onPointerDown={(event) => { event.preventDefault(); commit(suggestion); }}
+                  onPointerDown={(event) => event.preventDefault()}
                   onClick={() => commit(suggestion)}
                   className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-[14px] hover:bg-surface-2">
                   {t ? <Search className="size-4 text-muted-foreground" /> : <Clock className="size-4 text-muted-foreground" />}
