@@ -7,6 +7,8 @@ export const Route = createFileRoute("/esim")({
     { title: "eSIM guidance — MTC Pocket Market" },
     { name: "description", content: "Understand eSIM compatibility and official MTC activation requirements." },
     { property: "og:title", content: "eSIM guidance — MTC Pocket Market" },
+    { property: "og:description", content: "Check eSIM compatibility and learn about official MTC activation requirements." },
+    { name: "twitter:card", content: "summary" },
     { property: "og:type", content: "website" },
   ] }),
   component: EsimInformation,

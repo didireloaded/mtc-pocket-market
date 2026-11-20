@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdviserRouteImport } from './routes/adviser'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as EsimRouteImport } from './routes/esim'
@@ -28,6 +29,11 @@ import { Route as ProductIdRouteImport } from './routes/product.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdviserRoute = AdviserRouteImport.update({
+  id: '/adviser',
+  path: '/adviser',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -103,6 +109,7 @@ const ProductIdRoute = ProductIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/adviser': typeof AdviserRoute
   '/cart': typeof CartRoute
   '/compare': typeof CompareRouteWithChildren
   '/esim': typeof EsimRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/adviser': typeof AdviserRoute
   '/cart': typeof CartRoute
   '/compare': typeof CompareRouteWithChildren
   '/esim': typeof EsimRoute
@@ -138,6 +146,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/adviser': typeof AdviserRoute
   '/cart': typeof CartRoute
   '/compare': typeof CompareRouteWithChildren
   '/esim': typeof EsimRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/adviser'
     | '/cart'
     | '/compare'
     | '/esim'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/adviser'
     | '/cart'
     | '/compare'
     | '/esim'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/adviser'
     | '/cart'
     | '/compare'
     | '/esim'
@@ -209,6 +221,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdviserRoute: typeof AdviserRoute
   CartRoute: typeof CartRoute
   CompareRoute: typeof CompareRouteWithChildren
   EsimRoute: typeof EsimRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/adviser': {
+      id: '/adviser'
+      path: '/adviser'
+      fullPath: '/adviser'
+      preLoaderRoute: typeof AdviserRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -347,6 +367,7 @@ const CompareRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdviserRoute: AdviserRoute,
   CartRoute: CartRoute,
   CompareRoute: CompareRouteWithChildren,
   EsimRoute: EsimRoute,

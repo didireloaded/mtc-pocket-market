@@ -9,6 +9,8 @@ export const Route = createFileRoute("/compare")({
     { title: "Compare devices — MTC Pocket Market" },
     { name: "description", content: "Compare device prices, connectivity, storage and available details side by side." },
     { property: "og:title", content: "Compare devices" },
+    { property: "og:description", content: "Compare MTC catalog device prices, connectivity and specifications side by side." },
+    { name: "twitter:card", content: "summary" },
     { property: "og:type", content: "website" },
   ] }),
   component: CompareDevices,

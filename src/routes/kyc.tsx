@@ -7,6 +7,8 @@ export const Route = createFileRoute("/kyc")({
     { title: "Contract verification — MTC Pocket Market" },
     { name: "description", content: "Understand the required identity checks before applying for an MTC device contract." },
     { property: "og:title", content: "Contract verification" },
+    { property: "og:description", content: "Understand MTC identity and eligibility requirements before applying for a contract." },
+    { name: "twitter:card", content: "summary" },
     { property: "og:type", content: "website" },
   ] }),
   component: VerificationInformation,

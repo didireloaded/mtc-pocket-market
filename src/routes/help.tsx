@@ -8,6 +8,8 @@ export const Route = createFileRoute("/help")({
     { title: "Help and support — MTC Pocket Market" },
     { name: "description", content: "Answers about browsing, contract estimates, collection, demo checkout and account services." },
     { property: "og:title", content: "Help and support" },
+    { property: "og:description", content: "Answers about MTC Pocket Market shopping, contract estimates and account services." },
+    { name: "twitter:card", content: "summary" },
     { property: "og:type", content: "website" },
   ] }),
   component: Help,

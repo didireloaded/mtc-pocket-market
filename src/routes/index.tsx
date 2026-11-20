@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Search, ShoppingBag, ArrowUpRight, ArrowRight, Smartphone, Laptop, Tablet, Watch, Router, Cable, SlidersHorizontal, Wifi, MapPin, ShieldCheck } from "lucide-react";
+import { Bell, Search, ShoppingBag, ArrowUpRight, ArrowRight, Smartphone, Laptop, Tablet, Watch, Router, Cable, SlidersHorizontal, Wifi, MapPin, ShieldCheck, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/")({
     { property: "og:title", content: "MTC Pocket Market" },
     { property: "og:description", content: "A connected mobile retail concept for Namibia." },
     { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
   ] }),
   component: Home,
 });
@@ -60,6 +61,9 @@ function Home() {
       </div>
       <Button asChild variant="outline" className="mt-6 h-14 w-full justify-start gap-3 rounded-[18px] border-border/60 bg-card px-4 text-[14px] font-medium text-muted-foreground shadow-none">
         <Link to="/shop"><Search className="size-5 text-mint" /><span className="flex-1 text-left">Find phones, laptops or data devices</span><ArrowUpRight className="size-4" /></Link>
+      </Button>
+      <Button asChild variant="secondary" className="mt-3 h-12 w-full justify-between rounded-full px-4">
+        <Link to="/adviser"><span className="flex items-center gap-2"><MessageCircle className="size-4 text-mint" />Ask the shopping adviser</span><ArrowRight className="size-4" /></Link>
       </Button>
     </header>
 

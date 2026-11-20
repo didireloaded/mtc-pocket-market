@@ -16,6 +16,8 @@ export const Route = createFileRoute("/find")({
     { title: "Find My Contract — MTC Pocket Market" },
     { name: "description", content: "Explore illustrative device and plan combinations based on your monthly budget and needs." },
     { property: "og:title", content: "Find My Contract" },
+    { property: "og:description", content: "Explore MTC catalog devices and illustrative plan combinations for your budget." },
+    { name: "twitter:card", content: "summary" },
     { property: "og:type", content: "website" },
   ] }),
   component: FindMyContract,

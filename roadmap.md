@@ -1,4 +1,7 @@
 # Roadmap
+## AI shopping adviser
+- [x] Add a needs-based adviser using AI Gateway, grounded in catalog products and contract plans
+- [x] Verify catalog-only recommendations, errors, and mobile shopping flow
 ## Release 1 (current)
 - [x] Dark Spectra device catalog (Shop) with category filters + search
 - [x] Cash vs contract price toggle (cards, hero, product page)

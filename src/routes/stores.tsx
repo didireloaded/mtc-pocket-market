@@ -9,6 +9,8 @@ export const Route = createFileRoute("/stores")({
     { title: "MTC collection locations — Pocket Market" },
     { name: "description", content: "Browse MTC collection-location names from the product catalogue. Confirm opening hours and stock with MTC." },
     { property: "og:title", content: "MTC collection locations" },
+    { property: "og:description", content: "Browse MTC collection locations and confirm stock and opening hours before visiting." },
+    { name: "twitter:card", content: "summary" },
     { property: "og:type", content: "website" },
   ] }),
   component: Stores,

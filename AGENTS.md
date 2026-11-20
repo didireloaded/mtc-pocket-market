@@ -33,3 +33,4 @@ use the editor.
 - Catalog and contract plans in `src/lib/data.ts` mirror mtc.com.na (real names, cash prices, image URLs); contract prices come only from `quote()` so every screen shows the same split.
 - Delivery progress and order notifications both derive from `timeline()` in `src/lib/timeline.ts`; checkout totals/validation come only from `summarize()` in `src/lib/checkout.ts`.
 - Sign-in uses Lovable Cloud auth (email/password, Google, Lovable); store.tsx derives `user` from the auth session, never from localStorage, so accounts can't be faked.
+- Shopping advice uses a public server function with AI Gateway; validate model-selected IDs and contract eligibility against the catalog, and render prices only from catalog/quote helpers to prevent invented offers.
