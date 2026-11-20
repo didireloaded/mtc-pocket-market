@@ -28,7 +28,7 @@ function BottomNav() {
           <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
             className="group relative flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-medium text-muted-foreground data-[status=active]:text-mint">
             <span className="relative"><Icon className="size-5" />
-              {label === "Cart" && count > 0 && <span className="absolute -right-2 -top-2 grid size-4 place-items-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">{count}</span>}
+              {label === "Cart" && count > 0 && <span className="absolute -right-2 -top-2 grid size-4 place-items-center rounded-full bg-brand-red text-[9px] font-bold text-primary-foreground">{count}</span>}
             </span>
             {label}
           </Link>

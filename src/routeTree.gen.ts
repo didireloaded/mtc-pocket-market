@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as EsimRouteImport } from './routes/esim'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as MymtcRouteImport } from './routes/mymtc'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as StoresRouteImport } from './routes/stores'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
@@ -33,6 +35,11 @@ const CartRoute = CartRouteImport.update({
 const EsimRoute = EsimRouteImport.update({
   id: '/esim',
   path: '/esim',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KycRoute = KycRouteImport.update({
@@ -55,6 +62,11 @@ const OrdersRoute = OrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -75,10 +87,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
   '/esim': typeof EsimRoute
+  '/help': typeof HelpRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
+  '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
   '/product/$id': typeof ProductIdRoute
@@ -87,10 +101,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
   '/esim': typeof EsimRoute
+  '/help': typeof HelpRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
+  '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
   '/product/$id': typeof ProductIdRoute
@@ -100,10 +116,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
   '/esim': typeof EsimRoute
+  '/help': typeof HelpRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
+  '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
   '/product/$id': typeof ProductIdRoute
@@ -114,10 +132,12 @@ export interface FileRouteTypes {
     | '/'
     | '/cart'
     | '/esim'
+    | '/help'
     | '/kyc'
     | '/mymtc'
     | '/notifications'
     | '/orders'
+    | '/settings'
     | '/shop'
     | '/stores'
     | '/product/$id'
@@ -126,10 +146,12 @@ export interface FileRouteTypes {
     | '/'
     | '/cart'
     | '/esim'
+    | '/help'
     | '/kyc'
     | '/mymtc'
     | '/notifications'
     | '/orders'
+    | '/settings'
     | '/shop'
     | '/stores'
     | '/product/$id'
@@ -138,10 +160,12 @@ export interface FileRouteTypes {
     | '/'
     | '/cart'
     | '/esim'
+    | '/help'
     | '/kyc'
     | '/mymtc'
     | '/notifications'
     | '/orders'
+    | '/settings'
     | '/shop'
     | '/stores'
     | '/product/$id'
@@ -151,10 +175,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CartRoute: typeof CartRoute
   EsimRoute: typeof EsimRoute
+  HelpRoute: typeof HelpRoute
   KycRoute: typeof KycRoute
   MymtcRoute: typeof MymtcRoute
   NotificationsRoute: typeof NotificationsRoute
   OrdersRoute: typeof OrdersRoute
+  SettingsRoute: typeof SettingsRoute
   ShopRoute: typeof ShopRoute
   StoresRoute: typeof StoresRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -181,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/esim'
       fullPath: '/esim'
       preLoaderRoute: typeof EsimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kyc': {
@@ -211,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -239,10 +279,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CartRoute: CartRoute,
   EsimRoute: EsimRoute,
+  HelpRoute: HelpRoute,
   KycRoute: KycRoute,
   MymtcRoute: MymtcRoute,
   NotificationsRoute: NotificationsRoute,
   OrdersRoute: OrdersRoute,
+  SettingsRoute: SettingsRoute,
   ShopRoute: ShopRoute,
   StoresRoute: StoresRoute,
   ProductIdRoute: ProductIdRoute,

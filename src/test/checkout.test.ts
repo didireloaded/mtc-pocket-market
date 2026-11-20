@@ -24,3 +24,15 @@ describe("mixed cart checkout", () => {
     expect(s.errors).toHaveLength(2);
   });
 });
+
+describe("shipping and payment rules", () => {
+  it("shipping is free once shipped devices reach N$5,000", () => {
+    const big = { ...phone, price: 5000 };
+    expect(summarize([big], { promo: null, addr, kycDone: true, esimEmail: "" }).shipped.ship).toBe(0);
+    expect(summarize([{ ...phone, price: 4999 }], { promo: null, addr, kycDone: true, esimEmail: "" }).shipped.ship).toBe(99);
+  });
+  it("EFT is only allowed over N$5,000", () => {
+    const s = summarize([phone], { promo: null, addr, kycDone: true, esimEmail: "", payment: "eft" });
+    expect(s.errors).toContain("Bank transfer is only available for orders over N$5,000.");
+  });
+});

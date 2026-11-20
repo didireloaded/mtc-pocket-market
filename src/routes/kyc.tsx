@@ -10,19 +10,19 @@ export const Route = createFileRoute("/kyc")({
 });
 const steps = ["National ID — front", "National ID — back", "Selfie check"];
 function Kyc() {
-  const { setKycDone } = useStore();
+  const { setExtra, extra } = useStore();
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
   const done = step >= steps.length;
-  const capture = () => { setBusy(true); setTimeout(() => { setBusy(false); const n = step + 1; setStep(n); if (n >= steps.length) setKycDone(true); }, 1800); };
+  const capture = () => { setBusy(true); setTimeout(() => { setBusy(false); const n = step + 1; setStep(n); if (n >= steps.length) setExtra((e) => ({ ...e, kyc: "pending" })); }, 1800); };
   const selfie = step === 2;
   return (
     <Shell nav={false}>
       <div className="px-5 pt-6 pb-10">
         <button aria-label="Back" onClick={() => router.history.back()} className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></button>
         <div className="mt-6 flex items-center gap-2"><ShieldCheck className="size-4 text-mint" /><p className="text-xs font-semibold uppercase tracking-widest text-mint">VERIFI · secure KYC</p></div>
-        <h1 className="text-3xl font-bold">{done ? "Identity verified" : steps[step]}</h1>
+        <h1 className="text-3xl font-bold">{done ? (extra.kyc === "approved" ? "Identity verified" : "Under review") : steps[step]}</h1>
         <div className="mt-4 flex gap-2">{steps.map((s, i) => <div key={s} className={"h-1.5 flex-1 rounded-full " + (i < step ? "bg-mint" : i === step ? "bg-primary" : "bg-surface-2")} />)}</div>
         {!done ? (<>
           <div className={"relative mx-auto mt-8 overflow-hidden border-2 border-dashed border-mint/60 bg-card " + (selfie ? "size-64 rounded-full" : "aspect-[1.58] w-full rounded-[20px]")}>
@@ -34,7 +34,7 @@ function Kyc() {
             {busy ? <><Loader2 className="size-5 animate-spin" />{selfie ? "Matching face…" : "Reading document…"}</> : selfie ? "Take selfie" : "Capture"}</button>
         </>) : (
           <div className="mt-10 text-center"><div className="mx-auto grid size-24 place-items-center rounded-full bg-mint/15"><ShieldCheck className="size-12 text-mint" /></div>
-            <p className="mt-4 text-muted-foreground">Face match 98.7% · ID valid. You're approved for contract plans.</p>
+            <p className="mt-4 text-muted-foreground">{extra.kyc === "approved" ? "Face match 98.7% · ID valid. You're approved for contract plans." : "Documents submitted to VERIFI. Review usually takes under a minute — you can keep shopping."}</p>
             <Link to="/cart" className="mt-6 block h-14 rounded-2xl bg-mint pt-4 font-semibold text-mint-foreground">Continue to bag</Link></div>
         )}
       </div>

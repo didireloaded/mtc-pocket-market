@@ -25,7 +25,7 @@ export function AuthModal() {
       <div className="relative w-full max-w-md rounded-t-[32px] border bg-card p-6 pb-10 animate-in slide-in-from-bottom">
         {guest && <button aria-label="Close" onClick={() => setAuthOpen(false)} className="absolute right-5 top-5 text-muted-foreground"><X className="size-5" /></button>}
         <div className="mx-auto mb-6 h-1 w-10 rounded-full bg-surface-2" />
-        <div className="flex items-center gap-2"><span className="rounded-md bg-primary px-2 py-0.5 text-xs font-black text-primary-foreground">MTC</span><span className="text-xs text-muted-foreground">Namibia</span></div>
+        <div className="flex items-center gap-2"><span className="rounded-md bg-primary px-2 py-0.5 text-sm font-black italic lowercase text-primary-foreground">mtc</span><span className="text-xs text-muted-foreground">Namibia</span></div>
         <h2 className="mt-3 text-2xl font-bold">{step === "otp" ? "Enter code" : "Sign in to MTC Store"}</h2>
         {step !== "otp" && (
           <div className="mt-4 grid grid-cols-2 rounded-full bg-surface-2 p-1 text-sm font-semibold">

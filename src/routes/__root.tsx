@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import { StoreProvider } from "@/lib/store";
 import { AuthModal } from "@/components/AuthModal";
+import { Welcome } from "@/components/Welcome";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -99,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700;800&display=swap" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -132,6 +133,7 @@ function RootComponent() {
       <StoreProvider>
         <Outlet />
         <AuthModal />
+        <Welcome />
         <Toaster position="top-center" theme="dark" />
       </StoreProvider>
     </QueryClientProvider>

@@ -2,9 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, Truck, Wifi, Tag, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { Shell } from "@/components/Shell";
-import { nad } from "@/lib/data";
+import { nad, products } from "@/lib/data";
 import { useStore, type CartItem } from "@/lib/store";
-import { summarize, type Address } from "@/lib/checkout";
+import { summarize, PROMOS, PAYMENT_METHODS, FREE_SHIPPING_OVER, type Address, type PaymentId } from "@/lib/checkout";
+import { accessoryIds, getProduct } from "@/lib/data";
+const accessories = accessoryIds.map((id) => getProduct(id)!);
 import { EsimEmail } from "@/components/EsimEmail";
 
 export const Route = createFileRoute("/cart")({
@@ -15,7 +17,7 @@ function Row({ i }: { i: CartItem }) {
   const { setQty, remove } = useStore();
   return (
     <div className="flex gap-3 rounded-[20px] bg-card p-3">
-      <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-surface-2">{i.image ? <img src={i.image} alt={i.name} className="size-full object-cover" /> : <Wifi className="text-mint" />}</div>
+      <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-surface-2">{i.image ? <img src={i.image} alt={i.name} className="size-full bg-stage object-contain p-1.5" /> : <Wifi className="text-mint" />}</div>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-2"><p className="truncate font-semibold">{i.name}</p>
           <button aria-label="Remove" onClick={() => remove(i.key)} className="text-muted-foreground hover:text-primary"><Trash2 className="size-4" /></button></div>
@@ -33,14 +35,16 @@ function Row({ i }: { i: CartItem }) {
   );
 }
 function Cart() {
-  const { cart, clear, kycDone, placeOrder, user } = useStore();
+  const { cart, clear, kycDone, placeOrder, user, extra, setExtra, add } = useStore();
+  const [payment, setPayment] = useState<PaymentId>("card");
+  const [saveAs, setSaveAs] = useState("");
   const [orderId, setOrderId] = useState("");
-  const [addr, setAddr] = useState<Address>({ name: "", street: "12 Independence Ave", town: "Windhoek", phone: "" });
+  const [addr, setAddr] = useState<Address>(() => { const a = extra.addresses[0]; return a ? { name: a.name, street: a.street, town: a.town, phone: a.phone } : { name: "", street: "", town: "", phone: "" }; });
   const [esimEmail, setEsimEmail] = useState(user?.method === "email" ? user.label : "");
   const [code, setCode] = useState(""); const [promo, setPromo] = useState<number | null>(null); const [err, setErr] = useState("");
   const [paid, setPaid] = useState<null | { hasEsim: boolean; hasShipped: boolean; email: string }>(null);
   const [tried, setTried] = useState(false);
-  const s = summarize(cart, { promo, addr, kycDone, esimEmail });
+  const s = summarize(cart, { promo, addr, kycDone, esimEmail, payment });
   const { shipped, digital } = s;
   const pay = () => {
     setTried(true);
@@ -64,9 +68,14 @@ function Cart() {
         <div className="space-y-6 px-5 pt-5 pb-28">
           {shipped.items.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Shipped devices</p><span className="text-xs text-muted-foreground">1–3 business days</span></div><div className="space-y-3">{shipped.items.map((i) => <Row key={i.key} i={i} />)}</div>
             <div className="mt-3 space-y-2 rounded-[20px] bg-card p-4"><p className="text-sm font-semibold">Delivery details</p>
+              <div className="flex flex-wrap gap-2">{extra.addresses.map((a) => <button key={a.label} onClick={() => setAddr({ name: a.name, street: a.street, town: a.town, phone: a.phone })} className={"rounded-full border px-3 py-1 text-xs " + (a.street === addr.street && a.name === addr.name ? "border-mint text-mint" : "text-muted-foreground")}>{a.label}</button>)}</div>
               {([["name", "Recipient name"], ["street", "Street address"], ["town", "Town"], ["phone", "Contact number"]] as const).map(([k, ph]) => <input key={k} aria-label={ph} placeholder={ph} value={addr[k]} onChange={(e) => setAddr({ ...addr, [k]: e.target.value })} className="h-11 w-full rounded-xl bg-surface-2 px-3 text-sm outline-none" />)}
+              <div className="flex gap-2"><input aria-label="Save address as" value={saveAs} onChange={(e) => setSaveAs(e.target.value)} placeholder="Save as (e.g. Work)" className="h-9 flex-1 rounded-xl bg-surface-2 px-3 text-xs outline-none" />
+                <button disabled={!saveAs.trim() || !addr.street.trim()} onClick={() => { setExtra((e) => ({ ...e, addresses: [...e.addresses.filter((a) => a.label !== saveAs.trim()), { label: saveAs.trim(), ...addr }] })); setSaveAs(""); }} className="rounded-xl border px-3 text-xs font-semibold text-mint disabled:opacity-40">Save</button></div>
             </div>
-            <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Shipping" v={nad(shipped.ship)} /><Line k="Shipped subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
+            {shipped.items.some((i) => products.find((p) => p.id === i.id)?.category === "Phones") && <div className="mt-3 rounded-[20px] bg-card p-4"><p className="text-sm font-semibold">Add accessories</p>
+              <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto">{accessories.map((a) => { const inCart = cart.some((i) => i.id === a.id); return <button key={a.id} disabled={inCart} onClick={() => add({ id: a.id, name: a.name, image: a.image, variant: "Accessory", price: a.cash, kind: "physical", mode: "cash" })} className="w-32 shrink-0 rounded-xl bg-surface-2 p-2 text-left disabled:opacity-50"><img src={a.image} alt={a.name} className="h-16 w-full rounded-lg bg-stage object-contain p-1" /><p className="mt-1 truncate text-xs font-medium">{a.name}</p><p className="text-xs"><span className="font-bold">{nad(a.cash)}</span></p><p className="text-[10px] text-mint">{inCart ? "Added" : "+ Add"}</p></button>; })}</div></div>}
+            <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Shipping" v={shipped.ship ? nad(shipped.ship) : "Free"} />{shipped.ship > 0 && <p className="text-xs text-mint">Add {nad(FREE_SHIPPING_OVER - (shipped.sub - shipped.disc))} more for free shipping</p>}<Line k="Shipped subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
           </section>}
           {digital.items.length > 0 && <section className="rounded-[24px] border border-mint/40 p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-mint"><Wifi className="size-4" />Digital · eSIM & bundles</p><span className="text-xs text-mint">Instant · no shipping</span></div><div className="space-y-3">{digital.items.map((i) => <Row key={i.key} i={i} />)}</div>
             {digital.hasEsim && <div className="mt-3 rounded-[20px] bg-card p-4"><p className="text-sm font-semibold">eSIM delivery email</p><input type="email" aria-label="eSIM delivery email" placeholder="you@example.com" value={esimEmail} onChange={(e) => setEsimEmail(e.target.value)} className="mt-2 h-11 w-full rounded-xl bg-surface-2 px-3 text-sm outline-none" /><p className="mt-2 text-xs text-muted-foreground">QR and activation code also show on screen right after payment.</p></div>}
@@ -74,14 +83,17 @@ function Cart() {
           </section>}
           <section className="rounded-[20px] bg-card p-4">
             <div className="flex gap-2"><label className="flex flex-1 items-center gap-2 rounded-2xl bg-surface-2 px-3"><Tag className="size-4 text-muted-foreground" />
-              <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Promo code (try MTC10)" className="h-11 flex-1 bg-transparent text-sm outline-none" /></label>
-              <button onClick={() => { if (code === "MTC10") { setPromo(0.1); setErr(""); } else { setPromo(null); setErr("Invalid code"); } }} className="rounded-2xl bg-mint px-5 text-sm font-bold text-mint-foreground">Apply</button></div>
-            {err && <p className="mt-2 text-xs text-primary">{err}</p>}{promo && <p className="mt-2 text-xs text-mint">MTC10 applied — 10% off</p>}
+              <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Promo code (try MTCSUMMER)" className="h-11 flex-1 bg-transparent text-sm outline-none" /></label>
+              <button onClick={() => { if (PROMOS[code]) { setPromo(PROMOS[code]!); setErr(""); } else { setPromo(null); setErr("Invalid code"); } }} className="rounded-2xl bg-mint px-5 text-sm font-bold text-mint-foreground">Apply</button></div>
+            {err && <p className="mt-2 text-xs text-primary">{err}</p>}{promo && <p className="mt-2 text-xs text-mint">{code} applied — {Math.round(promo * 100)}% off</p>}
           </section>
           <section className="space-y-2 rounded-[20px] bg-card p-4 text-sm">
             {shipped.items.length > 0 && <Line k="Shipped devices" v={nad(shipped.total)} />}
             {digital.items.length > 0 && <Line k="Digital services" v={nad(digital.total)} />}
             <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Total</span><span>{nad(s.total)}</span></div>
+          </section>
+          <section className="rounded-[20px] bg-card p-4"><p className="mb-2 text-sm font-semibold">Payment method</p>
+            <div className="space-y-2">{PAYMENT_METHODS.map((m) => <label key={m.id} className={"flex cursor-pointer items-center gap-3 rounded-xl border p-3 " + (payment === m.id ? "border-mint" : "")}><input type="radio" name="pay" checked={payment === m.id} onChange={() => setPayment(m.id)} className="accent-[var(--mint)]" /><div><p className="text-sm font-medium">{m.label}</p><p className="text-xs text-muted-foreground">{m.hint}</p></div></label>)}</div>
           </section>
           {!user && <p className="text-center text-xs text-muted-foreground">Checking out as guest — sign in to keep your order history.</p>}
           {s.errors.length > 0 && (tried || cart.length > 0) && <ul role="alert" className="space-y-1 rounded-[20px] border border-primary/40 bg-primary/10 p-4 text-sm">{s.errors.map((e) => <li key={e}>• {e}</li>)}{!kycDone && cart.some((i) => i.mode === "contract") && <li><Link to="/kyc" className="font-semibold text-mint">Verify now →</Link></li>}</ul>}

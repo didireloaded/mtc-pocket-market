@@ -1,11 +1,12 @@
 import { nad, quote, type Plan } from "@/lib/data";
 
-export function ContractBreakdown({ p, plan }: { p: { cash: number; contract: number }; plan: Plan }) {
-  const q = quote(p, plan);
+export function ContractBreakdown({ p, plan, opt = {} }: { p: { cash: number }; plan: Plan; opt?: { months?: number; upfrontPct?: number } }) {
+  const q = quote(p, plan, opt);
   const rows = [
     ["Device payment", nad(q.device) + "/mo"],
     ["Plan fee", nad(q.fee) + "/mo"],
-    ["Upfront", q.upfront ? nad(q.upfront) : "N$0"],
+    ["Upfront payment", q.upfront ? nad(q.upfront) : "N$0"],
+    ["Connection fee (once)", nad(q.connection)],
     ["Contract term", q.months + " months"],
     ["Included", `${plan.data} · ${plan.mins} · ${plan.sms}`],
   ];
