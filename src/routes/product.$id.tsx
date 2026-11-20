@@ -83,8 +83,8 @@ function PDP() {
             <ContractBreakdown p={p} plan={sel} opt={opt} />
             <Link to="/kyc" className="flex items-center gap-3 rounded-[20px] bg-surface-2 p-4 text-sm">
               <ShieldCheck className={kycDone ? "text-mint" : "text-primary"} />
-              <span className="flex-1">{kycDone ? "VERIFI identity verified — you're contract-ready" : "Contracts need a quick VERIFI ID check"}</span>
-              {!kycDone && <span className="font-semibold text-mint">Start</span>}
+              <span className="flex-1">"Official MTC identity verification is required before applying"</span>
+              <span className="font-semibold text-mint">Learn more</span>
             </Link>
           </div>
         )}
