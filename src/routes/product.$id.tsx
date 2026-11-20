@@ -70,7 +70,7 @@ function PDP() {
             <span className={"h-1.5 rounded-full transition-all " + (i === slide ? "w-6 bg-primary" : "w-2 bg-foreground/35")} />
           </button>)}
         </div>}
-        <button type="button" aria-label="Back" onClick={() => router.history.back()} className="absolute left-5 top-6 grid size-11 place-items-center rounded-full border border-border bg-white/95"><ArrowLeft className="size-5" /></button>
+        <Link to="/shop" aria-label="Back to Shop" className="absolute left-5 top-6 grid size-11 place-items-center rounded-full border border-border bg-white/95"><ArrowLeft className="size-5" /></Link>
         <button type="button" aria-label="Share or copy product link" onClick={() => { void shareProduct(); }} className="absolute right-5 top-6 grid size-11 place-items-center rounded-full border border-border bg-white/95"><Share2 className="size-5" /></button>
       </div>
       <div className="relative px-5 pb-36 pt-6">
@@ -97,7 +97,7 @@ function PDP() {
         {p.category === "Laptops" && <Link to="/compare/macbooks" className="mt-4 block border-b border-border py-4 text-[14px] font-medium">Compare all MacBooks: outright vs Select plans <span className="text-mint">→</span></Link>}
         <details className="mt-2 border-b border-border py-4 text-[14px]"><summary className="cursor-pointer font-semibold">View potential collection locations</summary><p className="mt-2 text-[13px] leading-6 text-muted-foreground">These branch names come from the published collection list. Inventory and reservation availability have not been verified.</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
         <div className="mt-4 flex items-center justify-between">{!p.contractable && <span className="text-[13px] text-muted-foreground">Cash purchase only</span>}
-          {p.colors.length > 1 && <div className="flex gap-2">{p.colors.map((c) => <button key={c} onClick={() => setColor(c)} className={"min-h-11 rounded-[10px] border px-3 py-2 text-[13px] font-medium " + (color === c ? "border-primary bg-white text-foreground" : "border-border text-muted-foreground")}>{c}</button>)}</div>}
+          {p.colors.length > 1 && <div className="flex flex-wrap gap-2">{p.colors.map((c) => <button key={c} onClick={() => setColor(c)} className={"min-h-11 rounded-[10px] border px-3 py-2 text-[13px] font-medium " + (color === c ? "border-primary bg-white text-foreground" : "border-border text-muted-foreground")}>{c}</button>)}</div>}
         </div>
         {p.contractable && <Tabs value={tab} onValueChange={(value) => setTab(value as "overview" | "plans")} className="mt-6">
           <TabsList className="grid h-12 w-full grid-cols-2 gap-1 rounded-none border-b border-border bg-transparent p-0">
