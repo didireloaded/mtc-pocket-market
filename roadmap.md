@@ -1,5 +1,6 @@
 # Roadmap
 ## Real-service rollout
+- [ ] Save shopper profiles in Cloud, including display name and preferences
 - [ ] Store locator with official addresses, phone numbers, directions and location-based distances
 - [ ] Cloud orders, staff order processing, KYC review and returns
 - [ ] Real eSIM emails after verified payment — requires sender domain and authorised eSIM provisioning

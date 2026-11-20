@@ -112,6 +112,30 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          avatar_url: string
+          created_at: string
+          display_name: string
+          id: string
+          preferences: Json
+        }
+        Insert: {
+          avatar_url?: string
+          created_at?: string
+          display_name?: string
+          id: string
+          preferences?: Json
+        }
+        Update: {
+          avatar_url?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          preferences?: Json
+        }
+        Relationships: []
+      }
       return_requests: {
         Row: {
           created_at: string
