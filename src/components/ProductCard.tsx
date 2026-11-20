@@ -7,7 +7,7 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /** Editorial retail tile: product first, one main action, no stacked card chrome. */
-export function ProductCard({ p, minimal = false }: { p: Product; minimal?: boolean }) {
+export function ProductCard({ p, minimal = false, catalog = false }: { p: Product; minimal?: boolean; catalog?: boolean }) {
   const { mode, add, saved, toggleSave } = useStore();
   const navigate = useNavigate();
   const isSaved = saved.includes(p.id);
@@ -25,6 +25,38 @@ export function ProductCard({ p, minimal = false }: { p: Product; minimal?: bool
     });
     void navigate({ to: "/cart" });
   };
+
+  if (catalog) {
+    return (
+      <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[22px] bg-white p-2.5">
+        <div className="relative">
+          <Link to="/product/$id" params={{ id: p.id }}
+            aria-label={`View ${p.name}`}
+            className="block rounded-[17px] outline-offset-2 focus-visible:outline-2 focus-visible:outline-mint">
+            <div className="grid aspect-[1/1.08] place-items-center overflow-hidden rounded-[17px] bg-[#F1F2F0] p-3">
+              <img src={p.image} alt={p.name} loading="lazy" decoding="async"
+                className="h-full max-h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04] motion-reduce:transform-none" />
+            </div>
+          </Link>
+          {p.badge && <span className="absolute left-2 top-2 max-w-[calc(100%-56px)] truncate rounded-full bg-[#202E39] px-2.5 py-1 text-[11px] font-semibold text-white">{p.badge}</span>}
+          <button type="button" aria-pressed={isSaved}
+            aria-label={isSaved ? `Remove ${p.name} from saved products` : `Save ${p.name}`}
+            onClick={() => toggleSave(p.id)}
+            className="absolute bottom-2 right-2 grid size-11 place-items-center rounded-full bg-white text-foreground shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-colors hover:bg-[#F4F4F3] focus-visible:outline-2 focus-visible:outline-mint">
+            <Heart aria-hidden="true" strokeWidth={1.9}
+              className={cn("size-5", isSaved && "fill-primary text-primary")} />
+          </button>
+        </div>
+        <Link to="/product/$id" params={{ id: p.id }} className="mt-3 min-h-[42px] rounded-md text-center text-[14px] font-semibold leading-[21px] tracking-[-0.025em] text-foreground line-clamp-2">
+          {p.name}
+        </Link>
+        <p className="mt-auto pt-1 text-center text-[18px] font-bold tracking-[-0.035em] tabular-nums text-foreground">
+          {estimate ? nad(fromMonthly(p)) : nad(p.cash)}
+          {estimate && <span className="ml-1 text-[11px] font-medium tracking-normal text-muted-foreground">/mo est.</span>}
+        </p>
+      </article>
+    );
+  }
 
   if (minimal) {
     return (
