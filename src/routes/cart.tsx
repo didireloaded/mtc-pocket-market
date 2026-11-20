@@ -6,6 +6,7 @@ import { nad, products } from "@/lib/data";
 import { useStore, type CartItem } from "@/lib/store";
 import { summarize, PROMOS, PAYMENT_METHODS, FREE_SHIPPING_OVER, type Address, type PaymentId } from "@/lib/checkout";
 import { accessoryIds, getProduct } from "@/lib/data";
+import { CloudOrderRequest } from "@/components/CloudOrderRequest";
 const accessories = accessoryIds.map((id) => getProduct(id)!);
 
 
@@ -63,7 +64,7 @@ function Cart() {
   const Line = ({ k, v, cls = "text-muted-foreground" }: { k: string; v: string; cls?: string }) => <div className={"flex justify-between " + cls}><span>{k}</span><span>{v}</span></div>;
   return (
     <Shell>
-      <div className="px-5 pt-8"><h1 className="text-3xl font-bold">My Bag</h1><p className="text-sm text-muted-foreground">{cart.length} item{cart.length !== 1 && "s"}{shipped.items.length > 0 && digital.items.length > 0 && " · 2 deliveries"}</p></div>
+      <div className="px-5 pt-8"><h1 className="text-3xl font-bold">My Bag</h1><p className="text-sm text-muted-foreground">{cart.length} item{cart.length !== 1 && "s"}{shipped.items.length > 0 && digital.items.length > 0 && " · 2 deliveries"}</p><CloudOrderRequest /></div>
       {shipped.items.length > 0 && (() => { const got = shipped.sub - shipped.disc; const pct = Math.min(100, (got / FREE_SHIPPING_OVER) * 100); return (
         <div className="mx-5 mt-4 flex items-center gap-4 rounded-[20px] bg-success/10 p-4">
           <Truck className="size-8 shrink-0 text-success" />

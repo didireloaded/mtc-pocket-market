@@ -1,0 +1,705 @@
+[
+  {
+    "id": "divundu-tab_55",
+    "name": "Divundu",
+    "town": "Divundu",
+    "address": "Shoprite Complex, Plot 405, Divundu Main Road",
+    "phone": "+264 818882371",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/divundu",
+    "coordinates": {
+      "lat": -18.098819734983916,
+      "lng": 21.550173820087295
+    }
+  },
+  {
+    "id": "eenhana-tab_8",
+    "name": "Eenhana",
+    "town": "Eenhana",
+    "address": "Ewaneno Centre, Shop No.1, Erf 839, Sam Nujoma Drive",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/eenhana",
+    "coordinates": {
+      "lat": -17.48692117,
+      "lng": 16.32803652
+    }
+  },
+  {
+    "id": "gobabis-tab_9",
+    "name": "Gobabis",
+    "town": "Gobabis",
+    "address": "41 Kerk Street (next to Nampost)",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/gobabis",
+    "coordinates": {
+      "lat": -22.450167,
+      "lng": 18.969036
+    }
+  },
+  {
+    "id": "grootfontein-tab_43",
+    "name": "Grootfontein",
+    "town": "Grootfontein",
+    "address": "Shop 27 Grootfontein Mall Erf no 754",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/grootfontein",
+    "coordinates": {
+      "lat": -19.5788697,
+      "lng": 18.0835812
+    }
+  },
+  {
+    "id": "katimamulilo-tab_12",
+    "name": "Katima Mulilo",
+    "town": "Katima Mulilo",
+    "address": "Kamunu Village Shopping Complex, Sam Nujoma Drive, Erf 5689.",
+    "phone": "+264 818882349",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 -13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/katimamulilo",
+    "coordinates": {
+      "lat": -17.501090303216873,
+      "lng": 24.280100087244058
+    }
+  },
+  {
+    "id": "katimamulilo-tab_53",
+    "name": "Katima Mulilo",
+    "town": "Katima Mulilo",
+    "address": "Model Katima, Hage Geingob Street",
+    "phone": "+264 818882349",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/katimamulilo",
+    "coordinates": {
+      "lat": -17.501067783132562,
+      "lng": 24.27259041014156
+    }
+  },
+  {
+    "id": "keetmashoop-tab_17",
+    "name": "Keetmanshoop Main",
+    "town": "Keetmanshoop",
+    "address": "Old Mutual Shopping Centre",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/keetmashoop",
+    "coordinates": {
+      "lat": -26.58408485,
+      "lng": 18.13506565
+    }
+  },
+  {
+    "id": "luderitz-tab_19",
+    "name": "Luderitz",
+    "town": "Luderitz",
+    "address": "C/O Bismarck and Naghtigal",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/luderitz",
+    "coordinates": {
+      "lat": -26.6458333,
+      "lng": 15.1538889
+    }
+  },
+  {
+    "id": "mariental-tab_21",
+    "name": "Mariental",
+    "town": "Mariental",
+    "address": "Shoprite Centre Complex",
+    "phone": "+264 61 280 2750",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/mariental",
+    "coordinates": {
+      "lat": -24.622022,
+      "lng": 17.960164
+    }
+  },
+  {
+    "id": "nkurenkuru-tab_23",
+    "name": "Nkurenkuru",
+    "town": "Nkurenkuru",
+    "address": "Matukuchila Complex, Shop No.5,  Erf 544",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/nkurenkuru",
+    "coordinates": {
+      "lat": -17.65188405,
+      "lng": 18.60769961
+    }
+  },
+  {
+    "id": "okahandja-tab_24",
+    "name": "Okahandja",
+    "town": "Okahandja",
+    "address": "Okahandja Shopping Centre Shop No 35",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/okahandja",
+    "coordinates": {
+      "lat": -21.97290697,
+      "lng": 16.902158
+    }
+  },
+  {
+    "id": "omuthiya-tab_52",
+    "name": "Omuthiya",
+    "town": "Omuthiya",
+    "address": "Omuthiya Shell Service Station, Erf 2901",
+    "phone": "+264818882800",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/omuthiya",
+    "coordinates": {
+      "lat": -18.356088485696024,
+      "lng": 16.575054332714195
+    }
+  },
+  {
+    "id": "ondangwa-tab_26",
+    "name": "Ondangwa Express",
+    "town": "Ondangwa",
+    "address": "Yetu Shopping Complex, Main Road",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 9H00 - 18H00",
+      "Friday · 9H00 - 18H00",
+      "Saturday · 9H00 - 14H00",
+      "Sundays and Public Holidays · 9H00 - 13H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/ondangwa",
+    "coordinates": {
+      "lat": -17.913059,
+      "lng": 15.97781
+    }
+  },
+  {
+    "id": "ondangwa-tab_42",
+    "name": "Ondangwa Main Store",
+    "town": "Ondangwa",
+    "address": "Shop 14 Olunkono Centre, Ondangwa Main Road (next to KFC)",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Friday · 9H00 - 19H00",
+      "Saturday · 9H00 - 17H00",
+      "Sundays · 9H00 - 15H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/ondangwa",
+    "coordinates": {
+      "lat": -17.9021115,
+      "lng": 15.9386722
+    }
+  },
+  {
+    "id": "ongwediva-tab_28",
+    "name": "Ongwediva",
+    "town": "Ongwediva",
+    "address": "Oshana Regional Mall, Shop No 15",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/ongwediva",
+    "coordinates": {
+      "lat": -17.77344345,
+      "lng": 15.76409208
+    }
+  },
+  {
+    "id": "opuwo-tab_46",
+    "name": "Opuwo",
+    "town": "Opuwo",
+    "address": "Shop No.1, Cuvalei Centre, Opuwo Main Road",
+    "phone": "0612802000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/opuwo"
+  },
+  {
+    "id": "oranjemund-tab_29",
+    "name": "Oranjemund",
+    "town": "Oranjemund",
+    "address": "c/o 10th Avenue & 8th Street",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/oranjemund",
+    "coordinates": {
+      "lat": -28.559197,
+      "lng": 16.427364
+    }
+  },
+  {
+    "id": "oshakati-tab_30",
+    "name": "Oshakati Main",
+    "town": "Oshakati",
+    "address": "Mvula Shopping Centre, Oshakati Main Road",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 7H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/oshakati",
+    "coordinates": {
+      "lat": -17.78496758,
+      "lng": 15.70589887
+    }
+  },
+  {
+    "id": "oshikango-tab_31",
+    "name": "Oshikango",
+    "town": "Oshikango",
+    "address": "Supa Decca Building, Main Road",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/oshikango",
+    "coordinates": {
+      "lat": -17.395772,
+      "lng": 15.890689
+    }
+  },
+  {
+    "id": "otjiwarongo-tab_32",
+    "name": "Otjiwarongo",
+    "town": "Otjiwarongo",
+    "address": "Nampost Building, Hage Geingob Street",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/otjiwarongo",
+    "coordinates": {
+      "lat": -20.459967,
+      "lng": 16.650969
+    }
+  },
+  {
+    "id": "outapi-tab_33",
+    "name": "Outapi",
+    "town": "Outapi",
+    "address": "Makalani Shopping Complex, Tsandi Main Road",
+    "phone": "+26461 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/outapi",
+    "coordinates": {
+      "lat": -17.506842,
+      "lng": 14.990242
+    }
+  },
+  {
+    "id": "rehoboth-tab_34",
+    "name": "Rehoboth",
+    "town": "Rehoboth",
+    "address": "Shop 13, Rehoboth Mall, Swartkoppie Weg",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/rehoboth",
+    "coordinates": {
+      "lat": -23.32145916,
+      "lng": 17.07373354
+    }
+  },
+  {
+    "id": "rundu-tab_35",
+    "name": "Rundu",
+    "town": "Rundu",
+    "address": "Greg’s Motor Spares, Eugene Kakukuru Street, Extension No.4, Erf No 2399.",
+    "phone": "+264 818882315",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/rundu",
+    "coordinates": {
+      "lat": -17.92807102524178,
+      "lng": 19.77121345740895
+    }
+  },
+  {
+    "id": "rundu-tab_54",
+    "name": "Rundu",
+    "town": "Rundu",
+    "address": "Rundu Shopping Mall, Eugene Kakakuru Street",
+    "phone": "+264 662802875",
+    "hours": [
+      "Monday - Friday · 09H00 - 17H00",
+      "Saturdays · 09H00 - 17H00",
+      "Sundays and Public Holidays · 09H00-14H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/rundu",
+    "coordinates": {
+      "lat": -17.916224648867694,
+      "lng": 19.769845838681718
+    }
+  },
+  {
+    "id": "swakopmund-tab_36",
+    "name": "Swakopmund Main",
+    "town": "Swakopmund",
+    "address": "Fruit and Veg City Centre",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/swakopmund",
+    "coordinates": {
+      "lat": -22.6545615,
+      "lng": 14.60623609
+    }
+  },
+  {
+    "id": "swakopmund-tab_37",
+    "name": "Swakopmund Platz Am Meer",
+    "town": "Swakopmund",
+    "address": "Shop No 20, Platz Am Meer Shopping Centre,Venita, Swakopmund",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 18H00",
+      "Friday · 9H00 - 19H00",
+      "Saturday · 8H00 - 17H00",
+      "Sundays and Public Holidays · 8H00 - 16H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/swakopmund",
+    "coordinates": {
+      "lat": -22.679422,
+      "lng": 14.526325
+    }
+  },
+  {
+    "id": "tsumeb-tab_39",
+    "name": "Tsumeb",
+    "town": "Tsumeb",
+    "address": "Tsumeb Mall, Unit 18, Erf 592, Donkie Vlak B1 Main, Tsumeb",
+    "phone": "+264 67 2802880",
+    "hours": [
+      "Monday - Friday · 09H00 - 18H00",
+      "Saturday · 09H00 - 14H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/tsumeb",
+    "coordinates": {
+      "lat": -19.24590248758475,
+      "lng": 17.707083549104073
+    }
+  },
+  {
+    "id": "walvisbay-tab_47",
+    "name": "Dune Mall",
+    "town": "Walvis Bay",
+    "address": "Dune Mall Walvisbay",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Friday · 9H00 - 18H00",
+      "Saturdays · 9H00 - 17H00",
+      "Sundays · 9H00 - 16H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/walvisbay"
+  },
+  {
+    "id": "walvisbay-tab_40",
+    "name": "Walvis Bay",
+    "town": "Walvis Bay",
+    "address": "Sam Nujoma Ave",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/walvisbay",
+    "coordinates": {
+      "lat": -22.95001154,
+      "lng": 14.50919864
+    }
+  },
+  {
+    "id": "windhoek-tab_48",
+    "name": "Daniel Manumawa",
+    "town": "Windhoek",
+    "address": "CBD, Daniel Manumawa Street  (Opposite Telecom Namibia and Nampost)",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.565269,
+      "lng": 17.084307
+    }
+  },
+  {
+    "id": "windhoek-tab_51",
+    "name": "Eveline",
+    "town": "Windhoek",
+    "address": "Eveline Street Goreangab Katutura ERF No: 201",
+    "phone": "+264818882800",
+    "hours": [
+      "Monday - Thursday · 07H30 - 16H30",
+      "Friday · 0 · 9H00 - 16H30",
+      "Saturday · 07H30 - 14H00",
+      "*Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.514378,
+      "lng": 17.023957
+    }
+  },
+  {
+    "id": "windhoek-tab_11",
+    "name": "Hosea Kutako",
+    "town": "Windhoek",
+    "address": "Hosea Kutako International Airport",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Sunday · 4H00 - 22H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.4853,
+      "lng": 17.4703
+    }
+  },
+  {
+    "id": "windhoek-tab_50",
+    "name": "HTTP Nust",
+    "town": "Windhoek",
+    "address": "Nust Windhoek",
+    "phone": "061-2802815",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.562471,
+      "lng": 17.10433
+    }
+  },
+  {
+    "id": "windhoek-tab_13",
+    "name": "Katutura",
+    "town": "Windhoek",
+    "address": "Pick n Pay Centre, Independence Ave.",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.52220006,
+      "lng": 17.05055198
+    }
+  },
+  {
+    "id": "windhoek-tab_18",
+    "name": "Klein Windhoek",
+    "town": "Windhoek",
+    "address": "Schoemans Building c/o Nelson Mandela Ave. and Sam Nujoma Drive",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.57173242,
+      "lng": 17.10347934
+    }
+  },
+  {
+    "id": "windhoek-tab_20",
+    "name": "Maerua Mall",
+    "town": "Windhoek",
+    "address": "Maerua Mall Upper Level",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Friday · 9H00 - 18H00",
+      "Saturdays · 9H00 - 17H00",
+      "Sundays · 9H00 -15H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.583442,
+      "lng": 17.093008
+    }
+  },
+  {
+    "id": "windhoek-tab_56",
+    "name": "Okuryangava",
+    "town": "Windhoek",
+    "address": "Namica Shopping Centre, Erf 3327 Ondoto Street",
+    "phone": "0818882352",
+    "hours": [
+      "Monday - Thursday · 07H30 - 16H30",
+      "Friday · 09H00 - 16H30",
+      "Saturday · 07H30 - 14H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.509333592405046,
+      "lng": 17.05073323438405
+    }
+  },
+  {
+    "id": "windhoek-tab_25",
+    "name": "Olympia",
+    "town": "Windhoek",
+    "address": "Cnr. of Mose Tjitendero & Hamuntenya Wanehepo Ndadi Street, Olympia",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 8H00 - 17H00",
+      "Friday · 9H00 - 17H00",
+      "Saturday · 8H00 - 13H00",
+      "Sundays and Public Holidays · Closed"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.6035816,
+      "lng": 17.1000373
+    }
+  },
+  {
+    "id": "windhoek-tab_38",
+    "name": "The Grove",
+    "town": "Windhoek",
+    "address": "The Grove Mall Upper Level",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Thursday · 09H00 - 19H00",
+      "Friday · 09H00 - 20H00",
+      "Saturday · 08H00- 19H00",
+      "Sundays and Public Holidays · 09H00- 17H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.62055708,
+      "lng": 17.09283087
+    }
+  },
+  {
+    "id": "windhoek-tab_44",
+    "name": "Wernhill",
+    "town": "Windhoek",
+    "address": "Wernhil Park - Shop number M05",
+    "phone": "+264 61 280 2000",
+    "hours": [
+      "Monday - Friday · 9H00 - 19H00",
+      "Saturday · 9H00 - 17H00",
+      "Sundays · 9H00 - 15H00"
+    ],
+    "source": "https://www.mtc.com.na/location/area/windhoek",
+    "coordinates": {
+      "lat": -22.5608788,
+      "lng": 17.0657552
+    }
+  }
+]

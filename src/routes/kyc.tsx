@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, FileCheck2, IdCard, ShieldCheck, Store } from "lucide-react";
 import { Shell } from "@/components/Shell";
+import { KycReference } from "@/components/KycReference";
 
 export const Route = createFileRoute("/kyc")({
   head: () => ({ meta: [
@@ -26,6 +27,7 @@ function VerificationInformation() {
         <div className="mt-6 rounded-[22px] border border-[#90B2CC]/40 bg-[#E4EFF8] p-4 text-xs leading-5 text-[#1D4666]">
           <strong>No real verification is taking place.</strong> This demo does not capture your ID or selfie, approve applications, or create an MTC account. Do not upload sensitive identity documents here.
         </div>
+        <KycReference />
         <h2 className="mt-8 text-lg font-bold">How official verification will work</h2>
         <div className="mt-3 space-y-3">
           {[

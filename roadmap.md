@@ -1,4 +1,10 @@
 # Roadmap
+## Real-service rollout
+- [ ] Store locator with official addresses, phone numbers, directions and location-based distances
+- [ ] Cloud orders, staff order processing, KYC review and returns
+- [ ] Real eSIM emails after verified payment — requires sender domain and authorised eSIM provisioning
+- [ ] Real payments and MyMTC deductions — requires confirmed seller country, payment setup and authorised MTC billing access
+- [ ] SMS OTP sign-in — requires profile decision and SMS provider setup
 ## Add-to-bag polish
 - [x] Replace cramped product-card plus controls with clear bag buttons
 - [x] Open the bag after adding from catalog, product details and top-ups; verify mobile flow

@@ -5,6 +5,7 @@ import { Shell } from "@/components/Shell";
 import { nad } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { currentStage, timeline } from "@/lib/timeline";
+import { CloudOrders } from "@/components/CloudOrders";
 
 export const Route = createFileRoute("/orders")({
   head: () => ({ meta: [{ title: "My Orders — MTC Store" }, { name: "description", content: "Track your MTC device deliveries from processing to out for delivery." }, { property: "og:title", content: "My Orders — MTC Store" }, { property: "og:description", content: "Track your MTC device deliveries." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -22,7 +23,7 @@ function Orders() {
     <Shell>
       <div className="px-5 pt-6">
         <Link to="/mymtc" aria-label="Back" className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></Link>
-        <h1 className="mt-5 text-3xl font-bold">My orders</h1><p className="mt-3 rounded-2xl border border-[#90B2CC]/40 bg-[#E4EFF8] p-3 text-xs leading-5 text-[#1D4666]">Demo orders only. The timeline below progresses automatically for preview and does not reflect real shipping, courier tracking or MTC fulfilment.</p>
+        <h1 className="mt-5 text-3xl font-bold">My orders</h1><div className="mt-5"><CloudOrders /></div><h2 className="mt-8 text-lg font-semibold">Browser demo orders</h2><p className="mt-3 rounded-2xl border bg-card p-3 text-xs leading-5 text-muted-foreground">The separate demo timeline below progresses automatically and does not reflect real shipping or MTC fulfilment.</p>
         {!user && <button onClick={() => setAuthOpen(true)} className="mt-3 w-full rounded-2xl bg-card p-3 text-left text-sm text-muted-foreground">Browsing as guest — orders are saved on this device only. <span className="text-mint">Sign in</span></button>}
         {!orders.length && <div className="py-16 text-center text-muted-foreground">No orders yet.<Link to="/shop" className="mt-3 block font-semibold text-mint">Start shopping</Link></div>}
         <div className="mt-4 space-y-4">
