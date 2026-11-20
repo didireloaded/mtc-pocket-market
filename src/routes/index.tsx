@@ -21,41 +21,41 @@ function Home() {
     <Shell>
       <header className="flex items-center justify-between px-5 pt-8">
         <div>
-          <p className="text-sm text-muted-foreground">{h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"}</p>
-          <h1 className="text-2xl font-bold">{user ? "Hi, " + (user.method === "email" ? user.label.split("@")[0] : user.label) : <button onClick={() => setAuthOpen(true)}>Welcome, Guest</button>}</h1>
+          <h1 className="text-[28px] font-bold tracking-tight">{user ? "Hi, " + (user.method === "email" ? user.label.split("@")[0] : user.label) + "!" : <button onClick={() => setAuthOpen(true)}>Hi there!</button>}</h1>
+          <p className="mt-0.5 text-muted-foreground">{h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"} · discover devices you'll love</p>
         </div>
-        <Link to="/notifications" aria-label="Notifications" className="relative grid size-11 place-items-center rounded-full bg-card"><Bell className="size-5" />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-brand-red text-[10px] font-bold text-primary-foreground">{unread}</span>}</Link>
+        <Link to="/notifications" aria-label="Notifications" className="relative grid size-12 place-items-center rounded-full bg-card shadow-card"><Bell className="size-5" />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-brand-red text-[10px] font-bold text-primary-foreground">{unread}</span>}</Link>
       </header>
-      <Link to="/shop" className="mx-5 mt-5 flex items-center gap-3 rounded-2xl bg-card px-4 py-3.5 text-sm text-muted-foreground"><Search className="size-4" />Search devices, brands or "Aweh"</Link>
-      <div className="no-scrollbar mt-4 flex snap-x gap-3 overflow-x-auto px-5">
-        {[{ t: "Laptops on contract", d: "MacBook on Select plans, 12–36 months", c: "bg-primary text-primary-foreground", to: "/shop" as const }, { t: "Galaxy S26 is here", d: "N$21,999 cash or on contract", c: "bg-mint text-mint-foreground", to: "/shop" as const }, { t: "Travel eSIM", d: "10 GB for N$199", c: "bg-surface-2 text-foreground", to: "/esim" as const }].map((b) => (
-          <Link key={b.t} to={b.to} className={"w-64 shrink-0 snap-start rounded-[20px] p-4 " + b.c}><p className="text-lg font-extrabold">{b.t}</p><p className="text-sm opacity-80">{b.d}</p></Link>))}
-      </div>
-      <div className="no-scrollbar mt-4 flex gap-2 overflow-x-auto px-5">
-        {cats.map(({ n, i: I }, idx) => (
-          <Link key={n} to="/shop" search={{ c: n }} className={"flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium " + (idx === 0 ? "bg-mint text-mint-foreground" : "bg-card text-muted-foreground")}><I className="size-4" />{n}</Link>
-        ))}
-      </div>
-      <section className="px-5 pt-6">
-        <div className="relative overflow-hidden rounded-[28px] bg-card">
-          <Link to="/product/$id" params={{ id: hero.id }} className="block">
-            <div className="relative h-64 w-full bg-stage p-6"><img src={hero.image} alt={hero.name} className="size-full object-contain" />
-              <span className="absolute left-4 top-4 rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase text-primary-foreground">Featured</span></div>
-            <div className="p-5 pr-24">
-              <p className="text-xs uppercase tracking-widest text-mint">{hero.badge ?? hero.category}</p>
-              <h2 className="mt-1 text-2xl font-extrabold leading-tight">{hero.name}</h2>
-              <p className="mt-1 text-lg font-semibold">{mode === "cash" ? nad(hero.cash) : "from " + nad(fromMonthly(hero)) + "/mo"}</p>
-            </div>
-          </Link>
+      <Link to="/shop" className="mx-5 mt-5 flex items-center gap-3 rounded-full bg-card px-5 py-4 text-muted-foreground shadow-card"><Search className="size-5 text-foreground" />Search devices, brands or "Aweh"</Link>
+      <section className="px-5 pt-5">
+        <div className="relative flex h-48 overflow-hidden rounded-[24px] bg-stage">
+          <div className="z-10 flex flex-col justify-between p-5">
+            <div><p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{hero.badge ?? "Featured"}</p>
+              <h2 className="mt-1 max-w-[11rem] text-xl font-bold leading-tight">{hero.name}</h2>
+              <p className="mt-1 text-sm font-semibold text-mint">{mode === "cash" ? nad(hero.cash) : "from " + nad(fromMonthly(hero)) + "/mo"}</p></div>
+            <Link to="/product/$id" params={{ id: hero.id }} className="w-fit rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">Shop Now</Link>
+          </div>
+          <img src={hero.image} alt={hero.name} className="absolute -right-4 bottom-0 h-[92%] w-1/2 object-contain" />
           <button aria-label="Add to cart" onClick={() => add({ id: hero.id, name: hero.name, image: hero.image, variant: hero.colors[0]!, price: hero.cash, kind: "physical", mode: "cash" })}
-            className="absolute bottom-5 right-5 grid size-14 place-items-center rounded-full bg-mint text-mint-foreground glow-mint"><Plus className="size-6" /></button>
+            className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-card text-foreground shadow-card"><Plus className="size-5" /></button>
         </div>
-        <div className="mt-4 flex justify-center"><PriceToggle /></div>
+        <div className="mt-3 flex justify-center"><PriceToggle /></div>
+      </section>
+      <section className="pt-6">
+        <div className="flex items-center justify-between px-5"><h3 className="text-lg font-semibold">Shop by Category</h3><Link to="/shop" className="text-sm font-medium text-mint">View All</Link></div>
+        <div className="no-scrollbar mt-3 flex gap-4 overflow-x-auto px-5">
+          {cats.map(({ n }) => { const img = products.find((p) => p.category === n)?.image; return (
+            <Link key={n} to="/shop" search={{ c: n }} className="flex w-16 shrink-0 flex-col items-center gap-1.5 text-xs font-medium">
+              <span className="grid size-16 place-items-center rounded-full bg-card shadow-card">{img && <img src={img} alt="" className="size-11 object-contain" />}</span>{n}</Link>); })}
+        </div>
+      </section>
+      <section className="px-5 pt-6">
+        <Link to="/compare/macbooks" className="flex items-center justify-between rounded-[20px] bg-card p-4 shadow-card"><div><p className="font-semibold">Laptops on contract</p><p className="text-sm text-muted-foreground">MacBook on Select plans, 12–36 months</p></div><span className="grid size-10 place-items-center rounded-full bg-primary text-primary-foreground">→</span></Link>
       </section>
       <section className="pt-8">
         <div className="flex items-end justify-between px-5">
-          <div><p className="text-xs font-semibold uppercase tracking-widest text-mint">New Arrival</p><h3 className="text-xl font-bold">Just landed at MTC</h3></div>
-          <Link to="/shop" className="text-sm text-muted-foreground">See all</Link>
+          <div><h3 className="text-lg font-semibold">New Arrivals</h3></div>
+          <Link to="/shop" className="text-sm font-medium text-mint">View All</Link>
         </div>
         <div className="no-scrollbar mt-4 flex snap-x gap-4 overflow-x-auto px-5">
           {products.filter((p) => p.isNew).map((p) => <div key={p.id} className="w-44 shrink-0 snap-start"><ProductCard p={p} /></div>)}

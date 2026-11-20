@@ -67,7 +67,7 @@ function Shop() {
         </div>
       </div>
       {showF && (
-        <div className="mx-5 mt-3 space-y-4 rounded-[20px] bg-card p-4 text-sm">
+        <div className="mx-5 mt-3 space-y-4 rounded-[20px] bg-card shadow-card p-4 text-sm">
           <div><p className="mb-2 text-xs text-muted-foreground">Brand</p><div className="flex flex-wrap gap-2">{brands.map((b) => <button key={b} onClick={() => setF({ ...f, brands: f.brands.includes(b) ? f.brands.filter((x) => x !== b) : [...f.brands, b] })} className={cn("rounded-full border px-3 py-1 text-xs", f.brands.includes(b) ? "border-mint text-mint" : "text-muted-foreground")}>{b}</button>)}</div></div>
           <div className="grid grid-cols-2 gap-3">
             <label className="text-xs text-muted-foreground">Network<select value={f.net} onChange={(e) => setF({ ...f, net: e.target.value })} className="mt-1 h-9 w-full rounded-xl bg-surface-2 px-2 text-foreground outline-none">{["Any", "5G", "4G"].map((x) => <option key={x}>{x}</option>)}</select></label>
@@ -80,12 +80,12 @@ function Shop() {
         </div>)}
       {services.length > 0 && (
         <div className="px-5 pt-5"><p className="mb-2 text-xs font-semibold uppercase tracking-widest text-mint">Services</p>
-          <div className="space-y-2">{services.map((b) => <div key={b.id} className="flex items-center gap-3 rounded-[20px] bg-card p-3"><Wifi className="size-5 text-mint" /><div className="flex-1"><p className="text-sm font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
+          <div className="space-y-2">{services.map((b) => <div key={b.id} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-3"><Wifi className="size-5 text-mint" /><div className="flex-1"><p className="text-sm font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
             <button onClick={() => add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" })} className="flex items-center gap-1 rounded-full bg-mint px-3 py-1.5 text-xs font-bold text-mint-foreground"><Plus className="size-3" />{nad(b.price)}</button></div>)}</div></div>)}
       <p className="px-5 pt-4 text-xs text-muted-foreground">{list.length} device{list.length !== 1 && "s"}</p>
       {view === "grid" ? <div className="grid grid-cols-2 gap-3 px-5 pt-2">{list.map((p) => <ProductCard key={p.id} p={p} />)}</div> : (
         <div className="space-y-2 px-5 pt-2">{list.map((p) => { const st = stockLabel(p); return (
-          <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="flex items-center gap-3 rounded-[20px] bg-card p-3">
+          <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-3">
             <img src={p.image} alt={p.name} loading="lazy" className="size-16 rounded-xl object-cover" />
             <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{p.name}</p><p className="text-xs text-muted-foreground">{p.brand} · {p.network !== "None" ? p.network : p.category}{p.storage && ` · ${p.storage}`}</p><p className={cn("text-[11px]", st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>{st.text}</p></div>
             <p className="text-sm font-bold">{mode === "cash" ? nad(p.cash) : nad(fromMonthly(p)) + "/mo"}</p>

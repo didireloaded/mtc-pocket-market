@@ -33,7 +33,7 @@ export function Welcome() {
         <p className="mt-3 text-muted-foreground">{S.d}</p>
       </div>
       <div className="mb-6 flex justify-center gap-2">{slides.map((_, k) => <span key={k} className={cn("h-1.5 rounded-full transition-all", k === i ? "w-8 bg-mint" : "w-1.5 bg-surface-2")} />)}</div>
-      <button onClick={() => (i < 2 ? setI(i + 1) : finish())} className="h-14 rounded-2xl bg-primary font-semibold text-primary-foreground glow-red">{i < 2 ? "Next" : "Get started"}</button>
+      <button onClick={() => (i < 2 ? setI(i + 1) : finish())} className="h-14 rounded-full bg-primary font-semibold text-primary-foreground">{i < 2 ? "Next" : "Get started"}</button>
     </div>
   );
 }

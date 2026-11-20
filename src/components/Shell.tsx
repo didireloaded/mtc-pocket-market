@@ -23,14 +23,14 @@ function BottomNav() {
   ] as const;
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-4 pb-4">
-      <div className="flex items-center justify-around rounded-[28px] border bg-card/90 p-2 backdrop-blur-xl">
+      <div className="flex items-center justify-between gap-1 rounded-full border bg-card p-1.5 shadow-card">
         {items.map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
-            className="group relative flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-medium text-muted-foreground data-[status=active]:text-mint">
+          <Link key={to} to={to} activeOptions={{ exact: to === "/" }} aria-label={label}
+            className="group relative flex h-12 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold text-muted-foreground transition-all data-[status=active]:flex-1 data-[status=active]:bg-primary data-[status=active]:text-primary-foreground">
             <span className="relative"><Icon className="size-5" />
               {label === "Cart" && count > 0 && <span className="absolute -right-2 -top-2 grid size-4 place-items-center rounded-full bg-brand-red text-[9px] font-bold text-primary-foreground">{count}</span>}
             </span>
-            {label}
+            <span className="hidden group-data-[status=active]:inline">{label}</span>
           </Link>
         ))}
       </div>
@@ -40,9 +40,9 @@ function BottomNav() {
 export function PriceToggle() {
   const { mode, setMode } = useStore();
   return (
-    <div className="inline-flex rounded-full bg-card p-1 text-xs font-semibold">
+    <div className="inline-flex rounded-full border bg-card p-1 text-xs font-semibold">
       {(["cash", "contract"] as const).map((m) => (
-        <button key={m} onClick={() => setMode(m)} className={cn("rounded-full px-4 py-1.5 capitalize transition", mode === m ? "bg-mint text-mint-foreground" : "text-muted-foreground")}>{m}</button>
+        <button key={m} onClick={() => setMode(m)} className={cn("rounded-full px-4 py-1.5 capitalize transition", mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>{m}</button>
       ))}
     </div>
   );

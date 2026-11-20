@@ -19,7 +19,7 @@ function Notifications() {
         {!notices.length && <p className="py-16 text-center text-muted-foreground">No updates yet. We'll let you know when an order ships.</p>}
         <div className="mt-4 space-y-3">
           {notices.map((n) => (
-            <Link key={n.key} to="/orders" className="flex gap-3 rounded-[20px] bg-card p-4">
+            <Link key={n.key} to="/orders" className="flex gap-3 rounded-[20px] bg-card shadow-card p-4">
               <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-mint/15 text-mint">{n.title.includes("shipped") ? <Truck className="size-5" /> : <MapPin className="size-5" />}</span>
               <div className="flex-1"><p className="font-semibold">{n.title}{!n.read && <span className="ml-2 inline-block size-2 rounded-full bg-brand-red align-middle" />}</p>
                 <p className="text-xs text-muted-foreground">{n.body}</p><p className="mt-1 text-[11px] text-muted-foreground">{new Date(n.at).toLocaleString()}</p></div>

@@ -3,7 +3,7 @@
 @import "tw-animate-css";
 
 @theme inline {
-  --font-sans: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --radius-lg: 20px;
   --radius-xl: 24px;
   --color-background: var(--background);
@@ -28,28 +28,31 @@
   --color-accent-foreground: var(--foreground);
   --color-destructive: var(--brand-red);
   --color-brand-red: var(--brand-red);
+  --color-success: var(--success);
   --color-stage: var(--stage);
   --color-warning: var(--warning);
 }
 
 :root {
-  /* MTC brand: navy base, MTC blue (#1674BB) actions, MTC cyan highlights, MTC red (#ED1C24) for alerts only */
-  --background: oklch(0.18 0.045 262);
-  --foreground: oklch(0.97 0.01 250);
-  --card: oklch(0.235 0.06 262);
-  --surface-2: oklch(0.3 0.065 260);
-  --primary: oklch(0.56 0.135 248);
+  /* Light, airy MTC store: soft blue-grey canvas, white cards, MTC navy ink for primary actions, MTC blue accents, MTC red for alerts */
+  --background: oklch(0.965 0.01 250);
+  --foreground: oklch(0.2 0.03 262);
+  --card: oklch(1 0 0);
+  --surface-2: oklch(0.945 0.014 250);
+  --primary: oklch(0.21 0.04 262);
   --primary-foreground: oklch(0.99 0 0);
-  --mint: oklch(0.74 0.135 232);
-  --mint-foreground: oklch(0.2 0.05 262);
+  --mint: oklch(0.55 0.135 248);
+  --mint-foreground: oklch(0.99 0 0);
   --brand-red: oklch(0.6 0.23 27);
-  --stage: oklch(0.965 0.012 250);
-  --muted: oklch(0.27 0.05 262);
-  --muted-foreground: oklch(0.74 0.035 255);
-  --border: oklch(1 0 0 / 9%);
-  --warning: oklch(0.82 0.14 80);
-  --glow-mint: 0 8px 24px -12px color-mix(in oklab, var(--mint) 60%, transparent);
-  --glow-red: 0 8px 24px -12px color-mix(in oklab, var(--primary) 70%, transparent);
+  --success: oklch(0.6 0.15 150);
+  --stage: oklch(0.935 0.028 245);
+  --muted: oklch(0.94 0.012 250);
+  --muted-foreground: oklch(0.52 0.025 258);
+  --border: oklch(0.9 0.012 250);
+  --warning: oklch(0.7 0.15 70);
+  --glow-mint: 0 6px 18px -8px color-mix(in oklab, var(--mint) 45%, transparent);
+  --glow-red: 0 8px 20px -10px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-card: 0 1px 2px oklch(0.2 0.03 262 / 4%), 0 8px 24px -12px oklch(0.2 0.03 262 / 12%);
 }
 
 @layer base {
@@ -62,3 +65,5 @@
 @utility fade-bottom { background: linear-gradient(to bottom, transparent 40%, var(--background)); }
 @keyframes scan { 0%,100% { top: 8%; } 50% { top: 88%; } }
 @utility scanline { animation: scan 2s ease-in-out infinite; }
+
+@utility shadow-card { box-shadow: var(--shadow-card); }

@@ -32,7 +32,7 @@ function Orders() {
             const phys = o.items.filter((i) => i.kind === "physical"); const dig = o.items.filter((i) => i.kind === "digital");
             const isOpen = open === o.id;
             return (
-              <div key={o.id} className="rounded-[20px] bg-card p-4">
+              <div key={o.id} className="rounded-[20px] bg-card shadow-card p-4">
                 <button onClick={() => setOpen(isOpen ? null : o.id)} className="flex w-full items-start justify-between text-left" aria-expanded={isOpen}>
                   <div><p className="font-semibold">{o.id}</p><p className="text-xs text-muted-foreground">Placed {fmt(o.placedAt)}</p>
                     {stage && <span className="mt-2 inline-block rounded-full bg-mint/15 px-2 py-0.5 text-xs font-semibold text-mint">{stage}</span>}</div>

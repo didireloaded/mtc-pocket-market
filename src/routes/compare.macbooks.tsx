@@ -31,7 +31,7 @@ function Compare() {
           <button key={m.id} onClick={() => setMacId(m.id)} className={cn("flex shrink-0 items-center gap-2 rounded-2xl border p-2 pr-4 text-left", macId === m.id ? "border-mint bg-card" : "bg-card/50")}>
             <img src={m.image} alt="" className="size-12 rounded-xl bg-stage object-contain p-1" /><div><p className="text-xs font-semibold">{m.name.replace("Apple ", "")}</p><p className="text-[11px] text-muted-foreground">{nad(m.cash)}</p></div></button>))}</div>
 
-        <div className="mt-4 space-y-3 rounded-[20px] bg-card p-4 text-sm">
+        <div className="mt-4 space-y-3 rounded-[20px] bg-card shadow-card p-4 text-sm">
           <div className="grid grid-cols-3 gap-2">{([12, 24, 36] as const).map((m) => <button key={m} onClick={() => setMonths(m)} className={cn("rounded-xl py-2 font-semibold", months === m ? "bg-mint text-mint-foreground" : "bg-surface-2 text-muted-foreground")}>{m} months</button>)}</div>
           <label className="block text-xs text-muted-foreground">Upfront device payment: <span className="text-foreground">{nad(Math.round(mac.cash * upPct))} ({Math.round(upPct * 100)}%)</span>
             <input aria-label="Upfront device payment" type="range" min={0} max={0.5} step={0.05} value={upPct} onChange={(e) => setUpPct(+e.target.value)} className="mt-2 w-full accent-[var(--mint)]" /></label>

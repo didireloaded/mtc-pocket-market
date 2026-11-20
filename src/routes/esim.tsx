@@ -21,11 +21,11 @@ function Esim() {
         <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-mint">eSIM activation</p>
         <h1 className="text-3xl font-bold">{["Check your device", "Scan to install", "You're connected"][step]}</h1>
         {step === 0 && (<div className="mt-6 space-y-3">
-          {["Device supports eSIM (Settings → Cellular)", "Connected to Wi‑Fi", "Device is carrier-unlocked"].map((t) => <div key={t} className="flex items-center gap-3 rounded-[20px] bg-card p-4 text-sm"><CheckCircle2 className="size-5 text-mint" />{t}</div>)}
-          <button onClick={() => setStep(1)} className="mt-4 h-14 w-full rounded-2xl bg-primary font-semibold text-primary-foreground glow-red">Generate my QR code</button>
+          {["Device supports eSIM (Settings → Cellular)", "Connected to Wi‑Fi", "Device is carrier-unlocked"].map((t) => <div key={t} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-4 text-sm"><CheckCircle2 className="size-5 text-mint" />{t}</div>)}
+          <button onClick={() => setStep(1)} className="mt-4 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground">Generate my QR code</button>
         </div>)}
         {step === 1 && (<div className="mt-6">
-          <div className="mx-auto w-fit rounded-[28px] bg-foreground p-5 glow-mint"><QRCodeSVG value={code} size={220} bgColor="transparent" fgColor="currentColor" className="text-background" level="M" /></div>
+          <div className="mx-auto w-fit rounded-[28px] border bg-card p-5 shadow-card"><QRCodeSVG value={code} size={220} bgColor="#ffffff" fgColor="#0b1530" level="M" /></div>
           <p className="mt-4 text-center text-sm text-muted-foreground">On your phone: Settings → Cellular → Add eSIM → Use QR code</p>
           <div className="mt-4 rounded-2xl bg-card p-4">
             <p className="text-xs text-muted-foreground">On this phone? Copy the SM-DP+ activation code</p>
@@ -34,11 +34,11 @@ function Esim() {
             <p className="mt-2 text-[11px] text-muted-foreground">iPhone: Settings → Mobile Service → Add eSIM → Enter details manually. Android: Settings → SIMs → Add eSIM → Enter code.</p>
           </div>
           <div className="mt-3"><EsimEmail /></div>
-          <button onClick={() => setStep(2)} className="mt-4 h-14 w-full rounded-2xl bg-mint font-semibold text-mint-foreground">I've scanned it</button>
+          <button onClick={() => setStep(2)} className="mt-4 h-14 w-full rounded-full bg-mint font-semibold text-mint-foreground">I've scanned it</button>
         </div>)}
         {step === 2 && (<div className="mt-10 text-center"><div className="mx-auto grid size-24 place-items-center rounded-full bg-mint/15"><Smartphone className="size-10 text-mint" /></div>
           <p className="mt-4 text-muted-foreground">Your MTC eSIM is active. 10 GB ready to use.</p>
-          <Link to="/" className="mt-6 block h-14 rounded-2xl bg-primary pt-4 font-semibold text-primary-foreground">Done</Link></div>)}
+          <Link to="/" className="mt-6 block h-14 rounded-full bg-primary pt-4 font-semibold text-primary-foreground">Done</Link></div>)}
       </div>
     </Shell>
   );

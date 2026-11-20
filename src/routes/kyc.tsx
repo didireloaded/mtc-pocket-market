@@ -30,12 +30,12 @@ function Kyc() {
             {busy && <div className="scanline absolute inset-x-4 h-0.5 bg-mint glow-mint" />}
           </div>
           <p className="mt-4 text-center text-sm text-muted-foreground">{selfie ? "Center your face, remove glasses, and blink slowly." : "Place your Namibian ID inside the frame on a dark surface."}</p>
-          <button disabled={busy} onClick={capture} className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary font-semibold text-primary-foreground glow-red disabled:opacity-60">
+          <button disabled={busy} onClick={capture} className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground disabled:opacity-60">
             {busy ? <><Loader2 className="size-5 animate-spin" />{selfie ? "Matching face…" : "Reading document…"}</> : selfie ? "Take selfie" : "Capture"}</button>
         </>) : (
           <div className="mt-10 text-center"><div className="mx-auto grid size-24 place-items-center rounded-full bg-mint/15"><ShieldCheck className="size-12 text-mint" /></div>
             <p className="mt-4 text-muted-foreground">{extra.kyc === "approved" ? "Face match 98.7% · ID valid. You're approved for contract plans." : "Documents submitted to VERIFI. Review usually takes under a minute — you can keep shopping."}</p>
-            <Link to="/cart" className="mt-6 block h-14 rounded-2xl bg-mint pt-4 font-semibold text-mint-foreground">Continue to bag</Link></div>
+            <Link to="/cart" className="mt-6 block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Continue to bag</Link></div>
         )}
       </div>
     </Shell>

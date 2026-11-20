@@ -55,7 +55,7 @@ function PDP() {
             <button onClick={() => { setMode("contract"); setTab("plans"); }} className={"rounded-[20px] border p-3 text-left " + (contract ? "border-mint bg-card" : "bg-card/50")}><p className="text-[11px] uppercase tracking-widest text-muted-foreground">On contract</p><p className="mt-1 text-lg font-bold">from {nad(fromMonthly(p))}<span className="text-xs font-normal">/mo</span></p><p className="text-[11px] text-muted-foreground">+ {nad(CONNECTION_FEE)} connection fee</p></button>
           </div>)}
         {p.category === "Laptops" && <Link to="/compare/macbooks" className="mt-3 block rounded-[20px] bg-surface-2 p-3 text-sm">Compare all MacBooks: outright vs Select plans <span className="text-mint">→</span></Link>}
-        <details className="mt-3 rounded-[20px] bg-card p-3 text-sm"><summary className="cursor-pointer font-semibold">Collect at {MTC_STORES.length} MTC stores</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
+        <details className="mt-3 rounded-[20px] bg-card shadow-card p-3 text-sm"><summary className="cursor-pointer font-semibold">Collect at {MTC_STORES.length} MTC stores</summary><p className="mt-2 text-xs leading-5 text-muted-foreground">{MTC_STORES.join(" · ")}</p></details>
         <div className="mt-4 flex items-center justify-between">{!p.contractable && <span className="rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground">Cash purchase only</span>}
           {p.colors.length > 1 && <div className="flex gap-2">{p.colors.map((c) => <button key={c} onClick={() => setColor(c)} className={"rounded-full border px-3 py-1 text-xs " + (color === c ? "border-mint text-mint" : "text-muted-foreground")}>{c}</button>)}</div>}
         </div>
@@ -65,7 +65,7 @@ function PDP() {
         {contract && tab === "overview" && <div className="mt-4"><ContractBreakdown p={p} plan={sel} opt={opt} /></div>}
         {tab === "overview" ? (<>
           <div className="mt-4 flex items-center justify-between text-xs"><span className="text-muted-foreground">Specs and cash price as listed by MTC</span><a href={p.source} target="_blank" rel="noreferrer" className="font-semibold text-mint">View on mtc.com.na ↗</a></div>
-          <div className="mt-3 grid grid-cols-2 gap-3">{p.specs.map((s) => <div key={s.label} className="rounded-[20px] bg-card p-4"><p className="text-xs text-muted-foreground">{s.label}</p><p className="mt-1 text-lg font-bold">{s.value}</p></div>)}</div>
+          <div className="mt-3 grid grid-cols-2 gap-3">{p.specs.map((s) => <div key={s.label} className="rounded-[20px] bg-card shadow-card p-4"><p className="text-xs text-muted-foreground">{s.label}</p><p className="mt-1 text-lg font-bold">{s.value}</p></div>)}</div>
         </>) : (
           <div className="mt-4 space-y-3">
             {avail.map((pl) => (
@@ -74,7 +74,7 @@ function PDP() {
                 <p className="font-bold">{nad(quote(p, pl, opt).monthly)}<span className="text-xs font-normal text-muted-foreground">/mo</span></p>
               </button>
             ))}
-            <div className="space-y-4 rounded-[20px] bg-card p-4 text-sm">
+            <div className="space-y-4 rounded-[20px] bg-card shadow-card p-4 text-sm">
               <div><p className="mb-2 text-xs text-muted-foreground">Contract term</p><div className="grid grid-cols-4 gap-2">{TERMS.filter((m) => (sel.terms as readonly number[]).includes(m)).map((m) => <button key={m} onClick={() => setMonths(m)} className={"rounded-xl py-2 font-semibold " + (months === m ? "bg-mint text-mint-foreground" : "bg-surface-2 text-muted-foreground")}>{m} mo</button>)}</div></div>
               <label className="block text-xs text-muted-foreground">Upfront payment: <span className="text-foreground">{nad(q.upfront)} ({Math.round(upPct * 100)}%)</span>
                 <input aria-label="Upfront payment" type="range" min={0} max={0.5} step={0.05} value={upPct} onChange={(e) => setUpPct(+e.target.value)} className="mt-2 w-full accent-[var(--mint)]" /></label>
@@ -91,7 +91,7 @@ function PDP() {
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md gap-3 border-t bg-background/90 p-4 backdrop-blur-xl">
         <button aria-label="Save" onClick={() => toggleSave(p.id)} className={"grid size-14 place-items-center rounded-2xl bg-card " + (saved.includes(p.id) ? "text-mint" : "")}><Bookmark className="size-5" fill={saved.includes(p.id) ? "currentColor" : "none"} /></button>
         <button onClick={() => { add({ id: p.id, name: p.name, image: p.image, variant: contract ? `${color} · ${sel.name} · ${months} mo · ${sel.data}` + (q.upfront ? ` · ${nad(q.upfront)} upfront` : "") : color, price, kind: "physical", mode: contract ? "contract" : "cash" }); setAdded(true); setTimeout(() => setAdded(false), 1500); }}
-          disabled={st.tone === "out"} className="flex h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-primary disabled:opacity-40 font-semibold text-primary-foreground glow-red">{st.tone === "out" ? "Out of stock" : added ? <><Check className="size-5" /> Added</> : contract ? "Select plan & add" : "Add to Cart"}</button>
+          disabled={st.tone === "out"} className="flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-primary disabled:opacity-40 font-semibold text-primary-foreground">{st.tone === "out" ? "Out of stock" : added ? <><Check className="size-5" /> Added</> : contract ? "Select plan & add" : "Add to Cart"}</button>
       </div>
     </Shell>
   );

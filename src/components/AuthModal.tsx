@@ -37,16 +37,16 @@ export function AuthModal() {
             <span className="text-sm text-muted-foreground">+264</span>
             <input aria-label="Phone number" inputMode="numeric" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 9))} placeholder="81 234 5678" className="h-14 flex-1 bg-transparent outline-none" />
           </div>
-          <button disabled={phone.length < 8 || step === "sending"} onClick={sendOtp} className="mt-4 h-14 w-full rounded-2xl bg-primary font-semibold text-primary-foreground disabled:opacity-40 glow-red">{step === "sending" ? "Sending code…" : "Send OTP"}</button>
+          <button disabled={phone.length < 8 || step === "sending"} onClick={sendOtp} className="mt-4 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground disabled:opacity-40">{step === "sending" ? "Sending code…" : "Send OTP"}</button>
         </>) : (<>
           <p className="mt-1 text-sm text-muted-foreground">We sent a 4-digit code to +264 {phone}. Demo: any code except 0000.</p>
           <input aria-label="One-time code" autoFocus inputMode="numeric" value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, "").slice(0, 4)); setErr(""); }} placeholder="• • • •" className="mt-5 h-16 w-full rounded-2xl bg-surface-2 text-center text-3xl tracking-[0.6em] outline-none" />
-          <button disabled={otp.length < 4} onClick={verify} className="mt-4 h-14 w-full rounded-2xl bg-primary font-semibold text-primary-foreground disabled:opacity-40 glow-red">Verify & continue</button>
+          <button disabled={otp.length < 4} onClick={verify} className="mt-4 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground disabled:opacity-40">Verify & continue</button>
           <div className="mt-2 flex justify-between text-sm text-muted-foreground"><button onClick={() => { setStep("input"); setOtp(""); }}>Change number</button><button onClick={sendOtp} className="text-mint">Resend code</button></div>
         </>)) : (<>
-          <input aria-label="Email" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} placeholder="you@example.com" className="mt-4 h-14 w-full rounded-2xl bg-surface-2 px-4 outline-none" />
-          <input aria-label="Password" type="password" value={pw} onChange={(e) => { setPw(e.target.value); setErr(""); }} placeholder="Password" className="mt-2 h-14 w-full rounded-2xl bg-surface-2 px-4 outline-none" />
-          <button onClick={emailIn} className="mt-4 h-14 w-full rounded-2xl bg-primary font-semibold text-primary-foreground glow-red">Sign in</button>
+          <input aria-label="Email" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} placeholder="you@example.com" className="mt-4 h-14 w-full rounded-full bg-surface-2 px-4 outline-none" />
+          <input aria-label="Password" type="password" value={pw} onChange={(e) => { setPw(e.target.value); setErr(""); }} placeholder="Password" className="mt-2 h-14 w-full rounded-full bg-surface-2 px-4 outline-none" />
+          <button onClick={emailIn} className="mt-4 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground">Sign in</button>
         </>)}
         {err && <p role="alert" className="mt-3 text-sm text-primary">{err}</p>}
         <button onClick={browseGuest} className="mt-4 h-12 w-full rounded-2xl border text-sm font-medium text-mint">Browse as Guest</button>

@@ -32,7 +32,7 @@ function Stores() {
         <p className="mt-3 text-xs text-muted-foreground">{list.length} store{list.length !== 1 && "s"} found</p>
         <div className="mt-3 space-y-3">
           {list.map((s) => (
-            <div key={s.id} className="rounded-[20px] bg-card p-4">
+            <div key={s.id} className="rounded-[20px] bg-card shadow-card p-4">
               <button onClick={() => setOpen(open === s.id ? null : s.id)} className="flex w-full items-start gap-3 text-left">
                 <div className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary"><MapPin className="size-5" /></div>
                 <div className="flex-1"><p className="font-semibold">{s.name}</p><p className="text-xs text-muted-foreground">{s.town}, {s.region}</p></div>
