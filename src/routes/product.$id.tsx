@@ -65,7 +65,7 @@ function ProductDetail() {
     }
   };
 
-  const addToBag = () => {
+  const addToCart = () => {
     const item = {
       id: p.id,
       name: p.name,
@@ -83,18 +83,22 @@ function ProductDetail() {
 
   return (
     <Shell nav={false}>
-      <div className="relative bg-[#F1F2EF]">
+      <div className={cn("relative overflow-hidden", p.featured
+        ? "bg-[linear-gradient(145deg,#E1E7E7_0%,#F2F4F2_70%,#E9EDEA_100%)]"
+        : "bg-[#F1F2EF]")}>
+        {p.featured && <div aria-hidden="true"
+          className="pointer-events-none absolute inset-x-[13%] bottom-[48px] h-[65px] rounded-[50%] border border-white/90 shadow-[0_8px_24px_rgba(32,46,57,0.04)]" />}
         <div ref={galleryRef} onScroll={(event) => {
           setSlide(Math.max(0, Math.round(event.currentTarget.scrollLeft / event.currentTarget.clientWidth)));
-        }} className="no-scrollbar flex h-[min(54dvh,540px)] min-h-[365px] snap-x snap-mandatory overflow-x-auto">
+        }} className={cn("no-scrollbar relative z-10 flex snap-x snap-mandatory overflow-x-auto", p.featured ? "h-[min(64dvh,600px)] min-h-[450px]" : "h-[min(54dvh,540px)] min-h-[365px]")}>
           {imgs.map((src, index) => (
             <div key={src + index} className="flex h-full w-full shrink-0 snap-center items-center justify-center px-6 pb-12 pt-[70px]">
               <img src={src} alt={`${p.name} view ${index + 1}`} loading={index ? "lazy" : "eager"} decoding="async"
-                className="h-full max-h-[390px] w-full object-contain drop-shadow-[0_14px_12px_rgba(32,46,57,0.09)]" />
+                className={cn("h-full w-full object-contain drop-shadow-[0_18px_16px_rgba(32,46,57,0.10)]", p.featured ? "max-h-[485px]" : "max-h-[390px]")} />
             </div>
           ))}
         </div>
-        <div className="absolute inset-x-5 top-[max(18px,env(safe-area-inset-top))] flex items-center justify-between">
+        <div className="absolute inset-x-5 top-[max(18px,env(safe-area-inset-top))] z-20 flex items-center justify-between">
           <Link to="/shop" aria-label="Back to catalog"
             className="grid size-11 place-items-center rounded-full bg-white/95 text-foreground">
             <ArrowLeft aria-hidden="true" className="size-5" />
@@ -106,7 +110,7 @@ function ProductDetail() {
             <Heart aria-hidden="true" className={cn("size-[21px]", savedProduct && "fill-primary text-primary")} />
           </button>
         </div>
-        {imgs.length > 1 && <div className="absolute inset-x-0 bottom-10 flex justify-center gap-0.5" aria-label="Device gallery">
+        {imgs.length > 1 && <div className="absolute inset-x-0 bottom-10 z-20 flex justify-center gap-0.5" aria-label="Device gallery">
           {imgs.map((_, index) => (
             <button key={index} type="button" onClick={() => changePhoto(index)}
               aria-label={`Show product view ${index + 1}`} aria-current={slide === index ? "true" : undefined}
@@ -117,11 +121,11 @@ function ProductDetail() {
         </div>}
       </div>
 
-      <div className="relative -mt-7 min-h-[380px] rounded-t-[30px] bg-white px-6 pb-36 pt-7">
+      <div className="relative z-20 -mt-8 min-h-[380px] rounded-t-[34px] bg-white px-6 pb-36 pt-8">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{p.brand} / {p.category}</p>
-            <h1 className="mt-2 text-[25px] font-bold leading-[1.1] tracking-[-0.05em]">{p.name}</h1>
+            <p className="text-[12px] font-medium text-muted-foreground">{p.brand}</p>
+            <h1 className={cn("mt-2 font-bold leading-[1.07] tracking-[-0.055em]", p.featured ? "text-[30px]" : "text-[26px]")}>{p.name}</h1>
           </div>
           <button type="button" onClick={() => { void shareProduct(); }} aria-label="Share device"
             className="grid size-11 shrink-0 place-items-center rounded-full bg-[#F1F2EF]">
@@ -243,9 +247,9 @@ function ProductDetail() {
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-white px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3">
-        <Button type="button" onClick={addToBag} disabled={stock.tone === "out"}
+        <Button type="button" onClick={addToCart} disabled={stock.tone === "out"}
           className="h-[54px] w-full rounded-full bg-[#202E39] text-[14px] font-semibold text-white shadow-none hover:bg-[#364653]">
-          {stock.tone === "out" ? "Unavailable" : contract ? "Add plan to bag (preview)" : `Add to bag · ${nad(p.cash * qty)}`}
+          {stock.tone === "out" ? "Unavailable" : contract ? "Add selected plan to cart" : `Add to cart · ${nad(p.cash * qty)}`}
           {stock.tone !== "out" && <ShoppingBag aria-hidden="true" className="ml-2 size-[18px]" />}
         </Button>
       </div>
