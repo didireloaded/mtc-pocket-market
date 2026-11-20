@@ -1,9 +1,9 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Check, Heart, Minus, Plus, Share2, ShoppingBag, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Heart, Minus, Plus, Share2, ShoppingBag, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Shell } from "@/components/Shell";
-import { getProduct, nad, plansFor, quote, stockLabel, TERMS, fromMonthly } from "@/lib/data";
+import { getProduct, nad, plansFor, quote, stockLabel, TERMS } from "@/lib/data";
 import { ContractBreakdown } from "@/components/ContractBreakdown";
 import { UpfrontControl } from "@/components/retail/ContractControls";
 import { useStore } from "@/lib/store";
