@@ -13,7 +13,7 @@ export type Extra = {
   kyc: "none" | "pending" | "approved" | "rejected"; prefs: { orders: boolean; priceDrops: boolean; lowBalance: boolean };
   numbers: { number: string; label: string }[]; biometric: boolean;
 };
-const defaultExtra: Extra = { onboarded: false, recent: [], searches: [], addresses: [{ label: "Home", name: "", street: "12 Independence Ave", town: "Windhoek", phone: "" }],
+const defaultExtra: Extra = { onboarded: false, recent: [], searches: [], addresses: [{ label: "Home", name: "", street: "", town: "", phone: "" }],
   kyc: "none", prefs: { orders: true, priceDrops: true, lowBalance: true }, numbers: [], biometric: false };
 type Store = {
   cart: CartItem[]; add: (i: Omit<CartItem, "qty" | "key">) => void; setQty: (k: string, q: number) => void; remove: (k: string) => void; clear: () => void;
@@ -75,12 +75,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     };
     tick(); const t = setInterval(tick, 10000); return () => clearInterval(t);
   }, [orders, ready]);
-  // Demo VERIFI review: a submitted application is approved a few seconds later.
-  useEffect(() => {
-    if (extra.kyc !== "pending") return;
-    const t = setTimeout(() => { setExtraState((e) => ({ ...e, kyc: "approved" })); setKycDone(true); toast.success("VERIFI approved", { description: "You're cleared for contract plans." }); }, 6000);
-    return () => clearTimeout(t);
-  }, [extra.kyc]);
   const add: Store["add"] = (i) => setCart((c) => {
     const key = `${i.id}-${i.variant}-${i.mode ?? ""}`;
     const ex = c.find((x) => x.key === key);
