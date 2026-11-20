@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Clock, LayoutGrid, List, MessageCircle, Search, ShoppingBag, Wifi, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
 import { products, brands, bundles, nad, fromMonthly, stockLabel } from "@/lib/data";
@@ -15,8 +15,10 @@ const sorts = { new: "Newest", low: "Price: low to high", high: "Price: high to 
 type SortKey = keyof typeof sorts;
 
 export const Route = createFileRoute("/shop")({
-  validateSearch: (s: Record<string, unknown>): { c?: string } =>
-    typeof s["c"] === "string" ? { c: s["c"] } : {},
+  validateSearch: (s: Record<string, unknown>): { c?: string; q?: string } => ({
+    ...(typeof s["c"] === "string" ? { c: s["c"] } : {}),
+    ...(typeof s["q"] === "string" ? { q: s["q"] } : {}),
+  }),
   head: () => ({ meta: [
     { title: "Catalog — MTC Pocket Market" },
     { name: "description", content: "Browse MTC devices, compare indicative monthly prices and shop by category." },
@@ -27,10 +29,11 @@ export const Route = createFileRoute("/shop")({
 });
 
 function Shop() {
-  const { c = "All" } = Route.useSearch();
+  const { c = "All", q: initialQuery = "" } = Route.useSearch();
   const nav = useNavigate({ from: "/shop" });
   const { mode, setMode, extra, setExtra, add, cart } = useStore();
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(initialQuery);
+  useEffect(() => { setQ(initialQuery); }, [initialQuery]);
   const [focus, setFocus] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sort, setSort] = useState<SortKey>("new");
