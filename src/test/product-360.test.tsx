@@ -73,10 +73,19 @@ describe("genuine 360-degree photography media", () => {
   it("allows finger or mouse dragging to select successive angles", () => {
     render(<Product360Viewer productName="Phone" spin={phone} onUnavailable={vi.fn()} />);
     const slider = screen.getByRole("slider");
-    fireEvent.pointerDown(slider, { pointerId: 1, isPrimary: true, clientX: 180, clientY: 100 });
-    fireEvent.pointerMove(slider, { pointerId: 1, clientX: 60, clientY: 105 });
+    // jsdom does not consistently implement PointerEvent across versions.
+    const pointer = (name: string, x: number, y: number) => {
+      const event = new Event(name, { bubbles: true });
+      Object.defineProperties(event, {
+        pointerId: { value: 1 }, isPrimary: { value: true },
+        clientX: { value: x }, clientY: { value: y },
+      });
+      fireEvent(slider, event);
+    };
+    pointer("pointerdown", 180, 100);
+    pointer("pointermove", 60, 105);
     expect(slider.getAttribute("aria-valuenow")).toBe("10");
-    fireEvent.pointerUp(slider, { pointerId: 1 });
+    pointer("pointerup", 60, 105);
   });
 
   it("falls back to the ordinary gallery when a displayed frame fails", () => {
