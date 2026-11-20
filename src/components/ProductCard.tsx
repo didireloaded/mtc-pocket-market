@@ -5,6 +5,7 @@ import { ProductStage } from "@/components/retail/RetailPrimitives";
 import { nad, fromMonthly, type Product } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { pressClass } from "@/lib/retail-motion";
 
 /** Editorial retail tile: product first, one main action, no stacked card chrome. */
 export function ProductCard({ p, minimal = false, catalog = false }: { p: Product; minimal?: boolean; catalog?: boolean }) {
@@ -49,20 +50,20 @@ export function ProductCard({ p, minimal = false, catalog = false }: { p: Produc
           <button type="button" aria-pressed={isSaved}
             aria-label={isSaved ? `Remove ${p.name} from saved products` : `Save ${p.name}`}
             onClick={() => toggleSave(p.id)}
-            className={cn("grid size-11 place-items-center rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint",
-              isSaved ? "bg-primary text-white" : "bg-white text-[#202E39]")}>
+            className={cn("grid size-11 place-items-center rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.08)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint",
+              isSaved ? "bg-primary text-white" : "bg-white text-[#202E39]", pressClass)}>
             <Heart aria-hidden="true" strokeWidth={1.9} className={cn("size-[19px]", isSaved && "fill-current")} />
           </button>
           {estimate ? (
             <Link to="/product/$id" params={{ id: p.id }}
               aria-label={`Choose a contract for ${p.name}`}
-              className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+              className={`grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint ${pressClass}`}>
               <ArrowUpRight aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
             </Link>
           ) : (
             <Link to="/cart" onClick={addOutright}
               aria-label={`Add ${p.name} to cart and open cart`}
-              className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+              className={`grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint ${pressClass}`}>
               <ShoppingBag aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
             </Link>
           )}
@@ -121,11 +122,11 @@ export function ProductCard({ p, minimal = false, catalog = false }: { p: Produc
           </p>
         </div>
         {estimate ? (
-          <Button asChild className="mt-3 h-11 w-full rounded-[12px] px-2 text-[13px] font-semibold">
+          <Button asChild className={`mt-3 h-11 w-full rounded-[12px] px-2 text-[13px] font-semibold ${pressClass}`}>
             <Link to="/product/$id" params={{ id: p.id }}>Explore plans <ArrowUpRight strokeWidth={2} className="size-4" /></Link>
           </Button>
         ) : (
-          <Button asChild className="mt-3 h-11 w-full rounded-[12px] px-2 text-[13px] font-semibold">
+          <Button asChild className={`mt-3 h-11 w-full rounded-[12px] px-2 text-[13px] font-semibold ${pressClass}`}>
             <Link to="/cart" onClick={addOutright} aria-label={`Add ${p.name} to cart and open cart`}>
               <ShoppingBag strokeWidth={2} className="size-4" /> Add to cart
             </Link>

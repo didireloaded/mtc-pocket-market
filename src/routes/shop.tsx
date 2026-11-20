@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useRevealOnce, pressClass } from "@/lib/retail-motion";
 import { ArrowRight, Clock, LayoutGrid, List, MessageCircle, Search, ShoppingBag, Wifi, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/Shell";
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/shop")({
 });
 
 function Shop() {
+  const gridReveal = useRevealOnce<HTMLDivElement>();
   const { c = "All", q: initialQuery = "" } = Route.useSearch();
   const nav = useNavigate({ from: "/shop" });
   const { mode, setMode, extra, setExtra, add, cart } = useStore();
@@ -179,14 +181,19 @@ function Shop() {
                 variant: bundle.id === "esim" ? "eSIM · demonstration" : "Data bundle demonstration",
                 price: bundle.price, kind: "digital" });
               void nav({ to: "/cart" });
-            }} className="h-11 shrink-0 rounded-full px-3 text-[13px]">{nad(bundle.price)}</Button>
+            }} className={`h-11 shrink-0 rounded-full px-3 text-[13px] ${pressClass}`}>{nad(bundle.price)}</Button>
           </div>
         ))}
       </section>}
 
       {view === "grid" ? (
-        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-9 px-5 pb-7">
-          {list.map((product) => <ProductCard key={product.id} p={product} catalog />)}
+        <div key={`${c}-${sort}-${mode}`} ref={gridReveal.ref} className="mt-4 grid grid-cols-2 gap-x-4 gap-y-9 px-5 pb-7">
+          {list.map((product, index) => (
+            <div key={product.id} style={index < 8 ? { animationDelay: `${index * 45}ms` } : undefined}
+              className={`min-w-0 ${index < 8 ? (gridReveal.visible ? "pocket-reveal" : "pocket-reveal-pending") : ""}`}>
+              <ProductCard p={product} catalog />
+            </div>
+          ))}
         </div>
       ) : (
         <div className="mt-3 space-y-2 px-5 pb-6">

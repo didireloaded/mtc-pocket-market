@@ -124,3 +124,13 @@ The bottom navigation is exactly **Home, Shop, Cart, Orders, Profile**, in that 
 - **Orders:** separate account-linked server requests from locally saved previews using two tabs. Keep cards brief and show detailed timeline/notes only on expansion. Do not fabricate shipment events.
 - **Profile:** account status, working Cart and Orders shortcuts, real saved product images, addresses, saved numbers, notification preferences and support. Avoid empty generic dashboard cards and unconnected MTC balance widgets as primary content.
 - Match the user's three-screen reference by **composition, scale, overlap and spacing**, not merely corner radius or colour. Do not add generated photos or unverifiable promotional claims. Keep 44px touch controls, safe area/keyboard behaviour and truthful integration boundaries.
+
+## Premium motion system (November 2026)
+
+- Use the installed React/Tailwind/Vaul stack for motion, without external animation packages that are not present in the frozen Bun lockfile. Shared small visibility and press helpers live in `src/lib/retail-motion.ts`; CSS keyframes live in `src/styles.css`.
+- Keep UI animations roughly 200–300 ms. Use opacity and transform rather than layout animation. No endless loops or heavy glass effects.
+- Reveal Home cards once when scrolled into view. Limit initial Shop stagger to eight cards to avoid expensive cascades and reanimation on every search keystroke.
+- Use the `prefers-reduced-motion` media query to make all hidden/revealing content immediately visible without motion. Maintain touch targets and keyboard behaviour.
+- The Cart dock pulse uses the existing `StoreProvider.add()` through a non-persisted `cartPulse` counter. Do not animate cart hydration or fake an item addition.
+- The monthly plan selection uses the installed Vaul drawer with accessible title, close button, focus handling and swipe-down dismissal. Preserve the original contract calculations and user selection; do not create fictional MTC approval or payment states.
+- Use skeleton placeholders only for actual server fetches, not timed fake loading of the static catalogue.
