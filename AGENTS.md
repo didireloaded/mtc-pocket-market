@@ -134,3 +134,14 @@ The bottom navigation is exactly **Home, Shop, Cart, Orders, Profile**, in that 
 - The Cart dock pulse uses the existing `StoreProvider.add()` through a non-persisted `cartPulse` counter. Do not animate cart hydration or fake an item addition.
 - The monthly plan selection uses the installed Vaul drawer with accessible title, close button, focus handling and swipe-down dismissal. Preserve the original contract calculations and user selection; do not create fictional MTC approval or payment states.
 - Use skeleton placeholders only for actual server fetches, not timed fake loading of the static catalogue.
+
+## Genuine 360° product photography
+
+Pocket Market now has a reusable real-photo turntable viewer in `src/components/Product360Viewer.tsx`, with media registry in `src/lib/product-spins.ts`. Read `docs/product-360-photography.md` before enabling it for any product.
+
+- Never label a static front photograph, a CSS-rotated rectangle or AI-generated imaginary side/rear views as a real 360° spin.
+- Only register complete **24, 36 or 48-frame** sequences from authentic photographs, with correct `frontIndex`, `backIndex`, product and colour. The tests check that all registered image assets exist on disk.
+- An unavailable or failed sequence must fall back to the standard product gallery, with no misleading 360° button.
+- The viewer supports horizontal pointer drag, left/right keyboard rotation, Front/Back/Reset controls and a Photos mode toggle. Vertical page scrolling must continue to work on mobile.
+- Keep frame resources compact, defer neighboring prefetch until a real interaction and skip that prefetch when data-saver is enabled. Never preload every catalogue product's spin images.
+- Preserve all existing catalogue data, pricing, product/cart actions, purchases and contract verification boundaries. Do not add fake payment, stock, or colour availability as part of this visual feature.
