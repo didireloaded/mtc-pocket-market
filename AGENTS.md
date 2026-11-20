@@ -77,3 +77,15 @@ Treat Home as the lightest part of the experience, not a directory of every feat
 - Maintain generous vertical whitespace between these three sections and avoid gratuitous cards, borders and shadows.
 - Keep routes and functionality available through the main tabs. A simpler Home must not delete fulfilment, saved products, contract estimation or account features.
 - Ground all marketing and device imagery in the real catalogue. Do not advertise a discount or benefit unless verified by MTC.
+
+## Reference-led mobile retail UI
+
+For the three primary shopping surfaces, follow the user's supplied mobile commerce reference image, adapted to MTC (rather than copying its green furniture branding).
+
+- **Home**: one dark charcoal featured-device presentation with a large real product image on a white stage and one pill CTA; retain exactly one category row and one personalised discovery carousel below.
+- **Catalog / Shop**: a calm two-column grid of white, gently rounded product tiles; prominent studio-style image, save control, short name and cash/illustrative monthly price. Top controls are small search, filter, category chips, price mode and sorting. Advanced tools stay deeper in the journey.
+- **Device details**: very large neutral image stage, simple back/favourite controls, overlapping rounded white product information sheet, visible price, real colour options where listed, quantity control for outright products and one dark purchase-bar action. Specs, official collection guidance and illustrative contract configuration live below the primary details.
+- **Navigation**: five compact accessible icons in a floating rounded dock. Preserve labels for assistive technologies, safe areas, clear active state and keyboard handling.
+- Keep the current independent-concept disclaimers, actual MTC catalogue images, contract calculator and routes. Never present order payments, identity verification, stock or eSIM activation as connected when they aren't.
+- Use charcoal #202E39, crimson #DD2A1B and off-white neutral surfaces; do not introduce the reference's furniture imagery, bright green or fictitious discount badges.
+- Avoid new card-heavy sections. Never bring the full contract builder, adviser or comparisons back onto Home.
