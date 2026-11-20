@@ -110,21 +110,21 @@ function Shop() {
         </div>
       </div>
       {services.length > 0 && (
-        <div className="px-5 pt-5"><p className="mb-2 text-xs font-semibold uppercase tracking-widest text-mint">Services</p>
+        <div className="px-5 pt-5"><p className="mb-2 text-[13px] font-semibold uppercase tracking-[0.08em] text-mint">Related services (demo)</p>
           <div className="space-y-2">{services.map((b) => <div key={b.id} className="flex items-center gap-3 border-b border-border py-4"><Wifi className="size-5 text-mint" /><div className="flex-1"><p className="text-sm font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
-            <Button aria-label={`Add ${b.name} to bag`} onClick={() => { add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" }); void nav({ to: "/cart" }); }} className="h-11 shrink-0 gap-2 rounded-full px-3 text-xs"><ShoppingBag className="size-4" />{nad(b.price)}</Button></div>)}</div></div>)}
+            <Button aria-label={`Add ${b.name} to bag`} onClick={() => { add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" }); void nav({ to: "/cart" }); }} className="h-11 shrink-0 gap-2 rounded-[11px] px-3 text-[13px]"><ShoppingBag className="size-4" />{nad(b.price)}</Button></div>)}</div></div>)}
       <p className="px-5 pt-5 text-[13px] text-muted-foreground">{list.length} product{list.length !== 1 && "s"}{mode === "contract" ? " · monthly values are illustrative" : ""}</p>
       {view === "grid" ? <div className="grid grid-cols-2 gap-x-4 gap-y-7 px-5 pt-4">{list.map((p) => <ProductCard key={p.id} p={p} />)}</div> : (
         <div className="space-y-0 px-5 pt-2">{list.map((p) => { const st = stockLabel(p); return (
           <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="flex items-center gap-3 border-b border-border py-4">
             <img src={p.image} alt={p.name} loading="lazy" className="size-16 rounded-xl bg-stage object-contain" />
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{p.name}</p><p className="text-xs text-muted-foreground">{p.brand} · {p.network !== "None" ? p.network : p.category}{p.storage && ` · ${p.storage}`}</p><p className={cn("text-[11px]", st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>{st.text}</p></div>
-            <p className="text-sm font-bold">{mode === "cash" ? nad(p.cash) : p.contractable ? nad(fromMonthly(p)) + "/mo" : "Outright only"}</p>
+            <div className="min-w-0 flex-1"><p className="line-clamp-2 text-[15px] font-semibold leading-5">{p.name}</p><p className="mt-1 text-[13px] text-muted-foreground">{p.brand} · {p.network !== "None" ? p.network : p.category}{p.storage && ` · ${p.storage}`}</p><p className={cn("mt-1 text-[12px]", st.tone === "ok" ? "text-success" : "text-muted-foreground")}>{st.text}</p></div>
+            <p className="shrink-0 text-right text-[16px] font-bold tabular-nums">{mode === "cash" ? nad(p.cash) : p.contractable ? nad(fromMonthly(p)) + "/mo" : "Outright only"}</p>
           </Link>); })}</div>)}
-      {!list.length && <div role="status" className="mx-5 my-7 rounded-[22px] bg-card p-7 text-center">
+      {!list.length && <div role="status" className="mx-5 my-7 border-t border-border px-3 py-9 text-center">
         <p className="text-[17px] font-semibold">No matching products</p>
         <p className="mt-2 text-[14px] leading-6 text-muted-foreground">Try another category, a different budget, or remove your filters.</p>
-        <Button type="button" onClick={resetDiscovery} variant="outline" className="mt-5 h-12 rounded-full px-6 text-sm shadow-none">Clear search and filters</Button>
+        <Button type="button" onClick={resetDiscovery} variant="outline" className="mt-5 h-12 rounded-[12px] px-6 text-sm shadow-none">Clear search and filters</Button>
       </div>}
     </Shell>
   );
