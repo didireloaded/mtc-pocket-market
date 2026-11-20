@@ -1,4 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "framer-motion";
+import { revealGroup, revealItem, pressClass } from "@/lib/retail-motion";
 import { ArrowRight, Clock, LayoutGrid, List, MessageCircle, Search, ShoppingBag, Wifi, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/Shell";
@@ -29,6 +31,7 @@ export const Route = createFileRoute("/shop")({
 });
 
 function Shop() {
+  const reduceMotion = useReducedMotion();
   const { c = "All", q: initialQuery = "" } = Route.useSearch();
   const nav = useNavigate({ from: "/shop" });
   const { mode, setMode, extra, setExtra, add, cart } = useStore();
@@ -179,15 +182,22 @@ function Shop() {
                 variant: bundle.id === "esim" ? "eSIM · demonstration" : "Data bundle demonstration",
                 price: bundle.price, kind: "digital" });
               void nav({ to: "/cart" });
-            }} className="h-11 shrink-0 rounded-full px-3 text-[13px]">{nad(bundle.price)}</Button>
+            }} className={`h-11 shrink-0 rounded-full px-3 text-[13px] ${pressClass}`}>{nad(bundle.price)}</Button>
           </div>
         ))}
       </section>}
 
       {view === "grid" ? (
-        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-9 px-5 pb-7">
-          {list.map((product) => <ProductCard key={product.id} p={product} catalog />)}
-        </div>
+        <motion.div key={`${c}-${sort}-${mode}`} variants={revealGroup}
+          initial={reduceMotion ? false : "hidden"} animate="visible"
+          className="mt-4 grid grid-cols-2 gap-x-4 gap-y-9 px-5 pb-7">
+          {list.map((product, index) => (
+            <motion.div key={product.id} variants={index < 8 ? revealItem : undefined}
+              className="min-w-0">
+              <ProductCard p={product} catalog />
+            </motion.div>
+          ))}
+        </motion.div>
       ) : (
         <div className="mt-3 space-y-2 px-5 pb-6">
           {list.map((product) => {
