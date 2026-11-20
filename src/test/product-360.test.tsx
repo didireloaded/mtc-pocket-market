@@ -5,7 +5,7 @@ import {
   findProductSpin, isSpinReady, makeSpinFrames, productSpins,
   spinFrameFromDrag, spinViewLabel, wrapFrame, type ProductSpin,
 } from "@/lib/product-spins";
-import { existsSync, statSync } from "node:fs";
+import { readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const phone: ProductSpin = {
@@ -52,6 +52,17 @@ describe("genuine 360-degree photography media", () => {
         }
       }
     }
+  });
+
+  it("only offers a 360° toggle when the product and colour have a real frame set", () => {
+    const detailSource = readFileSync(new URL("../routes/product.$id.tsx", import.meta.url), "utf8");
+    expect(detailSource).toContain("findProductSpin(p.id, color)");
+    expect(detailSource).toContain("spinAvailable &&");
+    expect(detailSource).toContain("showSpin && currentSpin");
+    expect(detailSource).toContain("<Product360Viewer");
+    expect(detailSource).toContain("imgs.map((src, index)");
+    expect(detailSource).toContain('setMediaMode("photos")');
+    expect(detailSource).not.toContain("fake 360");
   });
 
   it("supports keyboard rotation plus front, back and reset controls", () => {
