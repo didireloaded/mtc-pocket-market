@@ -1,13 +1,14 @@
 import type { CartItem } from "./store";
 
+// Illustrative demo figures only. Not authorised MTC shipping or promotional policies.
 export const SHIPPING_FEE = 99;
 export const FREE_SHIPPING_OVER = 5000;
 export const PROMOS: Record<string, number> = { MTC10: 0.1, MTCSUMMER: 0.15 };
 export const PAYMENT_METHODS = [
-  { id: "wallet", label: "MTC Wallet", hint: "Balance N$1,250.00" },
-  { id: "card", label: "Visa / Mastercard", hint: "•••• 4821" },
-  { id: "ewallet", label: "e-Wallet / Blue Wallet", hint: "Pay from your mobile money" },
-  { id: "eft", label: "Bank transfer (EFT)", hint: "For orders over N$5,000" },
+  { id: "wallet", label: "Wallet (demo only)", hint: "No real account balance connected" },
+  { id: "card", label: "Card (demo only)", hint: "No card information collected" },
+  { id: "ewallet", label: "Mobile wallet (demo only)", hint: "Not connected to a payment provider" },
+  { id: "eft", label: "Bank transfer (demo only)", hint: "No payment is initiated" },
 ] as const;
 export type PaymentId = (typeof PAYMENT_METHODS)[number]["id"];
 export type Address = { name: string; street: string; town: string; phone: string };
@@ -35,10 +36,8 @@ export function summarize(cart: CartItem[], o: { promo: number | null; addr: Add
     if (!a.street.trim() || !a.town.trim()) errors.push("Add a street and town for delivery.");
     if (a.phone.replace(/\D/g, "").length < 8) errors.push("Add a contact number for the courier.");
   }
-  if (digital.hasEsim && !validEmail(o.esimEmail)) errors.push("Add an email to receive your eSIM activation details.");
+  if (digital.hasEsim && !validEmail(o.esimEmail)) errors.push("Enter an email address for the eSIM demonstration. No activation email is sent.");
   if (cart.some((i) => i.mode === "contract")) errors.push("Contract applications are not available in this concept preview. Official pricing and identity verification are required.");
-  const total = shipped.total + digital.total;
-  if (o.payment === "eft" && total < FREE_SHIPPING_OVER) errors.push("Bank transfer is only available for orders over N$5,000.");
-  if (o.payment === "wallet" && total > 1250) errors.push("MTC Wallet balance (N$1,250) is too low — pick another method.");
+  // There are no real payment eligibility rules until an approved provider is integrated.
   return { shipped, digital, recurringMonthly, total: shipped.total + digital.total, errors };
 }
