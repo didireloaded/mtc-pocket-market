@@ -23,7 +23,7 @@ function Settings() {
         <section className="rounded-[20px] bg-card shadow-card p-4 text-sm"><p className="text-xs text-muted-foreground">Signed in as</p>
           {user ? <p className="mt-1 font-semibold">{user.label}</p> : <button onClick={() => setAuthOpen(true)} className="mt-1 font-semibold text-mint">Guest — sign in</button>}</section>
         <section className="rounded-[20px] bg-card shadow-card p-4 text-sm"><p className="mb-2 font-semibold">Saved addresses</p>
-          {extra.addresses.map((a) => <div key={a.label} className="flex items-center justify-between border-t py-2 first:border-t-0"><div><p className="font-medium">{a.label}</p><p className="text-xs text-muted-foreground">{a.street}, {a.town}</p></div>
+          {extra.addresses.map((a) => <div key={a.label} className="flex items-center justify-between border-t py-2 first:border-t-0"><div><p className="font-medium">{a.label}</p><p className="text-xs text-muted-foreground">{a.street}, {a.town}{a.region ? `, ${a.region}` : ""}</p></div>
             <button aria-label={`Remove ${a.label}`} onClick={() => setExtra((e) => ({ ...e, addresses: e.addresses.filter((x) => x.label !== a.label) }))}><Trash2 className="size-4 text-muted-foreground" /></button></div>)}
           <p className="mt-1 text-xs text-muted-foreground">Add addresses from the bag at checkout.</p></section>
         <section className="rounded-[20px] bg-card shadow-card p-4 text-sm"><p className="mb-2 font-semibold">Saved recharge numbers (demo)</p><p className="mb-3 text-xs leading-5 text-muted-foreground">These numbers are saved only on this device and are not linked to the owner\'s MTC account.</p>
