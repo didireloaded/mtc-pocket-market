@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as EsimRouteImport } from './routes/esim'
+import { Route as FindRouteImport } from './routes/find'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as MymtcRouteImport } from './routes/mymtc'
@@ -33,9 +35,19 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EsimRoute = EsimRouteImport.update({
   id: '/esim',
   path: '/esim',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindRoute = FindRouteImport.update({
+  id: '/find',
+  path: '/find',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HelpRoute = HelpRouteImport.update({
@@ -79,9 +91,9 @@ const StoresRoute = StoresRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareMacbooksRoute = CompareMacbooksRouteImport.update({
-  id: '/compare/macbooks',
-  path: '/compare/macbooks',
-  getParentRoute: () => rootRouteImport,
+  id: '/macbooks',
+  path: '/macbooks',
+  getParentRoute: () => CompareRoute,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
@@ -92,7 +104,9 @@ const ProductIdRoute = ProductIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/compare': typeof CompareRouteWithChildren
   '/esim': typeof EsimRoute
+  '/find': typeof FindRoute
   '/help': typeof HelpRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
@@ -107,7 +121,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/compare': typeof CompareRouteWithChildren
   '/esim': typeof EsimRoute
+  '/find': typeof FindRoute
   '/help': typeof HelpRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
@@ -123,7 +139,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/compare': typeof CompareRouteWithChildren
   '/esim': typeof EsimRoute
+  '/find': typeof FindRoute
   '/help': typeof HelpRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
@@ -140,7 +158,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cart'
+    | '/compare'
     | '/esim'
+    | '/find'
     | '/help'
     | '/kyc'
     | '/mymtc'
@@ -155,7 +175,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cart'
+    | '/compare'
     | '/esim'
+    | '/find'
     | '/help'
     | '/kyc'
     | '/mymtc'
@@ -170,7 +192,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/cart'
+    | '/compare'
     | '/esim'
+    | '/find'
     | '/help'
     | '/kyc'
     | '/mymtc'
@@ -186,7 +210,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CartRoute: typeof CartRoute
+  CompareRoute: typeof CompareRouteWithChildren
   EsimRoute: typeof EsimRoute
+  FindRoute: typeof FindRoute
   HelpRoute: typeof HelpRoute
   KycRoute: typeof KycRoute
   MymtcRoute: typeof MymtcRoute
@@ -195,7 +221,6 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   ShopRoute: typeof ShopRoute
   StoresRoute: typeof StoresRoute
-  CompareMacbooksRoute: typeof CompareMacbooksRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
@@ -215,11 +240,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/esim': {
       id: '/esim'
       path: '/esim'
       fullPath: '/esim'
       preLoaderRoute: typeof EsimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find': {
+      id: '/find'
+      path: '/find'
+      fullPath: '/find'
+      preLoaderRoute: typeof FindRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/help': {
@@ -280,10 +319,10 @@ declare module '@tanstack/react-router' {
     }
     '/compare/macbooks': {
       id: '/compare/macbooks'
-      path: '/compare/macbooks'
+      path: '/macbooks'
       fullPath: '/compare/macbooks'
       preLoaderRoute: typeof CompareMacbooksRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CompareRoute
     }
     '/product/$id': {
       id: '/product/$id'
@@ -295,10 +334,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface CompareRouteChildren {
+  CompareMacbooksRoute: typeof CompareMacbooksRoute
+}
+
+const CompareRouteChildren: CompareRouteChildren = {
+  CompareMacbooksRoute: CompareMacbooksRoute,
+}
+
+const CompareRouteWithChildren =
+  CompareRoute._addFileChildren(CompareRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CartRoute: CartRoute,
+  CompareRoute: CompareRouteWithChildren,
   EsimRoute: EsimRoute,
+  FindRoute: FindRoute,
   HelpRoute: HelpRoute,
   KycRoute: KycRoute,
   MymtcRoute: MymtcRoute,
@@ -307,7 +359,6 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   ShopRoute: ShopRoute,
   StoresRoute: StoresRoute,
-  CompareMacbooksRoute: CompareMacbooksRoute,
   ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
