@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Search, ShoppingBag, ArrowUpRight, ArrowRight, Smartphone, Laptop, Tablet, Watch, Router, Cable, SlidersHorizontal, Wifi, MapPin, Bookmark, ShieldCheck } from "lucide-react";
+import { Bell, Search, ShoppingBag, ArrowUpRight, ArrowRight, Smartphone, Laptop, Tablet, Watch, Router, Cable, SlidersHorizontal, Wifi, MapPin, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Eyebrow, SectionHeading, ProductStage } from "@/components/retail/RetailPrimitives";
+import { Eyebrow, SectionHeading } from "@/components/retail/RetailPrimitives";
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
 import { products, nad, getProduct } from "@/lib/data";
