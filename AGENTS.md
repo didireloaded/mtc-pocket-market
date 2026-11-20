@@ -52,3 +52,16 @@ Apply the user's Mobile App Builder skill to every mobile-facing change. This ap
 - **Protect customers.** No private keys, credentials, ID documents or sensitive customer data in the browser bundle or git. Avoid raw backend error disclosure; handle retries and duplicate submissions.
 - **Verify and report truthfully.** Run `bun run test`, `bun run lint`, and `bun run build`; perform phone-width visual and keyboard checks on iOS Safari and Android Chrome when accessible. If unavailable, mark that check NOT RUN, never PASS. Do not publish solely because Lovable says its preview is ready.
 - **Source for the expanded standard.** See `docs/mobile-app-builder-standard.md` (adapted for the Pocket Market mobile web/PWA target).
+
+## Premium retail visual standard
+
+Keep the current light mobile-first retail experience. Do not switch back to dark mode or add stock UI imagery just for decoration. The shared theme lives in `src/styles.css`.
+
+- Palette: primary CTAs use MTC crimson `#DD2A1B`, typography uses charcoal `#202E39`, product stages use soft grey `#EEF1F3`, secondary information/navigation may use MTC-inspired blue `#275F84`.
+- Prices are prominent and tabular. Product imagery must remain the main visual, with one primary action per catalogue tile. Use catalogue photography, not generated placeholder assets.
+- Use a strict 20px page inset, consistent 16px product grid gaps, readable 14–16px supporting copy, and large enough touch areas for smartphones.
+- Avoid nesting a white card inside a white card. Prefer open sections, separators, subtle one-pixel borders, and unboxed information. Only floating overlays may use stronger shadows.
+- Use shadcn and Radix for functioning accessible controls, Lucide icons at consistent sizes and stroke weights. Never add Material UI/Chakra to this existing stack.
+- No gradient heroes, neon effects, glassmorphism or redundant CTA buttons. Prefer flat surfaces, grounded spacing, real images, clear selected states, usable focus outlines and reduced-motion support.
+- Preserve price source/eligibility, demo/official disclaimers, cart/auth/navigation state and backend boundaries when changing appearance. Never imply that illustrative contracts are real offers.
+- See `docs/premium-retail-ui.md` for component and page-specific rules.
