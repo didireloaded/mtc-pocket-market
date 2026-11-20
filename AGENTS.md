@@ -112,3 +112,15 @@ The supplied My MTC and checkout snippets are **visual references, not productio
 - Give real server requests genuine pending/success/error states. Local shopping preview saves may confirm only that local data was saved.
 - Avoid excessive repeated prototype labels, but retain concise disclosures wherever a customer could mistake an illustration for a transaction, service entitlement or live MTC data.
 - Do not call the flow `Secure Checkout` until security, provider integration and payment controls have been evaluated and verified.
+
+## Current navigation and reference-led shopping journey (November 2026)
+
+The bottom navigation is exactly **Home, Shop, Cart, Orders, Profile**, in that order. The My MTC experimental account dashboard can remain accessible by an old route, but must **not** replace Cart in the main dock.
+
+- **Home:** no “Featured on Pocket Market” label, small red dot or generic promo eyebrow. The iPhone is presented in a full-bleed dark editorial field with a large image breaking out of its white card, the device name and cash price, a circular bag action and a separate white explore-device pill. The circular bag action adds an outright device and opens Cart. Preserve categories and one carousel below.
+- **Product detail:** especially for the featured iPhone, make the actual product image large with a subtle grounded image stage and overlapping white information sheet. Colour, price, quantity and one prominent Add to Cart button stay obvious. Advanced contract configuration is disclosed only when monthly pricing is selected.
+- **Shop:** the red bag on outright catalogue products adds the exact item to the persistent Cart and routes to /cart. In contract mode use a distinct device/plan action; do not show a bag symbol when the action only opens a configurator.
+- **Cart:** has products, quantities, totals and delivery/request tools. Not a history screen. Show products first, with shipping and unavailable payments behind disclosure, not a wall of text. Never imply payment success.
+- **Orders:** separate account-linked server requests from locally saved previews using two tabs. Keep cards brief and show detailed timeline/notes only on expansion. Do not fabricate shipment events.
+- **Profile:** account status, working Cart and Orders shortcuts, real saved product images, addresses, saved numbers, notification preferences and support. Avoid empty generic dashboard cards and unconnected MTC balance widgets as primary content.
+- Match the user's three-screen reference by **composition, scale, overlap and spacing**, not merely corner radius or colour. Do not add generated photos or unverifiable promotional claims. Keep 44px touch controls, safe area/keyboard behaviour and truthful integration boundaries.
