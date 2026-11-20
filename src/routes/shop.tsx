@@ -7,12 +7,12 @@ import { products, brands, bundles, nad, fromMonthly, stockLabel } from "@/lib/d
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
-const all = ["All", "Phones", "Tablets", "Laptops", "Wearables", "Headphones", "Audio"];
+const all = ["All", "Phones", "Laptops", "Tablets", "Wearables", "Data devices", "Accessories"];
 const sorts = { new: "Newest", low: "Price: low to high", high: "Price: high to low" } as const;
 type SortKey = keyof typeof sorts;
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): { c?: string } => (typeof s["c"] === "string" ? { c: s["c"] } : {}),
-  head: () => ({ meta: [{ title: "Shop Devices — MTC Store" }, { name: "description", content: "Browse the full MTC catalog of phones, tablets, laptops, wearables and audio with cash or contract prices." }, { property: "og:title", content: "Shop Devices — MTC Store" }, { property: "og:description", content: "Browse the full MTC catalog with cash or contract prices." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Shop Devices — MTC Store" }, { name: "description", content: "Explore the current MTC Pocket Market device selection and indicative contract pricing." }, { property: "og:title", content: "Shop Devices — MTC Store" }, { property: "og:description", content: "Explore devices and indicative contract pricing." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Shop,
 });
 function Shop() {
@@ -43,7 +43,8 @@ function Shop() {
   return (
     <Shell>
       <div className="px-5 pt-8">
-        <div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-widest text-mint">Spectra Collection</p><h1 className="text-3xl font-bold">Shop</h1></div><PriceToggle /></div>
+        <div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-widest text-mint">Pocket Market collection</p><h1 className="text-3xl font-bold">Shop</h1></div><PriceToggle /></div>
+        <div className="mt-4 flex items-center justify-between gap-2 rounded-[20px] bg-primary px-4 py-3 text-primary-foreground"><div><p className="font-semibold">Not sure which contract fits?</p><p className="text-xs text-primary-foreground/70">Start with your monthly budget.</p></div><Link to="/find" className="shrink-0 rounded-full bg-white px-4 py-2 text-xs font-bold text-primary">Find my plan</Link></div>
         <div className="relative mt-5">
           <label className="flex items-center gap-3 rounded-2xl bg-card px-4"><Search className="size-4 text-muted-foreground" />
             <input value={q} onFocus={() => setFocus(true)} onBlur={() => setTimeout(() => setFocus(false), 150)} onKeyDown={(e) => e.key === "Enter" && commit(q)} onChange={(e) => setQ(e.target.value)} placeholder='Try "iPhone 15", "Samsung" or "Aweh"' className="h-12 flex-1 bg-transparent text-sm outline-none" />
@@ -82,7 +83,7 @@ function Shop() {
         <div className="px-5 pt-5"><p className="mb-2 text-xs font-semibold uppercase tracking-widest text-mint">Services</p>
           <div className="space-y-2">{services.map((b) => <div key={b.id} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-3"><Wifi className="size-5 text-mint" /><div className="flex-1"><p className="text-sm font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
             <button onClick={() => add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" })} className="flex items-center gap-1 rounded-full bg-mint px-3 py-1.5 text-xs font-bold text-mint-foreground"><Plus className="size-3" />{nad(b.price)}</button></div>)}</div></div>)}
-      <p className="px-5 pt-4 text-xs text-muted-foreground">{list.length} device{list.length !== 1 && "s"}</p>
+      <p className="px-5 pt-4 text-xs text-muted-foreground">{list.length} product{list.length !== 1 && "s"}{mode === "contract" ? " · monthly values are illustrative" : ""}</p>
       {view === "grid" ? <div className="grid grid-cols-2 gap-3 px-5 pt-2">{list.map((p) => <ProductCard key={p.id} p={p} />)}</div> : (
         <div className="space-y-2 px-5 pt-2">{list.map((p) => { const st = stockLabel(p); return (
           <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-3">
