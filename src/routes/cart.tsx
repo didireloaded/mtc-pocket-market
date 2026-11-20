@@ -7,7 +7,7 @@ import { useStore, type CartItem } from "@/lib/store";
 import { summarize, PROMOS, PAYMENT_METHODS, FREE_SHIPPING_OVER, type Address, type PaymentId } from "@/lib/checkout";
 import { accessoryIds, getProduct } from "@/lib/data";
 const accessories = accessoryIds.map((id) => getProduct(id)!);
-import { EsimEmail } from "@/components/EsimEmail";
+
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "Your Bag — MTC Store" }, { name: "description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:title", content: "Your Bag — MTC Store" }, { property: "og:description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -56,7 +56,7 @@ function Cart() {
     <Shell><div className="px-5 pt-20 text-center"><CheckCircle2 className="mx-auto size-16 text-mint" /><h1 className="mt-4 text-2xl font-bold">Demo order saved</h1>
       <p className="mt-1 text-xs text-muted-foreground">Local preview reference {orderId} · no payment made</p>
       {paid.hasShipped && <p className="mt-3 text-muted-foreground">This is a demonstration order saved in this browser. No real delivery or fulfilment has been requested.</p>}
-      {paid.hasEsim && <div className="mt-6 space-y-3"><EsimEmail initial={paid.email} autoSend /><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Activate your eSIM now</Link></div>}
+      {paid.hasEsim && <div className="mt-6 space-y-3"><p className="rounded-2xl bg-card p-4 text-xs leading-5 text-muted-foreground">No activation email has been sent. Digital fulfilment requires a live MTC integration.</p><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Learn about eSIM activation</Link></div>}
       {paid.hasShipped && <Link to="/orders" className="mt-4 block h-14 rounded-full border pt-4 font-semibold text-mint">Track order</Link>}
       <Link to="/" className="mt-3 block text-sm text-muted-foreground">Back home</Link></div></Shell>
   );
