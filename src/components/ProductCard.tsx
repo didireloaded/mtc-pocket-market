@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Heart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductStage } from "@/components/retail/RetailPrimitives";
@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 /** Editorial retail tile: product first, one main action, no stacked card chrome. */
 export function ProductCard({ p, minimal = false, catalog = false }: { p: Product; minimal?: boolean; catalog?: boolean }) {
   const { mode, add, saved, toggleSave } = useStore();
-  const navigate = useNavigate();
   const isSaved = saved.includes(p.id);
   const estimate = mode === "contract" && p.contractable;
 
@@ -23,7 +22,6 @@ export function ProductCard({ p, minimal = false, catalog = false }: { p: Produc
       kind: "physical",
       mode: "cash",
     });
-    void navigate({ to: "/cart" });
   };
 
   if (catalog) {
@@ -59,14 +57,14 @@ export function ProductCard({ p, minimal = false, catalog = false }: { p: Produc
             <Link to="/product/$id" params={{ id: p.id }}
               aria-label={`Choose a contract for ${p.name}`}
               className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
-              <ShoppingBag aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
+              <ArrowUpRight aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
             </Link>
           ) : (
-            <button type="button" onClick={addOutright}
-              aria-label={`Add ${p.name} to bag`}
+            <Link to="/cart" onClick={addOutright}
+              aria-label={`Add ${p.name} to cart and open cart`}
               className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_4px_16px_rgba(0,0,0,0.09)] transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
               <ShoppingBag aria-hidden="true" strokeWidth={1.9} className="size-[19px]" />
-            </button>
+            </Link>
           )}
         </div>
       </article>
@@ -127,10 +125,10 @@ export function ProductCard({ p, minimal = false, catalog = false }: { p: Produc
             <Link to="/product/$id" params={{ id: p.id }}>Explore plans <ArrowUpRight strokeWidth={2} className="size-4" /></Link>
           </Button>
         ) : (
-          <Button type="button" onClick={addOutright}
-            aria-label={`Add ${p.name} to bag at cash price`}
-            className="mt-3 h-11 w-full rounded-[12px] px-2 text-[13px] font-semibold">
-            <ShoppingBag strokeWidth={2} className="size-4" /> Add to bag
+          <Button asChild className="mt-3 h-11 w-full rounded-[12px] px-2 text-[13px] font-semibold">
+            <Link to="/cart" onClick={addOutright} aria-label={`Add ${p.name} to cart and open cart`}>
+              <ShoppingBag strokeWidth={2} className="size-4" /> Add to cart
+            </Link>
           </Button>
         )}
       </div>
