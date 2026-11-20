@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import { StoreProvider } from "@/lib/store";
 import { AuthModal } from "@/components/AuthModal";
 import { Welcome } from "@/components/Welcome";
+import { NetworkStatus } from "@/components/NetworkStatus";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -84,12 +85,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     // twitter:image here: every page without its own would inherit the root's preview image.
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MTC Store — Devices, Data & eSIM" },
-      { name: "description", content: "Shop phones, laptops, audio and MTC data bundles, eSIMs and contracts." },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { title: "MTC Pocket Market — Devices and Services" },
+      { name: "description", content: "Explore devices, compare illustrative contract options, and discover MTC services in a mobile-first experience." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "MTC Store" },
-      { property: "og:description", content: "Shop phones, laptops, audio and MTC data bundles, eSIMs and contracts." },
+      { property: "og:title", content: "MTC Pocket Market" },
+      { property: "og:description", content: "Browse devices and compare shopping options in this independent retail concept." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       
@@ -132,6 +133,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <StoreProvider>
         <Outlet />
+        <NetworkStatus />
         <AuthModal />
         <Welcome />
         <Toaster position="top-center" theme="light" />
