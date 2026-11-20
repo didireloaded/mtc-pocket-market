@@ -12,7 +12,8 @@ export const Route = createFileRoute("/")({
 const cats = [{ n: "Headphones", i: Headphones }, { n: "Laptops", i: Laptop }, { n: "Wearables", i: Watch }, { n: "Audio", i: Speaker }] as const;
 
 function Home() {
-  const { user, mode, add, setAuthOpen } = useStore();
+  const { user, mode, add, setAuthOpen, notices } = useStore();
+  const unread = notices.filter((n) => !n.read).length;
   const hero = products.find((p) => p.featured)!;
   const h = new Date().getHours();
   return (
@@ -22,7 +23,7 @@ function Home() {
           <p className="text-sm text-muted-foreground">{h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"}</p>
           <h1 className="text-2xl font-bold">{user ? "Hi, " + (user.method === "email" ? user.label.split("@")[0] : user.label) : <button onClick={() => setAuthOpen(true)}>Welcome, Guest</button>}</h1>
         </div>
-        <button aria-label="Notifications" className="relative grid size-11 place-items-center rounded-full bg-card"><Bell className="size-5" /><span className="absolute right-3 top-3 size-2 rounded-full bg-primary" /></button>
+        <Link to="/notifications" aria-label="Notifications" className="relative grid size-11 place-items-center rounded-full bg-card"><Bell className="size-5" />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{unread}</span>}</Link>
       </header>
       <div className="no-scrollbar mt-6 flex gap-2 overflow-x-auto px-5">
         {cats.map(({ n, i: I }, idx) => (

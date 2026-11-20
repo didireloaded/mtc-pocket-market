@@ -14,6 +14,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as EsimRouteImport } from './routes/esim'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as MymtcRouteImport } from './routes/mymtc'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as StoresRouteImport } from './routes/stores'
@@ -44,6 +45,11 @@ const MymtcRoute = MymtcRouteImport.update({
   path: '/mymtc',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/esim': typeof EsimRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
+  '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/esim': typeof EsimRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
+  '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/esim': typeof EsimRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
+  '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/shop': typeof ShopRoute
   '/stores': typeof StoresRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/kyc'
     | '/mymtc'
+    | '/notifications'
     | '/orders'
     | '/shop'
     | '/stores'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/kyc'
     | '/mymtc'
+    | '/notifications'
     | '/orders'
     | '/shop'
     | '/stores'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/kyc'
     | '/mymtc'
+    | '/notifications'
     | '/orders'
     | '/shop'
     | '/stores'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   EsimRoute: typeof EsimRoute
   KycRoute: typeof KycRoute
   MymtcRoute: typeof MymtcRoute
+  NotificationsRoute: typeof NotificationsRoute
   OrdersRoute: typeof OrdersRoute
   ShopRoute: typeof ShopRoute
   StoresRoute: typeof StoresRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MymtcRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orders': {
       id: '/orders'
       path: '/orders'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   EsimRoute: EsimRoute,
   KycRoute: KycRoute,
   MymtcRoute: MymtcRoute,
+  NotificationsRoute: NotificationsRoute,
   OrdersRoute: OrdersRoute,
   ShopRoute: ShopRoute,
   StoresRoute: StoresRoute,

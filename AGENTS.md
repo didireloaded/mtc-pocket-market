@@ -31,3 +31,4 @@ use the editor.
 
 - Store state (cart, auth, orders) lives in `src/lib/store.tsx` + localStorage; no backend yet, so all sign-in/payment/KYC flows are mock until Lovable Cloud is approved.
 - Contract prices come only from `quote()` in `src/lib/data.ts` so every screen shows the same device payment/plan fee/upfront split.
+- Delivery progress and order notifications both derive from `timeline()` in `src/lib/timeline.ts`; checkout totals/validation come only from `summarize()` in `src/lib/checkout.ts`.

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Smartphone, CheckCircle2, Copy, Mail } from "lucide-react";
+import { ArrowLeft, Smartphone, CheckCircle2, Copy } from "lucide-react";
+import { EsimEmail } from "@/components/EsimEmail";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { Shell } from "@/components/Shell";
@@ -11,8 +12,6 @@ export const Route = createFileRoute("/esim")({
 function Esim() {
   const [step, setStep] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
   const copy = async () => { try { await navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopied(false); } };
   const [code] = useState(() => "LPA:1$sm-dp.mtc.com.na$" + Math.random().toString(36).slice(2, 14).toUpperCase());
   return (
@@ -34,12 +33,7 @@ function Esim() {
               <button onClick={copy} className="flex shrink-0 items-center gap-1 rounded-full bg-mint px-3 py-2 text-xs font-bold text-mint-foreground"><Copy className="size-3" />{copied ? "Copied" : "Copy"}</button></div>
             <p className="mt-2 text-[11px] text-muted-foreground">iPhone: Settings → Mobile Service → Add eSIM → Enter details manually. Android: Settings → SIMs → Add eSIM → Enter code.</p>
           </div>
-          <div className="mt-3 rounded-2xl bg-card p-4">
-            <p className="flex items-center gap-2 text-xs text-muted-foreground"><Mail className="size-4" />Email the QR + code to yourself</p>
-            {sent ? <p className="mt-2 text-sm text-mint">Sent to {email}. Check your inbox.</p> : (
-              <div className="mt-2 flex gap-2"><input type="email" aria-label="Email for eSIM" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="h-10 flex-1 rounded-xl bg-surface-2 px-3 text-sm outline-none" />
-                <button disabled={!/^\S+@\S+\.\S+$/.test(email)} onClick={() => setSent(true)} className="rounded-xl border px-4 text-sm font-semibold text-mint disabled:opacity-40">Send</button></div>)}
-          </div>
+          <div className="mt-3"><EsimEmail /></div>
           <button onClick={() => setStep(2)} className="mt-4 h-14 w-full rounded-2xl bg-mint font-semibold text-mint-foreground">I've scanned it</button>
         </div>)}
         {step === 2 && (<div className="mt-10 text-center"><div className="mx-auto grid size-24 place-items-center rounded-full bg-mint/15"><Smartphone className="size-10 text-mint" /></div>

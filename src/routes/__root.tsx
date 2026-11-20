@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import { StoreProvider } from "@/lib/store";
 import { AuthModal } from "@/components/AuthModal";
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -131,6 +132,7 @@ function RootComponent() {
       <StoreProvider>
         <Outlet />
         <AuthModal />
+        <Toaster position="top-center" theme="dark" />
       </StoreProvider>
     </QueryClientProvider>
   );

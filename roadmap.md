@@ -19,3 +19,7 @@
 - [x] Cart: shipped vs digital eSIM clearly split; delivery details only for physical
 - [x] Contract breakdown (device payment, plan fee, upfront, term, allowances) wherever contracts are compared
 - [x] eSIM: copy SM-DP+ code + email delivery next to QR
+- [x] Mixed-cart checkout validation with separate shipped/digital summaries + totals
+- [x] Order detail timeline with timestamps + tracking number
+- [x] eSIM email: sending, confirmed, resend, error states
+- [x] Notifications when order hits shipped / out for delivery (from timeline)

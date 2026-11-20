@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Shell } from "@/components/Shell";
 import { nad } from "@/lib/data";
 import { useStore, type CartItem } from "@/lib/store";
+import { summarize, type Address } from "@/lib/checkout";
+import { EsimEmail } from "@/components/EsimEmail";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "Your Bag — MTC Store" }, { name: "description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:title", content: "Your Bag — MTC Store" }, { property: "og:description", content: "Review devices and digital services, apply a promo code and check out." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -33,31 +35,43 @@ function Row({ i }: { i: CartItem }) {
 function Cart() {
   const { cart, clear, kycDone, placeOrder, user } = useStore();
   const [orderId, setOrderId] = useState("");
-  const [addr, setAddr] = useState({ name: "", street: "12 Independence Ave", town: "Windhoek", phone: "" });
-  const pay = () => { setOrderId(placeOrder({ items: cart.map((i) => ({ name: i.name, qty: i.qty, kind: i.kind })), total: sub - disc + ship, address: phys.length ? `${addr.street}, ${addr.town}` : "" })); setPaid(true); setTimeout(clear, 0); };
-  const [code, setCode] = useState(""); const [promo, setPromo] = useState<number | null>(null); const [err, setErr] = useState(""); const [paid, setPaid] = useState(false);
-  const phys = cart.filter((i) => i.kind === "physical"); const dig = cart.filter((i) => i.kind === "digital");
-  const sub = cart.reduce((a, i) => a + i.price * i.qty, 0);
-  const ship = phys.length ? 99 : 0; const disc = promo ? Math.round(sub * promo) : 0;
-  const addrMissing = phys.length > 0 && (!addr.name.trim() || !addr.street.trim() || !addr.town.trim() || addr.phone.replace(/\D/g, "").length < 8);
-  const needsKyc = cart.some((i) => i.mode === "contract") && !kycDone;
-  const hasEsim = dig.some((i) => i.id === "esim");
+  const [addr, setAddr] = useState<Address>({ name: "", street: "12 Independence Ave", town: "Windhoek", phone: "" });
+  const [esimEmail, setEsimEmail] = useState(user?.method === "email" ? user.label : "");
+  const [code, setCode] = useState(""); const [promo, setPromo] = useState<number | null>(null); const [err, setErr] = useState("");
+  const [paid, setPaid] = useState<null | { hasEsim: boolean; hasShipped: boolean; email: string }>(null);
+  const [tried, setTried] = useState(false);
+  const s = summarize(cart, { promo, addr, kycDone, esimEmail });
+  const { shipped, digital } = s;
+  const pay = () => {
+    setTried(true);
+    if (s.errors.length) return;
+    setOrderId(placeOrder({ items: cart.map((i) => ({ name: i.name, qty: i.qty, kind: i.kind })), total: s.total, shippedTotal: shipped.total, digitalTotal: digital.total, esimEmail, address: shipped.items.length ? `${addr.street}, ${addr.town}` : "" }));
+    setPaid({ hasEsim: digital.hasEsim, hasShipped: shipped.items.length > 0, email: esimEmail }); setTimeout(clear, 0);
+  };
   if (paid) return (
-    <Shell><div className="px-5 pt-24 text-center"><CheckCircle2 className="mx-auto size-16 text-mint" /><h1 className="mt-4 text-2xl font-bold">Order confirmed</h1>
-      <p className="mt-2 text-muted-foreground">Devices ship to you in 1–3 days. Digital items are active now.</p>
-      {hasEsim && <Link to="/esim" className="mt-6 block h-14 rounded-2xl bg-mint pt-4 font-semibold text-mint-foreground">Activate your eSIM</Link>}
-      <p className="mt-2 text-xs text-muted-foreground">Order {orderId}</p><Link to="/orders" className="mt-4 block h-14 rounded-2xl border pt-4 font-semibold text-mint">Track order</Link><Link to="/" className="mt-3 block text-sm text-muted-foreground">Back home</Link></div></Shell>
+    <Shell><div className="px-5 pt-20 text-center"><CheckCircle2 className="mx-auto size-16 text-mint" /><h1 className="mt-4 text-2xl font-bold">Order confirmed</h1>
+      <p className="mt-1 text-xs text-muted-foreground">Order {orderId}</p>
+      {paid.hasShipped && <p className="mt-3 text-muted-foreground">Devices ship in 1–3 days. We'll notify you when they ship and when they're out for delivery.</p>}
+      {paid.hasEsim && <div className="mt-6 space-y-3"><EsimEmail initial={paid.email} autoSend /><Link to="/esim" className="block h-14 rounded-2xl bg-mint pt-4 font-semibold text-mint-foreground">Activate your eSIM now</Link></div>}
+      {paid.hasShipped && <Link to="/orders" className="mt-4 block h-14 rounded-2xl border pt-4 font-semibold text-mint">Track order</Link>}
+      <Link to="/" className="mt-3 block text-sm text-muted-foreground">Back home</Link></div></Shell>
   );
+  const Line = ({ k, v, cls = "text-muted-foreground" }: { k: string; v: string; cls?: string }) => <div className={"flex justify-between " + cls}><span>{k}</span><span>{v}</span></div>;
   return (
     <Shell>
-      <div className="px-5 pt-8"><h1 className="text-3xl font-bold">Shopping Bag</h1><p className="text-sm text-muted-foreground">{cart.length} item{cart.length !== 1 && "s"}</p></div>
+      <div className="px-5 pt-8"><h1 className="text-3xl font-bold">Shopping Bag</h1><p className="text-sm text-muted-foreground">{cart.length} item{cart.length !== 1 && "s"}{shipped.items.length > 0 && digital.items.length > 0 && " · 2 deliveries"}</p></div>
       {!cart.length ? <div className="px-5 py-20 text-center text-muted-foreground">Your bag is empty.<Link to="/shop" className="mt-4 block font-semibold text-mint">Start shopping</Link></div> : (
         <div className="space-y-6 px-5 pt-5 pb-28">
-          {phys.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Shipped devices</p><span className="text-xs text-muted-foreground">1–3 business days</span></div><div className="space-y-3">{phys.map((i) => <Row key={i.key} i={i} />)}</div>
+          {shipped.items.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Shipped devices</p><span className="text-xs text-muted-foreground">1–3 business days</span></div><div className="space-y-3">{shipped.items.map((i) => <Row key={i.key} i={i} />)}</div>
             <div className="mt-3 space-y-2 rounded-[20px] bg-card p-4"><p className="text-sm font-semibold">Delivery details</p>
               {([["name", "Recipient name"], ["street", "Street address"], ["town", "Town"], ["phone", "Contact number"]] as const).map(([k, ph]) => <input key={k} aria-label={ph} placeholder={ph} value={addr[k]} onChange={(e) => setAddr({ ...addr, [k]: e.target.value })} className="h-11 w-full rounded-xl bg-surface-2 px-3 text-sm outline-none" />)}
-            </div></section>}
-          {dig.length > 0 && <section className="rounded-[24px] border border-mint/40 p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-mint"><Wifi className="size-4" />Digital · eSIM & bundles</p><span className="text-xs text-mint">Instant · no shipping</span></div><div className="space-y-3">{dig.map((i) => <Row key={i.key} i={i} />)}</div><p className="mt-3 px-1 text-xs text-muted-foreground">eSIM QR and activation code appear right after payment and are emailed to you.</p></section>}
+            </div>
+            <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Shipping" v={nad(shipped.ship)} /><Line k="Shipped subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
+          </section>}
+          {digital.items.length > 0 && <section className="rounded-[24px] border border-mint/40 p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-mint"><Wifi className="size-4" />Digital · eSIM & bundles</p><span className="text-xs text-mint">Instant · no shipping</span></div><div className="space-y-3">{digital.items.map((i) => <Row key={i.key} i={i} />)}</div>
+            {digital.hasEsim && <div className="mt-3 rounded-[20px] bg-card p-4"><p className="text-sm font-semibold">eSIM delivery email</p><input type="email" aria-label="eSIM delivery email" placeholder="you@example.com" value={esimEmail} onChange={(e) => setEsimEmail(e.target.value)} className="mt-2 h-11 w-full rounded-xl bg-surface-2 px-3 text-sm outline-none" /><p className="mt-2 text-xs text-muted-foreground">QR and activation code also show on screen right after payment.</p></div>}
+            <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Digital items" v={nad(digital.sub)} />{digital.disc > 0 && <Line k="Discount" v={"-" + nad(digital.disc)} cls="text-mint" />}<Line k="Delivery" v="N$0" /><Line k="Digital subtotal" v={nad(digital.total)} cls="font-semibold" /></div>
+          </section>}
           <section className="rounded-[20px] bg-card p-4">
             <div className="flex gap-2"><label className="flex flex-1 items-center gap-2 rounded-2xl bg-surface-2 px-3"><Tag className="size-4 text-muted-foreground" />
               <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Promo code (try MTC10)" className="h-11 flex-1 bg-transparent text-sm outline-none" /></label>
@@ -65,20 +79,18 @@ function Cart() {
             {err && <p className="mt-2 text-xs text-primary">{err}</p>}{promo && <p className="mt-2 text-xs text-mint">MTC10 applied — 10% off</p>}
           </section>
           <section className="space-y-2 rounded-[20px] bg-card p-4 text-sm">
-            <div className="flex justify-between text-muted-foreground"><span>Subtotal</span><span>{nad(sub)}</span></div>
-            {disc > 0 && <div className="flex justify-between text-mint"><span>Discount</span><span>-{nad(disc)}</span></div>}
-            <div className="flex justify-between text-muted-foreground"><span>Shipping{!phys.length && " (digital only)"}</span><span>{ship ? nad(ship) : "N$0"}</span></div>
-            <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Total</span><span>{nad(sub - disc + ship)}</span></div>
+            {shipped.items.length > 0 && <Line k="Shipped devices" v={nad(shipped.total)} />}
+            {digital.items.length > 0 && <Line k="Digital services" v={nad(digital.total)} />}
+            <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Total</span><span>{nad(s.total)}</span></div>
           </section>
           {!user && <p className="text-center text-xs text-muted-foreground">Checking out as guest — sign in to keep your order history.</p>}
-          {addrMissing && !needsKyc && <p className="text-center text-xs text-muted-foreground">Add delivery details for your shipped devices to pay.</p>}
-          {needsKyc && <Link to="/kyc" className="block rounded-[20px] border border-primary/40 bg-primary/10 p-4 text-sm">Contract items need VERIFI ID verification before checkout. <span className="font-semibold text-mint">Verify now →</span></Link>}
+          {s.errors.length > 0 && (tried || cart.length > 0) && <ul role="alert" className="space-y-1 rounded-[20px] border border-primary/40 bg-primary/10 p-4 text-sm">{s.errors.map((e) => <li key={e}>• {e}</li>)}{!kycDone && cart.some((i) => i.mode === "contract") && <li><Link to="/kyc" className="font-semibold text-mint">Verify now →</Link></li>}</ul>}
         </div>
       )}
       {cart.length > 0 && (
         <div className="fixed inset-x-0 bottom-24 z-30 mx-auto flex max-w-md gap-2 px-4">
-          <button disabled={needsKyc || addrMissing} onClick={pay} className="h-14 flex-1 rounded-2xl bg-primary font-semibold text-primary-foreground disabled:opacity-40 glow-red">Pay Now · {nad(sub - disc + ship)}</button>
-          <button disabled={needsKyc || addrMissing} onClick={pay} className="h-14 rounded-2xl bg-foreground px-5 font-semibold text-background disabled:opacity-40">Apple Pay</button>
+          <button onClick={pay} className={"h-14 flex-1 rounded-2xl bg-primary font-semibold text-primary-foreground glow-red " + (s.errors.length ? "opacity-50" : "")}>Pay Now · {nad(s.total)}</button>
+          <button onClick={pay} className={"h-14 rounded-2xl bg-foreground px-5 font-semibold text-background " + (s.errors.length ? "opacity-50" : "")}>Apple Pay</button>
         </div>
       )}
     </Shell>
