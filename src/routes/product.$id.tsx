@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Heart, Minus, Plus, Share2, ShoppingBag, ShieldCheck, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, Heart, Minus, Plus, Share2, ShoppingBag, ShieldCheck, X, Rotate3D } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Shell } from "@/components/Shell";
+import { Product360Viewer } from "@/components/Product360Viewer";
+import { findProductSpin } from "@/lib/product-spins";
 import { getProduct, nad, plansFor, quote, stockLabel, TERMS } from "@/lib/data";
 import { ContractBreakdown } from "@/components/ContractBreakdown";
 import { UpfrontControl } from "@/components/retail/ContractControls";
@@ -38,6 +40,17 @@ function ProductDetail() {
   const [months, setMonths] = useState(24);
   const [upfrontPct, setUpfrontPct] = useState(0);
   const [planOpen, setPlanOpen] = useState(false);
+  const [mediaMode, setMediaMode] = useState<"360" | "photos">("360");
+  const [spinFailedKey, setSpinFailedKey] = useState("");
+  const currentSpin = findProductSpin(p.id, color);
+  const spinKey = `${p.id}:${color}`;
+  const spinAvailable = Boolean(currentSpin) && spinFailedKey !== spinKey;
+  const showSpin = spinAvailable && mediaMode === "360";
+  const onSpinUnavailable = useCallback(() => {
+    setSpinFailedKey(spinKey);
+    setMediaMode("photos");
+    toast.error("360° photos could not load. Showing the standard gallery.");
+  }, [spinKey]);
 
   const availablePlans = plansFor(p);
   const [selectedPlan, setSelectedPlan] = useState(availablePlans[0]?.id ?? "");
@@ -91,16 +104,24 @@ function ProductDetail() {
         : "bg-[#F1F2EF]")}>
         {p.featured && <div aria-hidden="true"
           className="pointer-events-none absolute inset-x-[13%] bottom-[48px] h-[65px] rounded-[50%] border border-white/90 shadow-[0_8px_24px_rgba(32,46,57,0.04)]" />}
-        <div ref={galleryRef} onScroll={(event) => {
-          setSlide(Math.max(0, Math.round(event.currentTarget.scrollLeft / event.currentTarget.clientWidth)));
-        }} className={cn("no-scrollbar relative z-10 flex snap-x snap-mandatory overflow-x-auto", p.featured ? "h-[min(64dvh,600px)] min-h-[450px]" : "h-[min(54dvh,540px)] min-h-[365px]")}>
-          {imgs.map((src, index) => (
-            <div key={src + index} className="flex h-full w-full shrink-0 snap-center items-center justify-center px-6 pb-12 pt-[70px]">
-              <img src={src} alt={`${p.name} view ${index + 1}`} loading={index ? "lazy" : "eager"} decoding="async"
-                className={cn("h-full w-full object-contain drop-shadow-[0_18px_16px_rgba(32,46,57,0.10)]", p.featured ? "max-h-[485px]" : "max-h-[390px]")} />
-            </div>
-          ))}
-        </div>
+        {showSpin && currentSpin ? (
+          <div className={cn("relative z-10 w-full", p.featured ? "h-[min(64dvh,600px)] min-h-[450px]" : "h-[min(54dvh,540px)] min-h-[365px]")}>
+            <Product360Viewer key={spinKey} spin={currentSpin} productName={p.name} onUnavailable={onSpinUnavailable} />
+          </div>
+        ) : (
+          <div ref={galleryRef} onScroll={(event) => {
+            setSlide(Math.max(0, Math.round(event.currentTarget.scrollLeft / event.currentTarget.clientWidth)));
+          }} className={cn("no-scrollbar relative z-10 flex snap-x snap-mandatory overflow-x-auto",
+            p.featured ? "h-[min(64dvh,600px)] min-h-[450px]" : "h-[min(54dvh,540px)] min-h-[365px]")}>
+            {imgs.map((src, index) => (
+              <div key={src + index} className={cn("flex h-full w-full shrink-0 snap-center items-center justify-center px-6 pb-12", spinAvailable ? "pt-[108px]" : "pt-[70px]")}>
+                <img src={src} alt={`${p.name} view ${index + 1}`} loading={index ? "lazy" : "eager"} decoding="async"
+                  className={cn("h-full w-full object-contain drop-shadow-[0_18px_16px_rgba(32,46,57,0.10)]",
+                    p.featured ? "max-h-[485px]" : "max-h-[390px]")} />
+              </div>
+            ))}
+          </div>
+        )}
         <div className="absolute inset-x-5 top-[max(18px,env(safe-area-inset-top))] z-20 flex items-center justify-between">
           <Link to="/shop" aria-label="Back to catalog"
             className="grid size-11 place-items-center rounded-full bg-white/95 text-foreground">
@@ -113,7 +134,21 @@ function ProductDetail() {
             <Heart aria-hidden="true" className={cn("size-[21px]", savedProduct && "fill-primary text-primary")} />
           </button>
         </div>
-        {imgs.length > 1 && <div className="absolute inset-x-0 bottom-10 z-20 flex justify-center gap-0.5" aria-label="Device gallery">
+        {spinAvailable && <div className="absolute inset-x-5 top-[max(76px,calc(env(safe-area-inset-top)+58px))] z-20 flex justify-center">
+          <div role="group" aria-label="Product viewing mode" className="inline-flex items-center gap-1 rounded-full bg-white/95 p-1 shadow-[0_3px_14px_rgba(32,46,57,0.09)]">
+            <button type="button" onClick={() => setMediaMode("360")} aria-pressed={mediaMode === "360"}
+              className={cn("inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold",
+                mediaMode === "360" ? "bg-[#202E39] text-white" : "text-[#202E39]")}>
+              <Rotate3D aria-hidden="true" className="size-4" /> 360° view
+            </button>
+            <button type="button" onClick={() => setMediaMode("photos")} aria-pressed={mediaMode === "photos"}
+              className={cn("min-h-11 rounded-full px-4 text-[13px] font-semibold",
+                mediaMode === "photos" ? "bg-[#202E39] text-white" : "text-[#202E39]")}>
+              Photos
+            </button>
+          </div>
+        </div>}
+        {!showSpin && imgs.length > 1 && <div className="absolute inset-x-0 bottom-10 z-20 flex justify-center gap-0.5" aria-label="Device gallery">
           {imgs.map((_, index) => (
             <button key={index} type="button" onClick={() => changePhoto(index)}
               aria-label={`Show product view ${index + 1}`} aria-current={slide === index ? "true" : undefined}
