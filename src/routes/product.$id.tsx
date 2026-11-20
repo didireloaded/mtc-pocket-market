@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Bookmark, Share2, ShieldCheck, ShoppingBag } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Shell } from "@/components/Shell";
 import { getProduct, nad, plansFor, quote, stockLabel, TERMS, MTC_STORES, fromMonthly, CONNECTION_FEE } from "@/lib/data";
 import { ContractBreakdown } from "@/components/ContractBreakdown";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ConceptNotice, Eyebrow } from "@/components/retail/RetailPrimitives";
@@ -25,6 +25,7 @@ function PDP() {
   const [months, setMonths] = useState<number>(24);
   const [upPct, setUpPct] = useState(0);
   const [slide, setSlide] = useState(0);
+  const galleryRef = useRef<HTMLDivElement>(null);
   const imgs = [p.image, ...(p.gallery ?? [])];
   const st = stockLabel(p);
   const [tab, setTab] = useState<"overview" | "plans">("overview");
@@ -36,25 +37,54 @@ function PDP() {
   const opt = { months, upfrontPct: upPct };
   const q = quote(p, sel, opt);
   const price = contract ? q.monthly : p.cash;
+  const goToSlide = (index: number) => {
+    galleryRef.current?.scrollTo({ left: index * galleryRef.current.clientWidth, behavior: "smooth" });
+    setSlide(index);
+  };
+  const shareProduct = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: p.name, url });
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        toast.success("Product link copied");
+      } else {
+        toast.error("Use the browser's share or copy-link option.");
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      toast.error("Couldn't share this product. Please try again.");
+    }
+  };
   return (
     <Shell nav={false}>
       <div className="relative">
-        <div onScroll={(e) => setSlide(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))} className="no-scrollbar flex h-[380px] snap-x snap-mandatory overflow-x-auto">
-          {imgs.map((src, i) => <img key={src} src={src} alt={`${p.name} photo ${i + 1}`} className="h-full w-full shrink-0 snap-center bg-stage object-contain p-10 pt-20" />)}
+        <div ref={galleryRef} onScroll={(e) => setSlide(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))} className="no-scrollbar flex h-[335px] snap-x snap-mandatory overflow-x-auto bg-stage sm:h-[380px]">
+          {imgs.map((src, i) => <img key={src} src={src} alt={`${p.name} photo ${i + 1}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" className="h-full w-full shrink-0 snap-center object-contain px-10 pb-10 pt-16" />)}
         </div>
-                {imgs.length > 1 && <div className="absolute inset-x-0 bottom-4 flex justify-center gap-1.5">{imgs.map((_, i) => <span key={i} className={"h-1.5 rounded-full transition-all " + (i === slide ? "w-6 bg-mint" : "w-1.5 bg-foreground/40")} />)}</div>}
-        <button aria-label="Back" onClick={() => router.history.back()} className="absolute left-5 top-6 grid size-11 place-items-center rounded-full bg-background/60 backdrop-blur"><ArrowLeft className="size-5" /></button>
-        <button aria-label="Share" onClick={() => navigator.share?.({ title: p.name, url: location.href }).catch(() => {})} className="absolute right-5 top-6 grid size-11 place-items-center rounded-full bg-background/60 backdrop-blur"><Share2 className="size-5" /></button>
+                {imgs.length > 1 && <div className="absolute inset-x-0 bottom-1 flex justify-center gap-1" role="group" aria-label="Product images">
+          {imgs.map((_, i) => <button key={i} type="button" aria-label={`View product photo ${i + 1}`}
+            aria-current={i === slide ? "true" : undefined} onClick={() => goToSlide(i)}
+            className="grid size-10 place-items-center rounded-full">
+            <span className={"h-1.5 rounded-full transition-all " + (i === slide ? "w-6 bg-primary" : "w-2 bg-foreground/35")} />
+          </button>)}
+        </div>}
+        <button type="button" aria-label="Back" onClick={() => router.history.back()} className="absolute left-5 top-6 grid size-11 place-items-center rounded-full border border-border bg-white/95"><ArrowLeft className="size-5" /></button>
+        <button type="button" aria-label="Share or copy product link" onClick={() => { void shareProduct(); }} className="absolute right-5 top-6 grid size-11 place-items-center rounded-full border border-border bg-white/95"><Share2 className="size-5" /></button>
       </div>
       <div className="relative px-5 pb-36 pt-6">
         <Eyebrow>{p.category}</Eyebrow>
-        <div className="mt-1 flex items-start justify-between gap-3">
-          <h1 className="text-[29px] font-bold leading-[1.1] tracking-[-0.05em]">{p.name}</h1>
-          <Badge variant="secondary" className="shrink-0 rounded-full bg-surface-2 px-3 py-2 text-[13px] font-bold tabular-nums">{nad(price)}{contract && "/mo"}</Badge>
+        <div className="mt-2">
+          <h1 className="text-[30px] font-bold leading-[1.08] tracking-[-0.055em]">{p.name}</h1>
+          <p className="mt-4 text-[13px] font-medium text-muted-foreground">{contract ? "Estimated monthly payment" : "Outright price"}</p>
+          <p className="mt-1 text-[30px] font-bold leading-9 tracking-[-0.055em] tabular-nums text-foreground">
+            {nad(price)}{contract && <span className="ml-1 text-[14px] font-medium tracking-normal text-muted-foreground">/month</span>}
+          </p>
         </div>
-        <p className="mt-1 text-muted-foreground">{p.tagline}</p>
+        <p className="mt-2 text-[14px] leading-6 text-muted-foreground">{p.tagline}</p>
         <ConceptNotice className="mt-4">Pocket Market concept preview. Contract instalments are estimates and require MTC confirmation before any application or payment.</ConceptNotice>
-        <p className={"mt-2 text-xs font-medium " + (st.tone === "ok" ? "text-mint" : st.tone === "low" ? "text-warning" : "text-primary")}>● {st.text}</p>
+        <p className="mt-3 text-[13px] font-medium text-muted-foreground">{st.text}</p>
         {p.contractable && (
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Button type="button" variant="outline" aria-pressed={!contract} onClick={() => { setMode("cash"); setTab("overview"); }}
