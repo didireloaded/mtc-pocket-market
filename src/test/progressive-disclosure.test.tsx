@@ -1,11 +1,12 @@
 import { readFileSync } from "node:fs";
+import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { ProductCard } from "@/components/ProductCard";
 import { nad, products } from "@/lib/data";
 
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children }: { children: React.ReactNode }) => <a href="#preview">{children}</a>,
+  Link: ({ children }: { children: ReactNode }) => <a href="#preview">{children}</a>,
   useNavigate: () => () => Promise.resolve(),
 }));
 vi.mock("@/lib/store", () => ({
