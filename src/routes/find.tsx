@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Check, SlidersHorizontal, Wallet, Wifi } from "lucide-react";
+import { ArrowLeft, ArrowRight, SlidersHorizontal, Wallet, Wifi } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
