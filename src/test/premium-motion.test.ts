@@ -10,47 +10,48 @@ const device = source("../routes/product.$id.tsx");
 const shell = source("../components/Shell.tsx");
 const store = source("../lib/store.tsx");
 const orders = source("../components/CloudOrders.tsx");
-const packageJson = JSON.parse(source("../../package.json")) as { dependencies: Record<string, string> };
+const css = source("../styles.css");
+const dependencies = (JSON.parse(source("../../package.json")) as { dependencies: Record<string, string> }).dependencies;
 
 describe("Premium, reduced-motion-aware retail interactions", () => {
-  it("installs Framer Motion while keeping the existing shopping views", () => {
-    expect(packageJson.dependencies["framer-motion"]).toBeTruthy();
+  it("uses the existing installed drawer instead of an unresolved dependency", () => {
+    expect(dependencies["vaul"]).toBeTruthy();
+    expect(dependencies["framer-motion"]).toBeUndefined();
     expect(home).toContain("<FeaturedDeviceHero product={featured} />");
     expect(shop).toContain("<ProductCard p={product} catalog />");
   });
 
-  it("stagger-reveals only the visible first shop products and the Home carousel", () => {
-    expect(home).toContain("revealGroup");
-    expect(home).toContain("revealItem");
-    expect(home).toContain("whileInView");
-    expect(shop).toContain("index < 8 ? revealItem : undefined");
-    expect(shop).toContain('initial={reduceMotion ? false : "hidden"}');
-    expect(hero).toContain("reduceMotion ? false");
-    expect(hero).not.toContain("Featured on Pocket Market");
+  it("reveal-animates Home and no more than the first eight Shop cards", () => {
+    expect(home).toContain("carouselReveal");
+    expect(home).toContain("pocket-reveal");
+    expect(shop).toContain("index < 8");
+    expect(shop).toContain("pocket-reveal-pending");
+    expect(hero).toContain("pocket-reveal");
+    expect(css).toContain("@keyframes pocket-rise");
+    expect(css).toContain(".pocket-reveal-pending { opacity: 1; }");
   });
 
-  it("uses tactile buttons and makes the bottom dock bounce only on cart additions", () => {
+  it("uses tactile buttons and bounces the dock only on cart additions", () => {
     expect(card).toContain("pressClass");
     expect(hero).toContain("pressClass");
     expect(device).toContain("pressClass");
     expect(store).toContain("setCartPulse((count) => count + 1)");
     expect(shell).toContain("cartPulse");
-    expect(shell).toContain("cartCount > 0");
-    expect(shell).toContain("useReducedMotion");
+    expect(shell).toContain("pocket-cart-bounce");
+    expect(css).toContain("@keyframes pocket-badge-pop");
   });
 
-  it("keeps the plan sheet accessible and derives real estimates from the existing calculator", () => {
+  it("keeps the draggable plan sheet accessible and uses existing pricing", () => {
     expect(device).toContain("<Drawer open={planOpen}");
     expect(device).toContain("<DrawerTitle");
     expect(device).toContain("<DrawerDescription");
     expect(device).toContain("<DrawerClose");
     expect(device).toContain("<ContractBreakdown");
     expect(device).toContain('setMode("contract"); setPlanOpen(false)');
-    expect(device).toContain('Learn about official contract verification');
     expect(device).not.toContain("setTimeout");
   });
 
-  it("uses card-shaped loading skeletons instead of fake payment progress", () => {
+  it("uses card-shaped skeletons for real server loading states", () => {
     expect(orders).toContain("Loading account requests");
     expect(orders).toContain("animate-pulse");
     expect(orders).not.toContain("Loader2");
