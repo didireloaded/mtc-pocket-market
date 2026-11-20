@@ -1,50 +1,67 @@
-# Mtc Pocket Market
+# MTC Pocket Market
 
-Build a premium, high-end mobile-first e-commerce web application for MTC Namibia (a major telecom operator). The app blends physical device retail (phones, laptops, audio) with digital telecom services (data bundles, eSIMs, contract plans).
+A mobile-first concept for a connected digital retail and customer experience in Namibia.
 
-1. Design System & Aesthetic (matching the attached reference image):
-- Vibe: Premium, sleek, futuristic, dark mode only.
-- Background: Deep charcoal (#0A0F14).
-- Surface/Cards: Slightly lighter charcoal (#151C23) with smooth rounded corners (border-radius: 20px).
-- Primary Accent: Alizarin Crimson (#DD2A1B) for primary actions or brand accents, paired with vibrant Mint/Teal (#2DD4BF) for featured tags, active tabs, highlights, and secondary CTAs as shown in the screenshot.
-- Typography: Inter/Sans-serif with clean bold headers and light gray secondary text (#9CA3AF).
+**Purpose:** Help customers discover devices, explore and configure contracts, understand identity requirements, purchase or reserve through authorised channels, track orders, and manage services in one place.
 
-2. App Architecture & Bottom Navigation:
-- Home: Discovery, horizontal category pills (Headphones, Laptops, Wearables, Audio), featured hero device card with circular '+' button, and New Arrivals carousel.
-- Shop: Full product catalog with filterable categories, search, and cash vs. contract price toggle.
-- MyMTC: Telecom account dashboard with data balance, airtime, active contracts, and quick bundle top-up.
-- Cart: Shopping bag with quantity pill controls (- 1 +), item removal, promo code input, order summary, and checkout.
+**Project:** [Lovable editor](https://lovable.dev/projects/e459443e-2f89-4545-9e2a-d3a5dbb456e8) · [Published site](https://mtc-pocket-market.lovable.app)
 
-3. Detailed Screens & Flows:
-- Home Screen: Greeting header, notification icon, category pills, Hero featured card (e.g. Sonic Pro ANC, $349 / N$), and "New Arrival" section (The Creator Series Laptops).
-- Product Detail Page (PDP): Large hero image with bottom gradient fade, back and share overlay buttons, product title, price pill, tab toggle between "OVERVIEW" (specs grid: battery, connectivity, etc.) and "PLANS" (monthly contract options), plus sticky bottom bar with Save/bookmark and "Add to Cart".
-- Shopping Bag (Cart): Cart item list with thumbnail, title, color/variant, price, trash icon, qty pill selector, promo code section with Apply, subtotal/shipping/total breakdown, and sticky "Pay Now" button with Apple Pay option.
-- Core Telecom Logic:
-  - Cash Price vs. Contract Price toggle on product cards and PDP.
-  - Cart separation for physical items (delivery) and digital items (eSIM / data bundles).
-  - Mock eSIM activation flow that displays a realistic QR code for scanning.
-  - Mock VERIFI KYC flow for contract applications (National ID capture simulation and selfie verification).
-  - Onboarding / Auth modal with Phone + OTP login or "Browse as Guest".
+## Experience
 
-This project was built with [Lovable](https://lovable.dev).
+- **Home** adapts to new guests and signed-in Pocket Market users. Signed-in status does **not** imply a linked MTC mobile account.
+- **Shop** includes searchable products, cash/contract estimate modes, filters, and category discovery.
+- **Find My Contract** (`/find`) matches a budget, term, device type and data preference with illustrative combinations.
+- **Compare devices** (`/compare`) compares cash prices, estimated monthly prices and available specifications.
+- **My MTC** is currently a clearly marked sample service dashboard.
+- **Orders** shows browser-local demo order history; no MTC fulfilment integration exists.
+- **Account** holds locally saved shopping preferences and account settings.
+- **Store collection** lists branch names from the product catalogue but makes no live stock or reservation claims.
 
-**Live app**: https://mtc-pocket-market.lovable.app
+The main navigation includes Home, Shop, My MTC, Orders and Account. Shopping Bag is accessible from Home, Shop and product details.
 
-## Build with Lovable
+## Important demo boundaries
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/e459443e-2f89-4545-9e2a-d3a5dbb456e8).
+This is an **independent concept**, not an authorised MTC transaction system.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+- Cash device records are a locally curated catalogue and need continuing verification.
+- Financing calculations, contract term totals and package suitability are **illustrative**, not official quotes.
+- Contract applications, MTC VERIFI identity checks, stock reservations, live account balances, real mobile-money/card processing, data recharges, SMS/email notifications, eSIM provisioning and shipping are **not connected to MTC**.
+- A demo order is saved in browser storage only. It does not take payment, activate a service or ship a product.
+- Never capture identity photos or simulate successful biometric verification as a real approval.
+- No made-up business phone numbers, store opening hours, stock counts, promotional terms or activation codes should be presented as genuine.
+
+## Stack
+
+- TanStack Start / TanStack Router / React 19
+- TypeScript, Vite, Tailwind CSS, Lucide
+- Lovable Cloud and Supabase Auth for Pocket Market sign-in
+- Browser-local cart, favourites, demo orders and preferences
+
+## Main code
+
+- `src/routes/index.tsx` — personalised Home
+- `src/routes/find.tsx` and `src/lib/finder.ts` — device/plan matcher
+- `src/routes/compare.tsx` — device comparison
+- `src/routes/shop.tsx` — product discovery
+- `src/lib/data.ts` — current seeded products, plans and illustrative quote engine
+- `src/lib/checkout.ts` — separates one-time demo checkout amounts from recurring estimates
+- `src/lib/store.tsx` — client-side shopping state and authentication session
+- `src/routes/orders.tsx` — local demo orders
+- `src/routes/kyc.tsx` and `src/routes/esim.tsx` — guidance only, no fake approval/provisioning
+
+Use file-based routes in `src/routes`. Do not manually edit `src/routeTree.gen.ts` or generated database files.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install
+bun run dev
+bun run test
+bun run build
 ```
+
+GitHub `main` is connected to the Lovable project. Changes pushed to the active branch sync to the Lovable editor. **Publishing to the live URL is a separate step.** For changes involving MTC account integration or official transaction backends, obtain approval and verified interfaces first.
+
+## Design direction
+
+Keep the current light MTC-inspired palette, strong typography, real product imagery, generous touch targets and low-data mobile performance. Avoid cluttered dashboards, neon effects, generic stock illustrations and invented product details.
