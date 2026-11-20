@@ -34,7 +34,7 @@ export function findContractMatches(options: FinderOptions): FinderMatch[] {
   return products.filter((p) => p.category === category && p.contractable).map((product) => {
     const candidates = plansFor(product)
       .filter((plan) => plan.id.startsWith("select-") && (plan.terms as readonly number[]).includes(months))
-      .map((plan) => {
+      .map((plan): FinderMatch => {
         const q = quote(product, plan, { months, upfrontPct });
         return {
           product, plan,
