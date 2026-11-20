@@ -58,7 +58,8 @@ export const brands = [...new Set(products.map((p) => p.brand))].sort();
 export const accessoryIds = ["apple-20w-adapter", "airpods-4", "burtone-metal-tws"];
 export const TERMS = [12, 24, 36, 48] as const;
 /** MTC lists every shop item as orderable for collection at its stores; live stock levels are not published. */
-export const stockLabel = (_p: Product) => ({ tone: "low" as const, text: "Stock and collection availability not yet verified" });
+export type StockTone = "ok" | "low" | "out";
+export const stockLabel = (_p: Product): { tone: StockTone; text: string } => ({ tone: "low", text: "Stock and collection availability not yet verified" });
 
 /** Real MTC contract packages (mtc.com.na/contract). Infinite plans let you build your own allowances. */
 export const plans = [
