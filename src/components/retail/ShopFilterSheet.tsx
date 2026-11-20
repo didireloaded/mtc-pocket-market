@@ -27,7 +27,7 @@ export function ShopFilterSheet({ open, onOpenChange, values, onChange, brands, 
   const clear = () => onChange({ brands: [], net: "Any", maxCash: 40000, maxMonthly: 4000, storage: "Any" });
   return <>
     <Button type="button" variant="outline" aria-label="Filter products" onClick={() => onOpenChange(true)}
-      className="relative size-[52px] shrink-0 rounded-full border-0 bg-white p-0 text-[#202E39] shadow-none">
+      className="relative size-[52px] shrink-0 rounded-full border-0 bg-white p-0 text-[#202E39] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
       <SlidersHorizontal aria-hidden="true" className="size-[20px]" />
       {activeCount > 0 && <Badge className="absolute -right-0.5 -top-0.5 grid min-h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] text-white">{activeCount}</Badge>}
     </Button>

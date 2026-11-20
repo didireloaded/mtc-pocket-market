@@ -78,7 +78,7 @@ function Shop() {
             <h1 className="mt-1 text-[32px] font-bold tracking-[-0.055em]">Catalog</h1>
           </div>
           <Link to="/cart" aria-label={`Shopping bag with ${cart.reduce((count, item) => count + item.qty, 0)} items`}
-            className="relative grid size-11 place-items-center rounded-full bg-white text-foreground">
+            className="relative grid size-11 place-items-center rounded-full bg-white text-foreground shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
             <ShoppingBag aria-hidden="true" className="size-5" />
             {cart.length > 0 && <span className="absolute -right-1 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
               {cart.reduce((count, item) => count + item.qty, 0)}
@@ -89,7 +89,7 @@ function Shop() {
         <div className="relative mt-5 flex items-center gap-2" onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocus(false);
         }}>
-          <label className="flex h-[52px] min-w-0 flex-1 items-center gap-3 rounded-full bg-white px-4">
+          <label className="flex h-[52px] min-w-0 flex-1 items-center gap-3 rounded-full bg-white px-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
             <Search aria-hidden="true" className="size-[18px] shrink-0 text-foreground" />
             <input type="search" aria-label="Search products and bundles" placeholder="Search devices"
               enterKeyHint="search" autoComplete="off" value={q}
@@ -109,7 +109,7 @@ function Shop() {
               {!t && <p className="px-3 py-1 text-[12px] font-medium text-muted-foreground">Recent searches</p>}
               {(t ? suggestions : extra.searches).map((suggestion) => (
                 <button key={suggestion} type="button"
-                  onPointerDown={(event) => { event.preventDefault(); commit(suggestion); }}
+                  onPointerDown={(event) => event.preventDefault()}
                   onClick={() => commit(suggestion)}
                   className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-[14px] hover:bg-surface-2">
                   {t ? <Search className="size-4 text-muted-foreground" /> : <Clock className="size-4 text-muted-foreground" />}
@@ -126,7 +126,7 @@ function Shop() {
           <Link key={name} to="/shop" search={name === "All" ? {} : { c: name }}
             aria-current={c === name ? "page" : undefined}
             className={cn("flex h-11 shrink-0 items-center rounded-full px-4 text-[13px] font-semibold transition-colors",
-              c === name ? "bg-[#202E39] text-white" : "bg-white text-foreground hover:bg-[#E7E9E9]")}>
+              c === name ? "bg-primary text-white" : "bg-white text-foreground hover:bg-[#E7E9E9]")}>
             {name}
           </Link>
         ))}
@@ -135,11 +135,11 @@ function Shop() {
       <div className="mt-4 flex items-center justify-between gap-2 px-5">
         <div className="inline-flex items-center gap-1 rounded-full bg-white p-1 text-[12px] font-semibold">
           <button type="button" onClick={() => setMode("cash")} aria-pressed={mode === "cash"}
-            className={cn("min-h-10 rounded-full px-3 transition-colors", mode === "cash" ? "bg-[#202E39] text-white" : "text-muted-foreground")}>
+            className={cn("min-h-10 rounded-full px-3 transition-colors", mode === "cash" ? "bg-primary text-white" : "text-muted-foreground")}>
             Outright
           </button>
           <button type="button" onClick={() => setMode("contract")} aria-pressed={mode === "contract"}
-            className={cn("min-h-10 rounded-full px-3 transition-colors", mode === "contract" ? "bg-[#202E39] text-white" : "text-muted-foreground")}>
+            className={cn("min-h-10 rounded-full px-3 transition-colors", mode === "contract" ? "bg-primary text-white" : "text-muted-foreground")}>
             Monthly est.
           </button>
         </div>
@@ -182,7 +182,7 @@ function Shop() {
       </section>}
 
       {view === "grid" ? (
-        <div className="mt-3 grid grid-cols-2 gap-3 px-5 pb-6">
+        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-9 px-5 pb-7">
           {list.map((product) => <ProductCard key={product.id} p={product} catalog />)}
         </div>
       ) : (
