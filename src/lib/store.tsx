@@ -14,7 +14,7 @@ export type Extra = {
 const defaultExtra: Extra = { onboarded: false, recent: [], searches: [], addresses: [{ label: "Home", name: "", street: "", town: "", phone: "" }],
   kyc: "none", prefs: { orders: true, priceDrops: true, lowBalance: true }, numbers: [], biometric: false };
 type Store = {
-  ready: boolean; authReady: boolean; cart: CartItem[]; add: (i: Omit<CartItem, "qty" | "key">) => void; setQty: (k: string, q: number) => void; remove: (k: string) => void; clear: () => void;
+  ready: boolean; authReady: boolean; cart: CartItem[]; cartPulse: number; add: (i: Omit<CartItem, "qty" | "key">) => void; setQty: (k: string, q: number) => void; remove: (k: string) => void; clear: () => void;
   mode: "cash" | "contract"; setMode: (m: "cash" | "contract") => void;
   user: User | null; guest: boolean; login: (u: User) => void; orders: Order[]; placeOrder: (o: Omit<Order, "id" | "placedAt" | "tracking">) => string; notices: Notice[]; markAllRead: () => void; browseGuest: () => void; logout: () => void; authOpen: boolean; setAuthOpen: (b: boolean) => void;
   extra: Extra; setExtra: (f: (e: Extra) => Extra) => void; viewProduct: (id: string) => void;
@@ -25,6 +25,7 @@ const g = globalThis as { __mtcStoreCtx?: React.Context<Store | null> };
 const Ctx = (g.__mtcStoreCtx ??= createContext<Store | null>(null));
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartPulse, setCartPulse] = useState(0);
   const [mode, setMode] = useState<"cash" | "contract">("cash");
   const [user, setUser] = useState<User | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -60,12 +61,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, []);
   // Browser demo orders never generate fake shipping or push notifications.
-  const add: Store["add"] = (i) => setCart((c) => {
+  const add: Store["add"] = (i) => {
+    setCartPulse((count) => count + 1);
+    setCart((c) => {
     const key = `${i.id}-${i.variant}-${i.mode ?? ""}`;
     const ex = c.find((x) => x.key === key);
     return ex ? c.map((x) => (x.key === key ? { ...x, qty: x.qty + 1 } : x)) : [...c, { ...i, key, qty: 1 }];
-  });
-  return <Ctx.Provider value={{ ready, authReady, cart, add, setQty: (k, q) => setCart((c) => q < 1 ? c.filter((x) => x.key !== k) : c.map((x) => (x.key === k ? { ...x, qty: q } : x))),
+    });
+  };
+  return <Ctx.Provider value={{ ready, authReady, cart, cartPulse, add, setQty: (k, q) => setCart((c) => q < 1 ? c.filter((x) => x.key !== k) : c.map((x) => (x.key === k ? { ...x, qty: q } : x))),
     remove: (k) => setCart((c) => c.filter((x) => x.key !== k)), clear: () => setCart([]), mode, setMode, user, guest,
     orders, placeOrder: (o) => { const id = "DEMO-" + Date.now().toString(36).toUpperCase(); setOrders((x) => [{ ...o, id, tracking: "", placedAt: Date.now() }, ...x]); return id; },
     extra, setExtra: setExtraState, viewProduct: (id) => setExtraState((e) => ({ ...e, recent: [id, ...e.recent.filter((x) => x !== id)].slice(0, 8) })),
