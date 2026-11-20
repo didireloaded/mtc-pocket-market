@@ -50,7 +50,7 @@ export function AuthModal() {
           <p className="mt-2 text-sm text-muted-foreground">We sent a confirmation link to {email}. Open it to finish creating your account.</p>
           <button onClick={() => { setSent(false); setMode("signin"); }} className="mt-5 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground">Back to sign in</button>
         </>) : (<>
-          <h2 className="mt-3 text-2xl font-bold">{mode === "signin" ? "Sign in to MTC Store" : "Create your account"}</h2>
+          <h2 className="mt-3 text-2xl font-bold">{mode === "signin" ? "Sign in to Pocket Market" : "Create your account"}</h2>
           <div className="mt-4 grid grid-cols-2 rounded-full bg-surface-2 p-1 text-sm font-semibold">
             {(["signin", "signup"] as const).map((m) => <button key={m} onClick={() => { setMode(m); setErr(""); }} className={cn("rounded-full py-2", mode === m ? "bg-mint text-mint-foreground" : "text-muted-foreground")}>{m === "signin" ? "Sign in" : "Sign up"}</button>)}
           </div>
@@ -64,7 +64,7 @@ export function AuthModal() {
           </div>
         </>)}
         {err && <p role="alert" className="mt-3 text-sm text-destructive">{err}</p>}
-        <button onClick={browseGuest} className="mt-4 h-12 w-full rounded-2xl border text-sm font-medium text-mint">Browse as Guest</button>
+        <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">Pocket Market accounts are separate from MTC mobile-number accounts. Orders and preferences are currently stored in this browser.</p><button onClick={browseGuest} className="mt-4 h-12 w-full rounded-2xl border text-sm font-medium text-mint">Browse as Guest</button>
       </div>
     </div>
   );
