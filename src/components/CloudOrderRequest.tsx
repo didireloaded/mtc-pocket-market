@@ -6,26 +6,29 @@ import { CheckCircle2, CloudOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
 import { submitOrderRequest } from "@/lib/operations.functions";
-
-type Address = { name: string; street: string; town: string; phone: string };
-const fields: { key: keyof Address; label: string; autoComplete: string; type?: string }[] = [
-  { key: "name", label: "Recipient name", autoComplete: "name" },
-  { key: "street", label: "Street address", autoComplete: "street-address" },
-  { key: "town", label: "Town", autoComplete: "address-level2" },
-  { key: "phone", label: "Contact number", autoComplete: "tel", type: "tel" },
-];
+import { NamibiaAddressFields, type NamibiaAddress } from "@/components/NamibiaAddressFields";
+import { isNamibiaRegion } from "@/lib/namibia";
 
 export function CloudOrderRequest() {
-  const { cart, user, setAuthOpen } = useStore();
+  const { cart, user, setAuthOpen, extra } = useStore();
   const submit = useServerFn(submitOrderRequest);
   const cache = useQueryClient();
-  const [address, setAddress] = useState<Address>({ name: "", street: "", town: "", phone: "" });
+  const [address, setAddress] = useState<NamibiaAddress>(() => {
+    const saved = extra.addresses[0];
+    return saved
+      ? { name: saved.name, street: saved.street, town: saved.town, region: saved.region ?? "", phone: saved.phone }
+      : { name: "", street: "", town: "", region: "", phone: "" };
+  });
   const eligible = cart.length > 0 && cart.every((item) => item.kind === "physical" && item.mode !== "contract");
 
   const mutation = useMutation({
     mutationFn: () => {
       if (!window.navigator.onLine) throw new Error("offline");
-      return submit({ data: { items: cart.map((item) => ({ id: item.id, qty: item.qty })), address } });
+      if (!isNamibiaRegion(address.region)) throw new Error("region");
+      return submit({ data: {
+        items: cart.map((item) => ({ id: item.id, qty: item.qty })),
+        address: { name: address.name, street: address.street, town: address.town, region: address.region, phone: address.phone },
+      } });
     },
     onSuccess: () => { void cache.invalidateQueries({ queryKey: ["cloud-operations"] }); },
   });
@@ -37,35 +40,30 @@ export function CloudOrderRequest() {
   };
 
   return <section className="mt-5 rounded-[22px] border border-border bg-card p-4" aria-labelledby="cloud-request-title">
-    <h2 id="cloud-request-title" className="text-[17px] font-bold">Save an account-linked order request</h2>
+    <h2 id="cloud-request-title" className="text-[17px] font-bold">Submit an account request</h2>
     <p className="mt-2 text-[14px] leading-6 text-muted-foreground">
-      No payment will be collected. Stock, delivery charges and final availability still require confirmation.
+      Submit your chosen devices for follow-up. This saves an account-linked request, not a purchase. No payment is collected, and stock and delivery need confirmation.
     </p>
 
     {!user ? <Button type="button" onClick={() => setAuthOpen(true)} className="mt-4 min-h-12 rounded-full text-[14px]">
       Sign in to submit a request
     </Button> : mutation.isSuccess ? <div role="status" className="mt-4 rounded-[16px] bg-surface-2 p-4">
       <CheckCircle2 aria-hidden="true" className="size-6 text-mint" />
-      <p className="mt-2 text-[15px] font-semibold">Your order request is saved</p>
-      <p className="mt-1 text-[13px] leading-5 text-muted-foreground">This is an account request, not confirmation of a paid order.</p>
-      <Button asChild className="mt-4 min-h-11 rounded-full"><Link to="/orders">View account requests</Link></Button>
+      <p className="mt-2 text-[15px] font-semibold">Your request was saved</p>
+      <p className="mt-1 text-[13px] leading-5 text-muted-foreground">The request is saved to your Pocket Market account. Payment and fulfilment have not started.</p>
+      <Button asChild className="mt-4 min-h-11 rounded-full"><Link to="/orders">View your requests</Link></Button>
     </div> : <form onSubmit={onSubmit} className="mt-5 space-y-4">
-      {fields.map(({ key, label, type, autoComplete }) => <div key={key}>
-        <label htmlFor={`request-${key}`} className="mb-1.5 block text-[14px] font-semibold">{label}</label>
-        <input id={`request-${key}`} type={type ?? "text"} inputMode={key === "phone" ? "tel" : "text"}
-          autoComplete={autoComplete} required minLength={key === "phone" ? 8 : 1}
-          value={address[key]} onChange={(event) => setAddress((prev) => ({ ...prev, [key]: event.target.value }))}
-          placeholder={label} className="h-12 w-full rounded-[14px] border border-border bg-background px-4 text-[16px] outline-none focus-visible:ring-2 focus-visible:ring-mint" />
-      </div>)}
-
+      <NamibiaAddressFields prefix="request" value={address} onChange={setAddress} />
       {mutation.isError && <div role="alert" className="flex items-start gap-2 rounded-[14px] bg-destructive/10 p-3 text-[13px] leading-5 text-destructive">
         <CloudOff aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
         <p>{mutation.error instanceof Error && mutation.error.message === "offline"
-          ? "You're offline. Connect to the internet and try again. Your form is still here."
+          ? "You're offline. Reconnect and try again. Your form is still here."
+          : mutation.error instanceof Error && mutation.error.message === "region"
+          ? "Choose a Namibian region for this address."
           : "We couldn't confirm that your request was saved. Check your account requests before trying again to avoid duplicates."}</p>
       </div>}
       <Button type="submit" disabled={mutation.isPending} className="min-h-12 w-full rounded-full text-[14px] font-semibold">
-        {mutation.isPending ? <><Loader2 aria-hidden="true" className="size-4 animate-spin" />Submitting…</> : "Save order request"}
+        {mutation.isPending ? <><Loader2 aria-hidden="true" className="size-4 animate-spin" />Submitting…</> : "Submit account request"}
       </Button>
     </form>}
   </section>;
