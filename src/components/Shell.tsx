@@ -38,12 +38,12 @@ function BottomNav() {
   ];
   if (editing) return null;
   return (
-    <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-3 pb-[max(12px,env(safe-area-inset-bottom))]">
-      <div className="flex items-center gap-1 rounded-[24px] border bg-card/95 p-1.5 shadow-card backdrop-blur">
+    <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-white px-2 pb-[max(8px,env(safe-area-inset-bottom))]">
+      <div className="grid grid-cols-5 gap-0 pt-1">
         {items.map(({ to, label, icon: Icon }) => (
           <Link key={to} to={to} activeOptions={{ exact: to === "/" }} aria-label={label}
-            className="group flex h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[18px] px-1 text-muted-foreground transition-colors data-[status=active]:bg-primary data-[status=active]:text-primary-foreground">
-            <Icon className="size-[19px]" strokeWidth={1.9} />
+            className="group flex h-[58px] min-w-0 flex-col items-center justify-center gap-1 rounded-[10px] px-1 text-muted-foreground transition-colors data-[status=active]:text-primary">
+            <Icon className="size-5" strokeWidth={1.9} />
             <span className="text-[12px] font-semibold leading-none">{label}</span>
           </Link>
         ))}
@@ -57,11 +57,11 @@ export function PriceToggle() {
   return <ToggleGroup type="single" value={mode} onValueChange={(value) => {
     if (value === "cash" || value === "contract") setMode(value);
   }} aria-label="Price display mode"
-    className="inline-grid grid-cols-2 gap-1 rounded-full border border-border/70 bg-card p-1">
-    <ToggleGroupItem value="cash" className="h-10 rounded-full px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
+    className="inline-grid grid-cols-2 gap-1 rounded-[13px] border border-border bg-white p-1">
+    <ToggleGroupItem value="cash" className="h-10 rounded-[10px] px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
       Buy outright
     </ToggleGroupItem>
-    <ToggleGroupItem value="contract" className="h-10 rounded-full px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
+    <ToggleGroupItem value="contract" className="h-10 rounded-[10px] px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
       Contract estimate
     </ToggleGroupItem>
   </ToggleGroup>;
