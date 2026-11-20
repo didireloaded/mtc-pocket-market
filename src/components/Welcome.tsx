@@ -4,17 +4,17 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const slides = [
-  { i: Smartphone, t: "Shop the latest devices", d: "Phones, laptops and audio — pay cash or spread it on contract." },
-  { i: Gauge, t: "Manage MyMTC", d: "Balances, bundles, contracts and orders in one place." },
-  { i: QrCode, t: "eSIM in minutes", d: "Buy a plan, scan a QR code, and you're connected." },
+  { i: Smartphone, t: "Shop the latest devices", d: "Explore real device categories, compare cash prices and preview contract choices." },
+  { i: Gauge, t: "Manage MyMTC", d: "One place for shopping, orders and connected services when approved." },
+  { i: QrCode, t: "Discover your connectivity", d: "Explore eSIM options and learn about official activation requirements." },
 ];
 export function Welcome() {
-  const { extra, setExtra, setAuthOpen, user, guest } = useStore();
+  const { extra, setExtra, browseGuest, user, guest } = useStore();
   const [splash, setSplash] = useState(true);
   const [i, setI] = useState(0);
   useEffect(() => { const t = setTimeout(() => setSplash(false), 1400); return () => clearTimeout(t); }, []);
   if (extra.onboarded || user || guest) return null;
-  const finish = () => { setExtra((e) => ({ ...e, onboarded: true })); setAuthOpen(true); };
+  const finish = () => { setExtra((e) => ({ ...e, onboarded: true })); browseGuest(); };
   if (splash) return (
     <div className="fixed inset-0 z-[60] grid place-items-center bg-background">
       <div className="text-center animate-in zoom-in-50 fade-in duration-700">
