@@ -65,3 +65,15 @@ Keep the current light mobile-first retail experience. Do not switch back to dar
 - No gradient heroes, neon effects, glassmorphism or redundant CTA buttons. Prefer flat surfaces, grounded spacing, real images, clear selected states, usable focus outlines and reduced-motion support.
 - Preserve price source/eligibility, demo/official disclaimers, cart/auth/navigation state and backend boundaries when changing appearance. Never imply that illustrative contracts are real offers.
 - See `docs/premium-retail-ui.md` for component and page-specific rules.
+
+## Progressive disclosure and calm Home
+
+Treat Home as the lightest part of the experience, not a directory of every feature. Its information budget is **one top bar, one featured-device hero, five quick categories and one new-arrivals carousel**. A short independent-concept disclaimer may appear below.
+
+- Keep the header limited to the existing MTC logo, Search and Bag. Notifications belong to My MTC, and profile/settings remain in Account.
+- Do not add a contract builder, comparison form, AI adviser section, account preview, upsell grid, second carousel or competing CTAs to Home.
+- Discovery product cards on Home show **photo, name and outright price only**. Shop and Product Details own richer controls and technical specifications.
+- Contract browsing lives in Shop and the `/find` flow; comparison appears after a relevant category is selected, while the AI adviser is reached through the discreet Shop action.
+- Maintain generous vertical whitespace between these three sections and avoid gratuitous cards, borders and shadows.
+- Keep routes and functionality available through the main tabs. A simpler Home must not delete fulfilment, saved products, contract estimation or account features.
+- Ground all marketing and device imagery in the real catalogue. Do not advertise a discount or benefit unless verified by MTC.
