@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Minus, Plus, Trash2, Wifi, CheckCircle2, CreditCard, Building2, Wallet, Info } from "lucide-react";
+import { Minus, Plus, Trash2, Truck, Wifi, CheckCircle2, CreditCard, Building2, Wallet, Info } from "lucide-react";
 import { useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { nad, products } from "@/lib/data";
@@ -68,11 +68,11 @@ function Cart() {
       <div className="px-5 pt-8"><h1 className="text-3xl font-bold">Your bag</h1><p className="text-sm text-muted-foreground">{cart.length} item{cart.length !== 1 && "s"}{shipped.items.length > 0 && digital.items.length > 0 && " · physical and digital items"}</p><CloudOrderRequest /></div>
       {!cart.length ? <div className="px-5 py-20 text-center text-muted-foreground">Your bag is empty.<Link to="/shop" className="mt-4 block font-semibold text-mint">Start shopping</Link></div> : (
         <div className="space-y-6 px-5 pt-5 pb-6">
-          {shipped.items.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Physical items (demo)</p><span className="text-xs text-muted-foreground">Delivery not arranged</span></div><div className="space-y-3">{shipped.items.map((i) => <Row key={i.key} i={i} />)}</div>
+          {shipped.items.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Physical devices</p><span className="text-xs text-muted-foreground">Delivery not arranged</span></div><div className="space-y-3">{shipped.items.map((i) => <Row key={i.key} i={i} />)}</div>
             <div className="mt-3 space-y-2 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">Delivery details</p>
               <div className="flex flex-wrap gap-2">{extra.addresses.map((a) => <button key={a.label} onClick={() => setAddr({ name: a.name, street: a.street, town: a.town, region: a.region ?? "", phone: a.phone })} className={"rounded-full border px-3 py-1 text-xs " + (a.street === addr.street && a.name === addr.name ? "border-mint text-mint" : "text-muted-foreground")}>{a.label}</button>)}</div>
               <NamibiaAddressFields prefix="bag" value={addr} onChange={setAddr} />
-              <div className="flex gap-2"><input aria-label="Save address as" value={saveAs} onChange={(e) => setSaveAs(e.target.value)} placeholder="Save as (e.g. Work)" className="h-12 min-w-0 flex-1 rounded-xl bg-surface-2 px-3 text-[16px] outline-none" />
+              <div className="flex gap-2"><input aria-label="Save address as" value={saveAs} onChange={(e) => setSaveAs(e.target.value)} placeholder="Save this address as (e.g. Work)" className="h-12 min-w-0 flex-1 rounded-xl bg-surface-2 px-3 text-[16px] outline-none" />
                 <button disabled={!saveAs.trim() || !addr.street.trim() || !addr.town.trim() || !addr.region} onClick={() => { setExtra((e) => ({ ...e, addresses: [...e.addresses.filter((a) => a.label !== saveAs.trim()), { label: saveAs.trim(), ...addr }] })); setSaveAs(""); }} className="min-h-12 rounded-xl border px-4 text-[14px] font-semibold text-mint disabled:opacity-40">Save</button></div>
             </div>
             {shipped.items.some((i) => products.find((p) => p.id === i.id)?.category === "Phones") && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">Add accessories</p>
@@ -80,7 +80,7 @@ function Cart() {
             <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Delivery fee" v="To be confirmed" /><p className="text-xs leading-5 text-muted-foreground">No delivery fee is included. An actual fee requires official confirmation.</p><Line k="Physical items subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
           </section>}
           {digital.items.length > 0 && <section className="rounded-[24px] border border-mint/40 p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-mint"><Wifi className="size-4" />Digital · eSIM & bundles</p><span className="text-xs text-mint">Activation not connected</span></div><div className="space-y-3">{digital.items.map((i) => <Row key={i.key} i={i} />)}</div>
-            {digital.hasEsim && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">eSIM delivery email</p><input type="email" inputMode="email" autoComplete="email" aria-label="Email for eSIM demonstration" placeholder="you@example.com" value={esimEmail} onChange={(e) => setEsimEmail(e.target.value)} className="mt-2 h-12 w-full rounded-xl bg-surface-2 px-3 text-[16px] outline-none" /><p className="mt-2 text-xs text-muted-foreground">No QR code or activation email is issued in this demo.</p></div>}
+            {digital.hasEsim && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">eSIM delivery email</p><input type="email" inputMode="email" autoComplete="email" aria-label="Email for eSIM demonstration" placeholder="you@example.com" value={esimEmail} onChange={(e) => setEsimEmail(e.target.value)} className="mt-2 h-12 w-full rounded-xl bg-surface-2 px-3 text-[16px] outline-none" /><p className="mt-2 text-xs text-muted-foreground">An activation email or QR code cannot be issued until an approved service is connected.</p></div>}
             <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Digital items" v={nad(digital.sub)} />{digital.disc > 0 && <Line k="Discount" v={"-" + nad(digital.disc)} cls="text-mint" />}<Line k="Delivery" v="N$0" /><Line k="Digital subtotal" v={nad(digital.total)} cls="font-semibold" /></div>
           </section>}
           <section className="space-y-2 rounded-[20px] bg-card shadow-card p-4 text-sm">
@@ -113,7 +113,7 @@ function Cart() {
             Independent retail concept. Saving a shopping preview does not place an MTC order, collect payment, reserve stock, arrange delivery or activate an eSIM.
           </p>
           {!user && <p className="text-center text-xs text-muted-foreground">Guest demo orders stay in this browser. Sign in does not sync them to MTC.</p>}
-          {s.errors.length > 0 && tried && <ul role="alert" className="space-y-1 rounded-[20px] border border-primary/40 bg-primary/10 p-4 text-sm">{s.errors.map((e) => <li key={e}>• {e}</li>)}{!kycDone && cart.some((i) => i.mode === "contract") && <li><Link to="/kyc" className="font-semibold text-mint">Verify now →</Link></li>}</ul>}
+          {s.errors.length > 0 && tried && <ul role="alert" className="space-y-1 rounded-[20px] border border-primary/40 bg-primary/10 p-4 text-sm">{s.errors.map((e) => <li key={e}>• {e}</li>)}{!kycDone && cart.some((i) => i.mode === "contract") && <li><Link to="/kyc" className="font-semibold text-mint">Review verification requirements →</Link></li>}</ul>}
         </div>
       )}
       {cart.length > 0 && (
