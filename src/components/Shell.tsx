@@ -61,7 +61,7 @@ export function PriceToggle() {
     <ToggleGroupItem value="cash" className="h-10 rounded-[10px] px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
       Buy outright
     </ToggleGroupItem>
-    <ToggleGroupItem value="contract" className="h-10 rounded-full px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
+    <ToggleGroupItem value="contract" className="h-10 rounded-[10px] px-4 text-[13px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
       Contract estimate
     </ToggleGroupItem>
   </ToggleGroup>;
