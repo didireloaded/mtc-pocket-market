@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search, LayoutGrid, List, Clock, Wifi, X, ShoppingBag } from "lucide-react";
+import { Search, LayoutGrid, List, Clock, Wifi, X, ShoppingBag, MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Shell, PriceToggle } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
@@ -68,9 +68,9 @@ function Shop() {
             <span className="mt-1 block text-[13px] text-muted-foreground">Compare devices and monthly estimates.</span></span>
           <span className="inline-flex min-h-11 items-center gap-1 text-[13px] font-semibold text-brand-red">Explore <span aria-hidden="true">→</span></span>
         </Link>
-        <Link to="/compare" className="mt-1 flex min-h-11 items-center justify-between text-[13px] font-semibold text-mint">
-          Compare two devices <span aria-hidden="true">→</span>
-        </Link>
+        {(c === "Phones" || c === "Laptops" || c === "Tablets" || c === "Wearables") && <Link to="/compare" className="mt-1 flex min-h-11 items-center justify-between text-[13px] font-semibold text-mint">
+          Compare devices in this category <span aria-hidden="true">→</span>
+        </Link>}
         <div className="relative mt-5" onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocus(false);
         }}>
@@ -125,6 +125,12 @@ function Shop() {
         <p className="text-[17px] font-semibold">No matching products</p>
         <p className="mt-2 text-[14px] leading-6 text-muted-foreground">Try another category, a different budget, or remove your filters.</p>
         <Button type="button" onClick={resetDiscovery} variant="outline" className="mt-5 h-12 rounded-[12px] px-6 text-sm shadow-none">Clear search and filters</Button>
+      </div>}
+      {!focus && !showF && <div className="pointer-events-none fixed inset-x-0 bottom-[calc(90px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-md justify-end px-5">
+        <Link to="/adviser" aria-label="Ask the shopping adviser"
+          className="pointer-events-auto grid size-[52px] place-items-center rounded-full bg-primary text-white shadow-[0_4px_14px_-6px_rgba(32,46,57,0.30)] transition-colors hover:bg-[#be2519] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+          <MessageCircle aria-hidden="true" className="size-[22px]" strokeWidth={1.9} />
+        </Link>
       </div>}
     </Shell>
   );

@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Settings as Cog, LifeBuoy, Smartphone, Package, MapPin, FileText, QrCode, ShieldCheck, LogOut, ShoppingBag } from "lucide-react";
+import { Settings as Cog, LifeBuoy, Smartphone, Package, MapPin, FileText, QrCode, ShieldCheck, LogOut, ShoppingBag, Bell } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { bundles, nad } from "@/lib/data";
 import { useStore } from "@/lib/store";
@@ -17,7 +17,7 @@ function MyMTC() {
   const usage = [1.2, 0.8, 2.1, 1.6, 0.9, 2.4, 1.3, 0.6, 1.8, 2.2, 1.1, 0.7];
   const devices = orders.flatMap((o) => o.items.filter((i) => i.kind === "physical").map((i, k) => ({ name: i.name, imei: "35" + o.id.slice(3) + String(k).padStart(6, "0"), warrantyTo: new Date(o.placedAt + 365 * 864e5).toLocaleDateString() })));
   if (!user) return (
-    <Shell><div className="px-5 pt-24 text-center"><h1 className="text-2xl font-bold">MyMTC</h1><p className="mt-2 text-muted-foreground">You're browsing as a guest. Sign in to see your balances, contracts and orders.</p>
+    <Shell><div className="px-5 pt-12 text-center"><div className="flex justify-end"><Link to="/notifications" aria-label="Notifications" className="grid size-11 place-items-center rounded-full"><Bell className="size-5" /></Link></div><h1 className="mt-8 text-2xl font-bold">My MTC</h1><p className="mt-2 text-muted-foreground">You're browsing as a guest. Sign in to explore your Pocket Market account. Live MTC balances and contracts are not connected yet.</p>
       <button onClick={() => setAuthOpen(true)} className="mt-6 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground">Sign in</button><Link to="/stores" className="mt-3 block text-sm text-mint">Find an MTC store</Link></div></Shell>
   );
   const used = 62;
@@ -25,7 +25,7 @@ function MyMTC() {
     <Shell>
       <header className="flex items-center justify-between px-5 pt-8">
         <div><p className="text-sm text-muted-foreground">{user.label} · signed in</p><h1 className="text-2xl font-bold">MyMTC</h1></div>
-        <button aria-label="Sign out" onClick={logout} className="grid size-11 place-items-center rounded-full bg-card"><LogOut className="size-4" /></button>
+        <div className="flex items-center gap-1"><Link to="/notifications" aria-label="Notifications" className="grid size-11 place-items-center rounded-full bg-card"><Bell className="size-5" /></Link><button aria-label="Sign out" onClick={logout} className="grid size-11 place-items-center rounded-full bg-card"><LogOut className="size-4" /></button></div>
       </header>
       <p className="mx-5 mt-4 rounded-2xl border border-[#90B2CC]/40 bg-[#E4EFF8] p-4 text-xs leading-5 text-[#1D4666]">Sample account dashboard. The balances, usage, contract and device warranty information shown below are not connected to MTC customer records.</p>
       <section className="mx-5 mt-6 rounded-[28px] bg-card p-6">

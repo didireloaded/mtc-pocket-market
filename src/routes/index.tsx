@@ -1,188 +1,134 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, Bell, Cable, Laptop, MapPin, MessageCircle, Search, ShieldCheck, ShoppingBag, SlidersHorizontal, Smartphone, Tablet, Watch, Router } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Eyebrow, SectionHeading } from "@/components/retail/RetailPrimitives";
+import { ArrowRight, ArrowUpRight, QrCode, Search, ShoppingBag } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
-import { products, nad, getProduct } from "@/lib/data";
 import { useStore } from "@/lib/store";
+import { products, nad, getProduct } from "@/lib/data";
+import mtcLogo from "@/assets/mtc-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "MTC Pocket Market — Devices, contracts and services" },
-    { name: "description", content: "Discover devices and explore illustrative contract options in one mobile-first retail experience." },
+    { title: "MTC Pocket Market — Discover devices" },
+    { name: "description", content: "Browse MTC devices, explore categories and discover new arrivals. Guest shopping is available." },
     { property: "og:title", content: "MTC Pocket Market" },
-    { property: "og:description", content: "Discover devices, compare prices and explore your next connection." },
+    { property: "og:description", content: "Explore phones, laptops, devices and more in Pocket Market." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ] }),
   component: Home,
 });
 
-const categories = [
-  { name: "Phones", Icon: Smartphone },
-  { name: "Laptops", Icon: Laptop },
-  { name: "Tablets", Icon: Tablet },
-  { name: "Wearables", Icon: Watch },
-  { name: "Data devices", Icon: Router },
-  { name: "Accessories", Icon: Cable },
-] as const;
+const categories = ["Phones", "Laptops", "Wearables", "Tablets"] as const;
 
 function Home() {
-  const { user, extra, saved, cart, notices, setAuthOpen } = useStore();
-  const featured = products.find((p) => p.featured) ?? products[0]!;
-  const recent = extra.recent.map(getProduct).filter((p) => !!p).slice(0, 5);
-  const favourites = saved.map(getProduct).filter((p) => !!p).slice(0, 5);
-  const unread = notices.filter((n) => !n.read).length;
-  const bagCount = cart.reduce((count, item) => count + item.qty, 0);
-  const firstName = user?.label?.split("@")[0]?.split(/[ ._-]/)[0];
+  const { extra } = useStore();
+  const featured = products.find((product) => product.featured) ?? products[0]!;
+  const newArrivals = products.filter((product) => product.isNew);
+  const recentlyViewed = extra.recent.map(getProduct).filter((product) => !!product);
+  // Personalise the one carousel, never add a second section to Home.
+  const showcase = (recentlyViewed.length ? recentlyViewed : newArrivals.length ? newArrivals : products).slice(0, 6);
+  const carouselTitle = recentlyViewed.length ? "Continue exploring" : "New arrivals";
 
   return (
     <Shell>
-      <header className="px-5 pt-8">
-        <div className="flex items-center justify-between gap-3">
-          <Eyebrow className="text-brand-red">MTC / POCKET MARKET</Eyebrow>
-          <div className="flex items-center gap-1">
-            <Link to="/notifications" aria-label="Notifications"
-              className="relative grid size-11 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2">
-              <Bell aria-hidden="true" className="size-[21px]" strokeWidth={1.9} />
-              {unread > 0 && <span aria-hidden="true" className="absolute right-1 top-1 size-2 rounded-full bg-brand-red" />}
-            </Link>
-            <Link to="/cart" aria-label={`Shopping bag with ${bagCount} items`}
-              className="relative grid size-11 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2">
-              <ShoppingBag aria-hidden="true" className="size-[21px]" strokeWidth={1.9} />
-              {bagCount > 0 && <span className="absolute right-0 top-0 grid min-h-4 min-w-4 place-items-center rounded-full bg-brand-red px-1 text-[10px] font-bold text-white">{bagCount}</span>}
-            </Link>
-          </div>
+      <header className="flex items-center justify-between bg-white px-6 pb-4 pt-[max(20px,env(safe-area-inset-top))]">
+        <Link to="/" aria-label="Pocket Market home"
+          className="grid h-11 w-[100px] place-items-center rounded-[10px] bg-primary px-3 focus-visible:outline-offset-2">
+          <img src={mtcLogo.url} alt="MTC" className="h-7 max-w-full object-contain" />
+        </Link>
+        <div className="flex items-center gap-1">
+          <Link to="/shop" aria-label="Search devices"
+            className="grid size-11 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2">
+            <Search aria-hidden="true" className="size-[21px]" strokeWidth={1.9} />
+          </Link>
+          <ShoppingBagLink />
         </div>
-        <h1 className="mt-4 max-w-[340px] text-[31px] font-bold leading-[1.08] tracking-[-0.055em] text-foreground">
-          {user ? `Welcome back, ${firstName || "there"}.` : "Find your next device."}
-        </h1>
-        <p className="mt-2 text-[14px] leading-6 text-muted-foreground">
-          {user ? "Discover something new or pick up where you left off." : "Explore the right phone, laptop or plan for your budget."}
-        </p>
-        <Link to="/shop"
-          className="mt-6 flex min-h-14 items-center gap-3 rounded-[13px] border border-border bg-white px-4 transition-colors hover:border-[#b8c3ca]">
-          <Search aria-hidden="true" className="size-5 shrink-0 text-foreground" strokeWidth={1.9} />
-          <span className="flex-1 text-[14px] text-muted-foreground">Search devices and accessories</span>
-          <ArrowRight aria-hidden="true" className="size-4 text-foreground" />
-        </Link>
-        <Link to="/adviser" className="mt-3 inline-flex min-h-11 items-center gap-2 text-[13px] font-semibold text-mint">
-          <MessageCircle aria-hidden="true" className="size-[18px]" strokeWidth={1.9} /> Need help choosing? Ask the adviser
-          <ArrowUpRight aria-hidden="true" className="size-4" />
-        </Link>
       </header>
 
-      <section className="mt-5 px-5" aria-label="Featured product">
-        <div className="relative isolate min-h-[260px] overflow-hidden rounded-[17px] bg-[#DDE8EF]">
-          <div className="relative z-10 flex min-h-[260px] w-[64%] flex-col items-start p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#31546D]">Featured device</p>
-            <h2 className="mt-3 text-[23px] font-bold leading-[1.1] tracking-[-0.045em] text-[#202E39]">{featured.name}</h2>
-            <div className="mt-auto pt-4">
-              <p className="text-[12px] text-[#3B576A]">Buy outright</p>
-              <p className="mt-0.5 text-[22px] font-bold leading-7 tracking-tight tabular-nums text-[#202E39]">{nad(featured.cash)}</p>
-              <Link to="/product/$id" params={{ id: featured.id }}
-                className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[11px] bg-[#DD2A1B] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#be2519]">
-                View device <ArrowUpRight aria-hidden="true" className="size-4" />
-              </Link>
+      <div className="space-y-9 px-6 pb-8 pt-6">
+        <section aria-label="Featured device">
+          <div className="relative isolate min-h-[270px] overflow-hidden rounded-[17px] bg-[#DDE8EF]">
+            <div className="relative z-10 flex min-h-[270px] w-[64%] flex-col items-start p-5">
+              <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#31546D]">In focus</p>
+              <h1 className="mt-3 text-[22px] font-bold leading-[1.08] tracking-[-0.045em] text-[#202E39]">
+                {featured.name}
+              </h1>
+              <div className="mt-auto pt-5">
+                <p className="text-[12px] text-[#3B576A]">Outright price</p>
+                <p className="mt-1 text-[22px] font-bold leading-7 tracking-[-0.04em] tabular-nums text-[#202E39]">
+                  {nad(featured.cash)}
+                </p>
+                <Link to="/product/$id" params={{ id: featured.id }}
+                  className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-[11px] bg-primary px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#be2519] active:translate-y-px">
+                  View device <ArrowUpRight aria-hidden="true" className="size-4" />
+                </Link>
+              </div>
             </div>
+            <img src={featured.image} alt="" loading="eager" decoding="async"
+              className="pointer-events-none absolute -right-4 bottom-0 h-[84%] w-[45%] object-contain" />
           </div>
-          <img src={featured.image} alt="" loading="eager" decoding="async"
-            className="pointer-events-none absolute -right-4 bottom-0 h-[90%] w-[47%] object-contain" />
-        </div>
-      </section>
+        </section>
 
-      <section className="retail-section" aria-labelledby="categories-heading">
-        <div className="px-5"><h2 id="categories-heading" className="text-[21px] font-bold tracking-[-0.035em]">Shop by category</h2></div>
-        <div className="no-scrollbar mt-4 flex gap-4 overflow-x-auto px-5 pb-2">
-          {categories.map(({ name, Icon }) => {
-            const image = products.find((product) => product.category === name)?.image;
-            return <Link key={name} to="/shop" search={{ c: name }}
-              className="flex w-[78px] shrink-0 flex-col items-center gap-2 text-center">
-              <span className="grid size-[76px] place-items-center rounded-[13px] border border-border/70 bg-stage p-2">
-                {image ? <img src={image} alt="" loading="lazy" decoding="async" className="size-full object-contain" />
-                  : <Icon aria-hidden="true" className="size-6 text-foreground" strokeWidth={1.9} />}
+        <section aria-labelledby="quick-categories-heading">
+          <h2 id="quick-categories-heading" className="text-[20px] font-bold tracking-[-0.04em]">Shop by category</h2>
+          <div className="mt-5 grid grid-cols-5 gap-1.5">
+            {categories.map((name) => {
+              const product = products.find((item) => item.category === name);
+              return (
+                <Link key={name} to="/shop" search={{ c: name }}
+                  className="group flex min-w-0 flex-col items-center gap-2 text-center">
+                  <span className="grid size-[49px] place-items-center overflow-hidden rounded-full bg-stage p-2.5 transition-colors group-hover:bg-[#E5E9EC] min-[390px]:size-[60px]">
+                    {product && <img src={product.image} alt="" loading="lazy" decoding="async"
+                      className="size-full object-contain" />}
+                  </span>
+                  <span className="text-[11px] font-medium leading-4 text-foreground min-[390px]:text-[12px]">{name}</span>
+                </Link>
+              );
+            })}
+            <Link to="/esim" className="group flex min-w-0 flex-col items-center gap-2 text-center">
+              <span className="grid size-[49px] place-items-center rounded-full bg-stage transition-colors group-hover:bg-[#E5E9EC] min-[390px]:size-[60px]">
+                <QrCode aria-hidden="true" className="size-6 text-foreground" strokeWidth={1.8} />
               </span>
-              <span className="text-[12px] font-medium leading-4 text-foreground">{name}</span>
-            </Link>;
-          })}
-        </div>
-      </section>
-
-      <section className="retail-section border-y border-border bg-white px-5 py-7" aria-labelledby="contract-promo">
-        <Eyebrow className="text-brand-red">FIND MY CONTRACT</Eyebrow>
-        <h2 id="contract-promo" className="mt-2 max-w-[290px] text-[26px] font-bold leading-[1.13] tracking-[-0.05em]">
-          Start with what you can afford.
-        </h2>
-        <p className="mt-2 max-w-[335px] text-[14px] leading-6 text-muted-foreground">
-          Choose a monthly budget. Compare devices and illustrative plan options in one place.
-        </p>
-        <Button asChild className="mt-5 h-12 rounded-[12px] px-5 text-[14px] font-semibold">
-          <Link to="/find">Find a contract <ArrowRight aria-hidden="true" className="size-4" /></Link>
-        </Button>
-      </section>
-
-      <section className="retail-section px-5" aria-label="Helpful links">
-        <Link to="/compare" className="flex min-h-[68px] items-center gap-3 border-b border-border py-3">
-          <SlidersHorizontal aria-hidden="true" className="size-5 shrink-0 text-mint" strokeWidth={1.9} />
-          <span className="flex-1 text-[15px] font-semibold">Compare two devices</span>
-          <ArrowRight aria-hidden="true" className="size-[18px] text-foreground" />
-        </Link>
-        <Link to="/stores" className="flex min-h-[68px] items-center gap-3 border-b border-border py-3">
-          <MapPin aria-hidden="true" className="size-5 shrink-0 text-mint" strokeWidth={1.9} />
-          <span className="flex-1 text-[15px] font-semibold">Find an MTC location</span>
-          <ArrowRight aria-hidden="true" className="size-[18px] text-foreground" />
-        </Link>
-        <Link to="/orders" className="flex min-h-[68px] items-center gap-3 border-b border-border py-3">
-          <ShoppingBag aria-hidden="true" className="size-5 shrink-0 text-mint" strokeWidth={1.9} />
-          <span className="flex-1 text-[15px] font-semibold">Orders and requests</span>
-          <ArrowRight aria-hidden="true" className="size-[18px] text-foreground" />
-        </Link>
-      </section>
-
-      {user ? (
-        <section className="retail-section px-5">
-          <div className="flex items-start gap-3 border-l-[3px] border-mint bg-white px-4 py-4">
-            <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-mint" strokeWidth={1.9} />
-            <div className="min-w-0 flex-1">
-              <p className="text-[15px] font-semibold">Your Pocket Market account</p>
-              <p className="mt-1 text-[13px] leading-5 text-muted-foreground">MTC mobile balances and contracts need an authorised account connection.</p>
-              <Link to="/mymtc" className="mt-2 inline-flex min-h-9 items-center gap-1 text-[13px] font-semibold text-mint">
-                Explore My MTC <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
-            </div>
+              <span className="text-[11px] font-medium leading-4 text-foreground min-[390px]:text-[12px]">eSIM</span>
+            </Link>
           </div>
         </section>
-      ) : (
-        <section className="retail-section px-5">
-          <button type="button" onClick={() => setAuthOpen(true)}
-            className="flex min-h-[70px] w-full items-center gap-3 border-y border-border py-3 text-left">
-            <span className="min-w-0 flex-1">
-              <span className="block text-[15px] font-semibold">Have a Pocket Market account?</span>
-              <span className="mt-1 block text-[13px] text-muted-foreground">Sign in to save your shopping journey.</span>
-            </span>
-            <ArrowRight aria-hidden="true" className="size-5 shrink-0 text-mint" />
-          </button>
+
+        <section aria-labelledby="arrivals-heading">
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="arrivals-heading" className="text-[20px] font-bold tracking-[-0.04em]">
+              {carouselTitle}
+            </h2>
+            <Link to="/shop" className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-[13px] font-semibold text-mint">
+              Shop all <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </div>
+          <div className="no-scrollbar -mx-6 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
+            {showcase.map((product) => (
+              <div key={product.id} className="w-[152px] shrink-0 snap-start min-[390px]:w-[170px]">
+                <ProductCard p={product} minimal />
+              </div>
+            ))}
+          </div>
         </section>
-      )}
-
-      {favourites.length > 0 && <section className="retail-section">
-        <div className="px-5"><SectionHeading title="Saved for later" description="Devices you've bookmarked." /></div>
-        <div className="no-scrollbar mt-4 flex snap-x gap-4 overflow-x-auto px-5 pb-2">
-          {favourites.map((p) => <div key={p.id} className="w-[174px] shrink-0 snap-start"><ProductCard p={p} /></div>)}
-        </div>
-      </section>}
-
-      <section className="retail-section pb-5">
-        <div className="px-5"><SectionHeading title={recent.length ? "Continue exploring" : "New arrivals"} to="/shop" action="Shop all" /></div>
-        <div className="no-scrollbar mt-4 flex snap-x gap-4 overflow-x-auto px-5 pb-2">
-          {(recent.length ? recent : products.filter((p) => p.isNew)).slice(0, 6).map((p) =>
-            <div key={p.id} className="w-[174px] shrink-0 snap-start"><ProductCard p={p} /></div>)}
-        </div>
-      </section>
-      <p className="px-6 pb-7 pt-3 text-center text-[12px] leading-5 text-muted-foreground">
-        Independent retail concept. Product availability and contract estimates require official MTC verification.
+      </div>
+      <p className="px-6 pb-8 text-center text-[12px] leading-5 text-muted-foreground">
+        Independent retail concept. Availability and contract prices require MTC confirmation.
       </p>
     </Shell>
+  );
+}
+
+function ShoppingBagLink() {
+  const { cart } = useStore();
+  const count = cart.reduce((total, item) => total + item.qty, 0);
+  return (
+    <Link to="/cart" aria-label={`Shopping bag with ${count} items`}
+      className="relative grid size-11 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2">
+      <ShoppingBag aria-hidden="true" className="size-[21px]" strokeWidth={1.9} />
+      {count > 0 && <span className="absolute right-0 top-0 grid min-h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+        {count}
+      </span>}
+    </Link>
   );
 }
