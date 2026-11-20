@@ -226,10 +226,12 @@ function Shop() {
         Independent concept. Device stock, monthly pricing and payments require official MTC confirmation.
       </p>
 
-      {!focus && !showF && <Link to="/adviser" aria-label="Ask the shopping adviser"
-        className="fixed bottom-[calc(86px+env(safe-area-inset-bottom))] right-[max(16px,calc((100vw-448px)/2+16px))] z-30 grid size-12 place-items-center rounded-full bg-primary text-white shadow-[0_4px_14px_rgba(32,46,57,0.2)]">
-        <MessageCircle aria-hidden="true" className="size-5" />
-      </Link>}
+      {!focus && !showF && <div className="pointer-events-none fixed inset-x-0 bottom-[calc(88px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-md justify-end px-5">
+        <Link to="/adviser" aria-label="Ask the shopping adviser"
+          className="pointer-events-auto grid size-12 place-items-center rounded-full bg-primary text-white shadow-[0_4px_14px_rgba(32,46,57,0.2)]">
+          <MessageCircle aria-hidden="true" className="size-5" />
+        </Link>
+      </div>}
     </Shell>
   );
 }
