@@ -14,7 +14,7 @@ export type Extra = {
 const defaultExtra: Extra = { onboarded: false, recent: [], searches: [], addresses: [{ label: "Home", name: "", street: "", town: "", phone: "" }],
   kyc: "none", prefs: { orders: true, priceDrops: true, lowBalance: true }, numbers: [], biometric: false };
 type Store = {
-  ready: boolean; cart: CartItem[]; add: (i: Omit<CartItem, "qty" | "key">) => void; setQty: (k: string, q: number) => void; remove: (k: string) => void; clear: () => void;
+  ready: boolean; authReady: boolean; cart: CartItem[]; add: (i: Omit<CartItem, "qty" | "key">) => void; setQty: (k: string, q: number) => void; remove: (k: string) => void; clear: () => void;
   mode: "cash" | "contract"; setMode: (m: "cash" | "contract") => void;
   user: User | null; guest: boolean; login: (u: User) => void; orders: Order[]; placeOrder: (o: Omit<Order, "id" | "placedAt" | "tracking">) => string; notices: Notice[]; markAllRead: () => void; browseGuest: () => void; logout: () => void; authOpen: boolean; setAuthOpen: (b: boolean) => void;
   extra: Extra; setExtra: (f: (e: Extra) => Extra) => void; viewProduct: (id: string) => void;
@@ -35,6 +35,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState<string[]>([]);
   const [kycDone, setKycDone] = useState(false);
   const [ready, setReady] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
   useEffect(() => {
     try { const s = JSON.parse(localStorage.getItem("mtc") || "{}");
       if (s.cart) setCart(s.cart); if (Array.isArray(s.orders)) setOrders(s.orders.filter((o: Order) => Boolean(o && typeof o.id === "string"))); if (s.notices) setNotices(s.notices); if (s.extra) setExtraState({ ...defaultExtra, ...s.extra }); if (s.guest) setGuest(true); if (s.saved) setSaved(s.saved); if (s.kycDone) setKycDone(true);
@@ -47,9 +48,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const apply = (u: { email?: string | null; user_metadata?: { full_name?: string } } | null | undefined) =>
       setUser(u ? { label: u.email || u.user_metadata?.full_name || "MTC customer", method: "email" } : null);
-    supabase.auth.getSession().then(({ data }) => { apply(data.session?.user); if (data.session) { setGuest(false); setAuthOpen(false); } });
+    supabase.auth.getSession()
+      .then(({ data }) => { apply(data.session?.user); if (data.session) { setGuest(false); setAuthOpen(false); } })
+      .catch(() => { /* Offline guests can still browse the local catalogue. */ })
+      .finally(() => setAuthReady(true));
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       apply(session?.user);
+      setAuthReady(true);
       if (event === "SIGNED_IN") { setGuest(false); setAuthOpen(false); }
     });
     return () => sub.subscription.unsubscribe();
@@ -60,7 +65,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const ex = c.find((x) => x.key === key);
     return ex ? c.map((x) => (x.key === key ? { ...x, qty: x.qty + 1 } : x)) : [...c, { ...i, key, qty: 1 }];
   });
-  return <Ctx.Provider value={{ ready, cart, add, setQty: (k, q) => setCart((c) => q < 1 ? c.filter((x) => x.key !== k) : c.map((x) => (x.key === k ? { ...x, qty: q } : x))),
+  return <Ctx.Provider value={{ ready, authReady, cart, add, setQty: (k, q) => setCart((c) => q < 1 ? c.filter((x) => x.key !== k) : c.map((x) => (x.key === k ? { ...x, qty: q } : x))),
     remove: (k) => setCart((c) => c.filter((x) => x.key !== k)), clear: () => setCart([]), mode, setMode, user, guest,
     orders, placeOrder: (o) => { const id = "DEMO-" + Date.now().toString(36).toUpperCase(); setOrders((x) => [{ ...o, id, tracking: "", placedAt: Date.now() }, ...x]); return id; },
     extra, setExtra: setExtraState, viewProduct: (id) => setExtraState((e) => ({ ...e, recent: [id, ...e.recent.filter((x) => x !== id)].slice(0, 8) })),
