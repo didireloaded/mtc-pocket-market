@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bell, Plus, Headphones, Laptop, Watch, Speaker, Wifi } from "lucide-react";
 import { Shell, PriceToggle } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
-import { products, nad } from "@/lib/data";
+import { products, nad, fromMonthly } from "@/lib/data";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
@@ -20,7 +20,7 @@ function Home() {
       <header className="flex items-center justify-between px-5 pt-8">
         <div>
           <p className="text-sm text-muted-foreground">{h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"}</p>
-          <h1 className="text-2xl font-bold">{user ? "Hi, +264 " + user.phone.slice(0, 2) + "•••" : <button onClick={() => setAuthOpen(true)}>Welcome, Guest</button>}</h1>
+          <h1 className="text-2xl font-bold">{user ? "Hi, " + (user.method === "email" ? user.label.split("@")[0] : user.label) : <button onClick={() => setAuthOpen(true)}>Welcome, Guest</button>}</h1>
         </div>
         <button aria-label="Notifications" className="relative grid size-11 place-items-center rounded-full bg-card"><Bell className="size-5" /><span className="absolute right-3 top-3 size-2 rounded-full bg-primary" /></button>
       </header>
@@ -38,10 +38,10 @@ function Home() {
             <div className="absolute bottom-5 left-5">
               <p className="text-xs uppercase tracking-widest text-muted-foreground">{hero.tagline}</p>
               <h2 className="text-3xl font-extrabold">{hero.name}</h2>
-              <p className="mt-1 text-lg font-semibold">{mode === "cash" ? nad(hero.cash) : nad(hero.contract) + "/mo"}</p>
+              <p className="mt-1 text-lg font-semibold">{mode === "cash" ? nad(hero.cash) : "from " + nad(fromMonthly(hero)) + "/mo"}</p>
             </div>
           </Link>
-          <button aria-label="Add to cart" onClick={() => add({ id: hero.id, name: hero.name, image: hero.image, variant: hero.colors[0]!, price: mode === "cash" ? hero.cash : hero.contract, kind: "physical", mode })}
+          <button aria-label="Add to cart" onClick={() => add({ id: hero.id, name: hero.name, image: hero.image, variant: hero.colors[0]!, price: hero.cash, kind: "physical", mode: "cash" })}
             className="absolute bottom-5 right-5 grid size-14 place-items-center rounded-full bg-mint text-mint-foreground glow-mint"><Plus className="size-6" /></button>
         </div>
         <div className="mt-4 flex justify-center"><PriceToggle /></div>

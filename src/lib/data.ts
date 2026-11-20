@@ -23,10 +23,18 @@ export const products: Product[] = [
     specs: [{ label: "Battery", value: "30 hrs" }, { label: "Connectivity", value: "BT 5.3" }, { label: "Drivers", value: "50 mm" }, { label: "ANC", value: "Pro" }] },
 ];
 export const plans = [
-  { id: "aweh-24", name: "Aweh Super 24", months: 24, data: "10 GB", mins: "500 min", extra: 0 },
-  { id: "go-36", name: "MTC Go 36", months: 36, data: "25 GB", mins: "Unlimited", extra: 150 },
-  { id: "max-24", name: "Max Unlimited", months: 24, data: "Unlimited", mins: "Unlimited", extra: 450 },
+  { id: "aweh-24", name: "Aweh Super 24", months: 24, data: "10 GB", mins: "500 min", sms: "500 SMS", fee: 199, upfrontPct: 0 },
+  { id: "go-36", name: "MTC Go 36", months: 36, data: "25 GB", mins: "Unlimited", sms: "1000 SMS", fee: 349, upfrontPct: 0 },
+  { id: "max-24", name: "Max Unlimited", months: 24, data: "Unlimited", mins: "Unlimited", sms: "Unlimited", fee: 649, upfrontPct: 0.1 },
 ];
+export type Plan = (typeof plans)[number];
+/** Contract quote: device instalment scales with term; plan fee is fixed per plan; upfront is a % of cash price. */
+export function quote(p: { cash: number; contract: number }, plan: Plan) {
+  const upfront = Math.round(p.cash * plan.upfrontPct);
+  const device = Math.round(((p.cash - upfront) / plan.months) * 1.15);
+  return { device, fee: plan.fee, upfront, monthly: device + plan.fee, months: plan.months };
+}
+export const fromMonthly = (p: { cash: number; contract: number }) => Math.min(...plans.map((pl) => quote(p, pl).monthly));
 export const bundles = [
   { id: "b1", name: "1 GB Daily", price: 25, data: "1 GB", validity: "24 hrs" },
   { id: "b2", name: "5 GB Weekly", price: 79, data: "5 GB", validity: "7 days" },

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Wifi, Phone, FileText, QrCode, ShieldCheck, LogOut, Plus } from "lucide-react";
+import { Package, MapPin, FileText, QrCode, ShieldCheck, LogOut, Plus } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { bundles, nad } from "@/lib/data";
 import { useStore } from "@/lib/store";
@@ -11,14 +11,14 @@ export const Route = createFileRoute("/mymtc")({
 function MyMTC() {
   const { user, add, setAuthOpen, logout, kycDone } = useStore();
   if (!user) return (
-    <Shell><div className="px-5 pt-24 text-center"><h1 className="text-2xl font-bold">MyMTC</h1><p className="mt-2 text-muted-foreground">Sign in with your MTC number to see your balances and contracts.</p>
-      <button onClick={() => setAuthOpen(true)} className="mt-6 h-14 w-full rounded-2xl bg-primary font-semibold text-primary-foreground">Sign in</button></div></Shell>
+    <Shell><div className="px-5 pt-24 text-center"><h1 className="text-2xl font-bold">MyMTC</h1><p className="mt-2 text-muted-foreground">You're browsing as a guest. Sign in to see your balances, contracts and orders.</p>
+      <button onClick={() => setAuthOpen(true)} className="mt-6 h-14 w-full rounded-2xl bg-primary font-semibold text-primary-foreground">Sign in</button><Link to="/stores" className="mt-3 block text-sm text-mint">Find an MTC store</Link></div></Shell>
   );
   const used = 62;
   return (
     <Shell>
       <header className="flex items-center justify-between px-5 pt-8">
-        <div><p className="text-sm text-muted-foreground">+264 {user.phone}</p><h1 className="text-2xl font-bold">MyMTC</h1></div>
+        <div><p className="text-sm text-muted-foreground">{user.label} · {user.method === "phone" ? "OTP" : "Email"} sign-in</p><h1 className="text-2xl font-bold">MyMTC</h1></div>
         <button aria-label="Sign out" onClick={logout} className="grid size-11 place-items-center rounded-full bg-card"><LogOut className="size-4" /></button>
       </header>
       <section className="mx-5 mt-6 rounded-[28px] bg-card p-6">
@@ -34,9 +34,9 @@ function MyMTC() {
         </div>
       </section>
       <div className="mx-5 mt-4 grid grid-cols-4 gap-2">
-        {[{ i: Wifi, l: "Bundles" }, { i: Phone, l: "Airtime" }, { i: QrCode, l: "eSIM", to: "/esim" }, { i: ShieldCheck, l: "Verify", to: "/kyc" }].map(({ i: I, l, to }) => {
+        {[{ i: Package, l: "Orders", to: "/orders" as const }, { i: MapPin, l: "Stores", to: "/stores" as const }, { i: QrCode, l: "eSIM", to: "/esim" as const }, { i: ShieldCheck, l: "Verify", to: "/kyc" as const }].map(({ i: I, l, to }) => {
           const inner = <><I className="size-5 text-mint" /><span className="text-[11px]">{l}</span></>;
-          return to ? <Link key={l} to={to} className="flex flex-col items-center gap-2 rounded-[20px] bg-card py-4">{inner}</Link> : <div key={l} className="flex flex-col items-center gap-2 rounded-[20px] bg-card py-4">{inner}</div>;
+          return <Link key={l} to={to} className="flex flex-col items-center gap-2 rounded-[20px] bg-card py-4">{inner}</Link>;
         })}
       </div>
       <section className="px-5 pt-6">

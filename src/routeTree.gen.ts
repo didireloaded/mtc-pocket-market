@@ -14,7 +14,9 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as EsimRouteImport } from './routes/esim'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as MymtcRouteImport } from './routes/mymtc'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as StoresRouteImport } from './routes/stores'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -42,9 +44,19 @@ const MymtcRoute = MymtcRouteImport.update({
   path: '/mymtc',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoresRoute = StoresRouteImport.update({
+  id: '/stores',
+  path: '/stores',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -59,7 +71,9 @@ export interface FileRoutesByFullPath {
   '/esim': typeof EsimRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
+  '/orders': typeof OrdersRoute
   '/shop': typeof ShopRoute
+  '/stores': typeof StoresRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
@@ -68,7 +82,9 @@ export interface FileRoutesByTo {
   '/esim': typeof EsimRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
+  '/orders': typeof OrdersRoute
   '/shop': typeof ShopRoute
+  '/stores': typeof StoresRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
@@ -78,15 +94,34 @@ export interface FileRoutesById {
   '/esim': typeof EsimRoute
   '/kyc': typeof KycRoute
   '/mymtc': typeof MymtcRoute
+  '/orders': typeof OrdersRoute
   '/shop': typeof ShopRoute
+  '/stores': typeof StoresRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/cart' | '/esim' | '/kyc' | '/mymtc' | '/shop' | '/product/$id'
+    | '/'
+    | '/cart'
+    | '/esim'
+    | '/kyc'
+    | '/mymtc'
+    | '/orders'
+    | '/shop'
+    | '/stores'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cart' | '/esim' | '/kyc' | '/mymtc' | '/shop' | '/product/$id'
+  to:
+    | '/'
+    | '/cart'
+    | '/esim'
+    | '/kyc'
+    | '/mymtc'
+    | '/orders'
+    | '/shop'
+    | '/stores'
+    | '/product/$id'
   id:
     | '__root__'
     | '/'
@@ -94,7 +129,9 @@ export interface FileRouteTypes {
     | '/esim'
     | '/kyc'
     | '/mymtc'
+    | '/orders'
     | '/shop'
+    | '/stores'
     | '/product/$id'
   fileRoutesById: FileRoutesById
 }
@@ -104,7 +141,9 @@ export interface RootRouteChildren {
   EsimRoute: typeof EsimRoute
   KycRoute: typeof KycRoute
   MymtcRoute: typeof MymtcRoute
+  OrdersRoute: typeof OrdersRoute
   ShopRoute: typeof ShopRoute
+  StoresRoute: typeof StoresRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
@@ -145,11 +184,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MymtcRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stores': {
+      id: '/stores'
+      path: '/stores'
+      fullPath: '/stores'
+      preLoaderRoute: typeof StoresRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/product/$id': {
@@ -168,7 +221,9 @@ const rootRouteChildren: RootRouteChildren = {
   EsimRoute: EsimRoute,
   KycRoute: KycRoute,
   MymtcRoute: MymtcRoute,
+  OrdersRoute: OrdersRoute,
   ShopRoute: ShopRoute,
+  StoresRoute: StoresRoute,
   ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport

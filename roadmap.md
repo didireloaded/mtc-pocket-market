@@ -12,3 +12,10 @@
 - [ ] Store locator, FAQ/help, live chat
 - [ ] Payment methods (MTC Wallet, card, e-Wallet, EFT)
 - [ ] Real backend: accounts, orders, admin, inventory, live payments — needs your go-ahead
+## Release 1 additions
+- [x] Phone OTP + email sign-in, guest browsing, clear signed-in/guest states
+- [x] Store locator: search, details, call + directions
+- [x] Order tracking: processing → shipped → out for delivery
+- [x] Cart: shipped vs digital eSIM clearly split; delivery details only for physical
+- [x] Contract breakdown (device payment, plan fee, upfront, term, allowances) wherever contracts are compared
+- [x] eSIM: copy SM-DP+ code + email delivery next to QR
