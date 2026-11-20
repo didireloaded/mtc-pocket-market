@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search, LayoutGrid, List, SlidersHorizontal, Clock, Wifi, X, Plus } from "lucide-react";
+import { Search, LayoutGrid, List, Clock, Wifi, X, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Shell, PriceToggle } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
