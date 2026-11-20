@@ -14,7 +14,7 @@ export const Route = createFileRoute("/product/$id")({
 function PDP() {
   const p = Route.useLoaderData();
   const router = useRouter();
-  const { mode, setMode, add, saved, toggleSave, kycDone, viewProduct } = useStore();
+  const { mode, setMode, add, saved, toggleSave, viewProduct } = useStore();
   useEffect(() => { viewProduct(p.id); }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [months, setMonths] = useState<number>(24);
   const [upPct, setUpPct] = useState(0);
@@ -82,8 +82,8 @@ function PDP() {
             </div>
             <ContractBreakdown p={p} plan={sel} opt={opt} />
             <Link to="/kyc" className="flex items-center gap-3 rounded-[20px] bg-surface-2 p-4 text-sm">
-              <ShieldCheck className={kycDone ? "text-mint" : "text-primary"} />
-              <span className="flex-1">"Official MTC identity verification is required before applying"</span>
+              <ShieldCheck className="text-primary" />
+              <span className="flex-1">Official MTC identity verification is required before applying</span>
               <span className="font-semibold text-mint">Learn more</span>
             </Link>
           </div>
