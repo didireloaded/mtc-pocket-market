@@ -99,3 +99,16 @@ The Shop catalogue uses the user's image-first floating-product card reference.
 - A save control and shopping-bag action float across each card's bottom edge. Cash uses `addOutright()`; monthly mode must open the product's contract configuration before adding a selected plan.
 - Selected category and purchase-mode pills use MTC crimson `#DD2A1B`. Home's dark featured section may use a restrained charcoal gradient but do not apply a heavy dark theme to all forms, checkout and My MTC by default.
 - Maintain image `object-contain`, accessible button labels, minimum 44px control targets, contract-estimate disclaimers, and comfortable vertical gaps so floating buttons never overlap the next row.
+
+## My MTC and checkout trust standard
+
+The supplied My MTC and checkout snippets are **visual references, not production MTC APIs**.
+
+- Keep the polished dark My MTC account card, clear quick actions and real Pocket Market authentication. Show MTC mobile data, airtime, phone ownership, KYC and active contracts only when official connected customer data exists. Until then, show honest empty/unlinked states, never invented numbers or Verified badges.
+- Cloud order requests must use authenticated server functions. Browser shopping previews are local records and must never be displayed as shipped, out-for-delivery, paid, or activated.
+- The cart already persists via the existing `StoreProvider` local-storage state. Do not add duplicate `mtc_cart` storage or a second cart provider.
+- Use `NamibiaAddressFields` with a town and one of the 14 Namibian regions. Preserve the region in saved browser addresses and in Cloud request address JSON without requiring database schema changes.
+- Do not add fictional bank/wallet balances, unverified supported payment providers, coupon programmes or delivery charges. Payment methods can be shown as unavailable until authorised. A two-second `setTimeout` is **not** proof of payment or order submission.
+- Give real server requests genuine pending/success/error states. Local shopping preview saves may confirm only that local data was saved.
+- Avoid excessive repeated prototype labels, but retain concise disclosures wherever a customer could mistake an illustration for a transaction, service entitlement or live MTC data.
+- Do not call the flow `Secure Checkout` until security, provider integration and payment controls have been evaluated and verified.
