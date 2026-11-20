@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Heart, Minus, Plus, Share2, ShoppingBag, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Heart, Minus, Plus, Share2, ShoppingBag, ShieldCheck, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Shell } from "@/components/Shell";
@@ -9,6 +9,9 @@ import { UpfrontControl } from "@/components/retail/ContractControls";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { motion, useReducedMotion } from "framer-motion";
+import { revealGroup, revealItem, pressClass } from "@/lib/retail-motion";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
 
 export const Route = createFileRoute("/product/$id")({
   loader: ({ params }) => { const product = getProduct(params.id); if (!product) throw notFound(); return product; },
@@ -23,6 +26,7 @@ export const Route = createFileRoute("/product/$id")({
 });
 
 function ProductDetail() {
+  const reduceMotion = useReducedMotion();
   const p = Route.useLoaderData();
   const router = useRouter();
   const { mode, setMode, add, saved, toggleSave, viewProduct } = useStore();
@@ -35,6 +39,7 @@ function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [months, setMonths] = useState(24);
   const [upfrontPct, setUpfrontPct] = useState(0);
+  const [planOpen, setPlanOpen] = useState(false);
 
   const availablePlans = plansFor(p);
   const [selectedPlan, setSelectedPlan] = useState(availablePlans[0]?.id ?? "");
@@ -169,60 +174,101 @@ function ProductDetail() {
         </div>
         <p className="mt-2 text-[12px] leading-5 text-muted-foreground">{stock.text}</p>
 
-        {p.contractable && <section className="mt-6">
+        {p.contractable && <section className="mt-6" aria-label="Purchase options">
           <p className="mb-3 text-[13px] font-semibold">How would you like to get it?</p>
           <div className="grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => setMode("cash")} aria-pressed={!contract}
-              className={cn("flex min-h-[55px] items-center justify-center rounded-[14px] border px-2 text-[13px] font-semibold",
+            <button type="button" onClick={() => { setMode("cash"); setPlanOpen(false); }} aria-pressed={!contract}
+              className={cn("flex min-h-[55px] items-center justify-center rounded-[14px] border px-2 text-[13px] font-semibold", pressClass,
                 !contract ? "border-[#202E39] bg-[#202E39] text-white" : "border-border bg-[#F5F5F3]")}>
               Buy outright
             </button>
-            <button type="button" onClick={() => setMode("contract")} aria-pressed={contract}
-              className={cn("flex min-h-[55px] items-center justify-center rounded-[14px] border px-2 text-[13px] font-semibold",
+            <button type="button" onClick={() => setPlanOpen(true)} aria-pressed={contract}
+              className={cn("flex min-h-[55px] items-center justify-center rounded-[14px] border px-2 text-[13px] font-semibold", pressClass,
                 contract ? "border-[#202E39] bg-[#202E39] text-white" : "border-border bg-[#F5F5F3]")}>
               Pay monthly (est.)
             </button>
           </div>
+          {contract && <button type="button" onClick={() => setPlanOpen(true)}
+            className="mt-3 flex min-h-[60px] w-full items-center justify-between gap-3 rounded-[17px] bg-[#F4F5F7] px-4 text-left">
+            <span className="min-w-0">
+              <span className="block text-[13px] font-semibold">{plan.name} · {months} months</span>
+              <span className="mt-1 block text-[12px] text-muted-foreground">Your illustrative contract selection</span>
+            </span>
+            <span className="shrink-0 text-[13px] font-semibold text-mint">Edit plan</span>
+          </button>}
         </section>}
 
-        {contract && <section className="mt-6 space-y-5" aria-label="Illustrative contract builder">
-          <p className="text-[14px] font-semibold">Choose your plan</p>
-          <div className="space-y-2">
-            {availablePlans.map((item) => (
-              <button key={item.id} type="button" onClick={() => {
-                setSelectedPlan(item.id);
-                if (!(item.terms as readonly number[]).includes(months)) setMonths(item.terms[0]!);
-              }} aria-pressed={item.id === plan.id}
-                className={cn("flex min-h-[65px] w-full items-center justify-between gap-3 rounded-[16px] border px-4 py-3 text-left",
-                  item.id === plan.id ? "border-[#202E39] bg-[#F5F5F3]" : "border-border bg-white")}>
-                <span className="min-w-0"><span className="block text-[14px] font-semibold">{item.name}</span>
-                  <span className="mt-1 block text-[12px] text-muted-foreground">{item.data} · {item.mins}</span></span>
-                <span className="shrink-0 text-right text-[14px] font-bold tabular-nums">
-                  {nad(quote(p, item, options).monthly)}<span className="block text-[11px] font-medium text-muted-foreground">/mo est.</span>
-                </span>
-              </button>
-            ))}
-          </div>
-          <div>
-            <p className="mb-3 text-[13px] font-semibold">Duration</p>
-            <div className="grid grid-cols-4 gap-2">
-              {TERMS.filter((term) => (plan.terms as readonly number[]).includes(term)).map((term) => (
-                <button key={term} type="button" onClick={() => setMonths(term)} aria-pressed={months === term}
-                  className={cn("min-h-11 rounded-[12px] text-[12px] font-semibold",
-                    months === term ? "bg-[#202E39] text-white" : "bg-[#F1F2EF] text-foreground")}>
-                  {term} mo
-                </button>
-              ))}
+        {p.contractable && <Drawer open={planOpen} onOpenChange={setPlanOpen} shouldScaleBackground={false}>
+          <DrawerContent className="mx-auto max-h-[90dvh] w-full max-w-md overflow-hidden rounded-t-[30px] border-white/10 bg-[#151C23] text-white">
+            <div className="flex items-start justify-between gap-4 px-5 pb-4 pt-4">
+              <div className="min-w-0">
+                <DrawerTitle className="text-[23px] font-bold tracking-[-0.04em]">Choose your plan</DrawerTitle>
+                <DrawerDescription className="mt-2 text-[13px] leading-5 text-[#B8C5CF]">
+                  Compare estimates for {p.name}. Final terms require MTC confirmation.
+                </DrawerDescription>
+              </div>
+              <DrawerClose aria-label="Close contract options" className="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-white">
+                <X aria-hidden="true" className="size-5" />
+              </DrawerClose>
             </div>
-          </div>
-          <UpfrontControl value={upfrontPct} onChange={setUpfrontPct} cash={p.cash} />
-          <ContractBreakdown p={p} plan={plan} opt={options} />
-          <Link to="/kyc" className="flex min-h-14 items-center justify-between gap-3 border-b border-border py-3 text-[13px] font-semibold">
-            <ShieldCheck aria-hidden="true" className="size-[19px] shrink-0 text-mint" />
-            <span className="flex-1">Learn about official contract verification</span>
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
-        </section>}
+
+            <div className="no-scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-6">
+              <motion.div variants={revealGroup} initial={reduceMotion ? false : "hidden"} animate="visible" className="space-y-2">
+                {availablePlans.map((item) => (
+                  <motion.div key={item.id} variants={revealItem}>
+                    <button type="button" onClick={() => {
+                      setSelectedPlan(item.id);
+                      if (!(item.terms as readonly number[]).includes(months)) setMonths(item.terms[0]!);
+                    }} aria-pressed={item.id === plan.id}
+                      className={cn("flex min-h-[72px] w-full items-center justify-between gap-3 rounded-[18px] border px-4 py-3 text-left", pressClass,
+                        item.id === plan.id ? "border-white/60 bg-[#30414E]" : "border-white/10 bg-[#202E39]")}>
+                      <span className="min-w-0">
+                        <span className="block text-[14px] font-semibold">{item.name}</span>
+                        <span className="mt-1 block text-[12px] text-[#BAC5CE]">{item.data} · {item.mins}</span>
+                      </span>
+                      <span className="shrink-0 text-right text-[15px] font-bold tabular-nums">
+                        {nad(quote(p, item, options).monthly)}
+                        <span className="block text-[11px] font-medium text-[#BAC5CE]">/mo estimated</span>
+                      </span>
+                    </button>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              <div className="rounded-[20px] bg-white p-4 text-[#202E39]">
+                <p className="mb-3 text-[13px] font-semibold">Contract duration</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {TERMS.filter((term) => (plan.terms as readonly number[]).includes(term)).map((term) => (
+                    <button key={term} type="button" onClick={() => setMonths(term)} aria-pressed={months === term}
+                      className={cn("min-h-11 rounded-[12px] text-[12px] font-semibold", pressClass,
+                        months === term ? "bg-[#202E39] text-white" : "bg-[#F1F2EF] text-foreground")}>
+                      {term} mo
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-[20px] bg-white p-4 text-[#202E39]">
+                <UpfrontControl value={upfrontPct} onChange={setUpfrontPct} cash={p.cash} />
+              </div>
+              <div className="rounded-[20px] bg-white p-4 text-[#202E39]">
+                <ContractBreakdown p={p} plan={plan} opt={options} />
+              </div>
+              <Link to="/kyc" onClick={() => setPlanOpen(false)}
+                className="flex min-h-12 items-center gap-3 text-[13px] font-semibold text-white">
+                <ShieldCheck aria-hidden="true" className="size-5 shrink-0" />
+                Learn about official contract verification <ArrowRight aria-hidden="true" className="ml-auto size-4" />
+              </Link>
+            </div>
+
+            <div className="border-t border-white/10 bg-[#151C23] px-5 pb-[max(18px,env(safe-area-inset-bottom))] pt-3">
+              <button type="button" onClick={() => { setMode("contract"); setPlanOpen(false); }}
+                className={cn("flex min-h-[54px] w-full items-center justify-center gap-2 rounded-full bg-white px-4 text-[14px] font-semibold text-[#202E39]", pressClass)}>
+                Use this plan · {nad(pricing.monthly)}/mo est.
+              </button>
+            </div>
+          </DrawerContent>
+        </Drawer>}
 
         <details className="mt-6 border-t border-border pt-4">
           <summary className="cursor-pointer py-2 text-[14px] font-semibold">Device specifications</summary>
@@ -248,7 +294,7 @@ function ProductDetail() {
 
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-white px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3">
         <Button type="button" onClick={addToCart} disabled={stock.tone === "out"}
-          className="h-[54px] w-full rounded-full bg-[#202E39] text-[14px] font-semibold text-white shadow-none hover:bg-[#364653]">
+          className={`h-[54px] w-full rounded-full bg-[#202E39] text-[14px] font-semibold text-white shadow-none hover:bg-[#364653] ${pressClass}`}>
           {stock.tone === "out" ? "Unavailable" : contract ? "Add selected plan to cart" : `Add to cart · ${nad(p.cash * qty)}`}
           {stock.tone !== "out" && <ShoppingBag aria-hidden="true" className="ml-2 size-[18px]" />}
         </Button>
