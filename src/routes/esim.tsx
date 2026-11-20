@@ -1,44 +1,44 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Smartphone, CheckCircle2, Copy } from "lucide-react";
-import { EsimEmail } from "@/components/EsimEmail";
-import { QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
+import { ArrowLeft, ArrowUpRight, CheckCircle2, Info, QrCode, Smartphone, Wifi } from "lucide-react";
 import { Shell } from "@/components/Shell";
 
 export const Route = createFileRoute("/esim")({
-  head: () => ({ meta: [{ title: "Activate eSIM — MTC Store" }, { name: "description", content: "Scan your MTC eSIM QR code to get connected in minutes." }, { property: "og:title", content: "Activate eSIM — MTC Store" }, { property: "og:description", content: "Scan your MTC eSIM QR code to get connected in minutes." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
-  component: Esim,
+  head: () => ({ meta: [
+    { title: "eSIM guidance — MTC Pocket Market" },
+    { name: "description", content: "Understand eSIM compatibility and official MTC activation requirements." },
+    { property: "og:title", content: "eSIM guidance — MTC Pocket Market" },
+    { property: "og:type", content: "website" },
+  ] }),
+  component: EsimInformation,
 });
-function Esim() {
-  const [step, setStep] = useState(0);
-  const [copied, setCopied] = useState(false);
-  const copy = async () => { try { await navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopied(false); } };
-  const [code] = useState(() => "LPA:1$sm-dp.mtc.com.na$" + Math.random().toString(36).slice(2, 14).toUpperCase());
+
+function EsimInformation() {
   return (
-    <Shell nav={false}>
-      <div className="px-5 pt-6">
-        <Link to="/mymtc" className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></Link>
-        <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-mint">eSIM activation</p>
-        <h1 className="text-3xl font-bold">{["Check your device", "Scan to install", "You're connected"][step]}</h1>
-        {step === 0 && (<div className="mt-6 space-y-3">
-          {["Device supports eSIM (Settings → Cellular)", "Connected to Wi‑Fi", "Device is carrier-unlocked"].map((t) => <div key={t} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-4 text-sm"><CheckCircle2 className="size-5 text-mint" />{t}</div>)}
-          <button onClick={() => setStep(1)} className="mt-4 h-14 w-full rounded-full bg-primary font-semibold text-primary-foreground">Generate my QR code</button>
-        </div>)}
-        {step === 1 && (<div className="mt-6">
-          <div className="mx-auto w-fit rounded-[28px] border bg-card p-5 shadow-card"><QRCodeSVG value={code} size={220} bgColor="#ffffff" fgColor="#0b1530" level="M" /></div>
-          <p className="mt-4 text-center text-sm text-muted-foreground">On your phone: Settings → Cellular → Add eSIM → Use QR code</p>
-          <div className="mt-4 rounded-2xl bg-card p-4">
-            <p className="text-xs text-muted-foreground">On this phone? Copy the SM-DP+ activation code</p>
-            <div className="mt-2 flex items-center gap-2"><p className="flex-1 break-all font-mono text-xs">{code}</p>
-              <button onClick={copy} className="flex shrink-0 items-center gap-1 rounded-full bg-mint px-3 py-2 text-xs font-bold text-mint-foreground"><Copy className="size-3" />{copied ? "Copied" : "Copy"}</button></div>
-            <p className="mt-2 text-[11px] text-muted-foreground">iPhone: Settings → Mobile Service → Add eSIM → Enter details manually. Android: Settings → SIMs → Add eSIM → Enter code.</p>
-          </div>
-          <div className="mt-3"><EsimEmail /></div>
-          <button onClick={() => setStep(2)} className="mt-4 h-14 w-full rounded-full bg-mint font-semibold text-mint-foreground">I've scanned it</button>
-        </div>)}
-        {step === 2 && (<div className="mt-10 text-center"><div className="mx-auto grid size-24 place-items-center rounded-full bg-mint/15"><Smartphone className="size-10 text-mint" /></div>
-          <p className="mt-4 text-muted-foreground">Your MTC eSIM is active. 10 GB ready to use.</p>
-          <Link to="/" className="mt-6 block h-14 rounded-full bg-primary pt-4 font-semibold text-primary-foreground">Done</Link></div>)}
+    <Shell>
+      <div className="px-5 pt-6 pb-10">
+        <Link to="/" aria-label="Back to Home" className="grid size-11 place-items-center rounded-full bg-card"><ArrowLeft className="size-5" /></Link>
+        <div className="mt-7 grid size-16 place-items-center rounded-[20px] bg-card"><QrCode className="size-8 text-mint" /></div>
+        <p className="mt-6 text-xs font-bold uppercase tracking-[0.17em] text-mint">Connectivity</p>
+        <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight">Get ready for an eSIM.</h1>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">Explore how an eSIM works, check your device and learn how to activate through an authorised MTC service.</p>
+        <div className="mt-6 flex gap-3 rounded-[20px] border border-[#90B2CC]/40 bg-[#E4EFF8] p-4 text-[#1D4666]">
+          <Info className="mt-0.5 size-5 shrink-0" />
+          <p className="text-xs leading-5"><strong>Concept preview.</strong> Pocket Market cannot issue an activation code or provision an eSIM yet. No QR code is generated here, because a simulated code cannot activate a mobile line.</p>
+        </div>
+        <h2 className="mt-7 text-lg font-bold">Before you activate</h2>
+        <div className="mt-3 space-y-3">
+          {[
+            { Icon: Smartphone, text: "Check whether your phone supports eSIM in its mobile network settings." },
+            { Icon: Wifi, text: "Connect to a stable Wi-Fi network when installing an authorised activation profile." },
+            { Icon: CheckCircle2, text: "Obtain your actual activation details from an official MTC channel." },
+          ].map(({ Icon, text }) => (
+            <div key={text} className="flex items-start gap-3 rounded-[20px] bg-card p-4 shadow-card">
+              <Icon className="mt-0.5 size-5 shrink-0 text-mint" /><p className="text-sm leading-6">{text}</p>
+            </div>
+          ))}
+        </div>
+        <a href="https://www.mtc.com.na" target="_blank" rel="noreferrer" className="mt-7 flex h-14 items-center justify-center gap-2 rounded-full bg-primary text-sm font-semibold text-primary-foreground">Visit MTC for official eSIM options <ArrowUpRight className="size-4" /></a>
+        <Link to="/stores" className="mt-3 flex h-12 items-center justify-center rounded-full border text-sm font-semibold">Explore collection locations</Link>
       </div>
     </Shell>
   );
