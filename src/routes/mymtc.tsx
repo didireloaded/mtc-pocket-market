@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Bell, ChevronRight, FileCheck2, Headphones, LogOut, MapPin, Package, QrCode, ShieldCheck, Smartphone, UserRound, Wifi, Wallet } from "lucide-react";
+import { ArrowRight, Bell, ChevronRight, FileCheck2, Headphones, LogOut, MapPin, Package, QrCode, ShieldCheck, UserRound, Wifi, Wallet } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { useStore } from "@/lib/store";
 
@@ -79,17 +79,21 @@ function MyMTC() {
           <section aria-labelledby="my-mtc-actions">
             <h2 id="my-mtc-actions" className="text-[19px] font-bold tracking-tight">Quick actions</h2>
             <div className="mt-4 grid grid-cols-3 gap-3">
-              {([
-                { title: "Explore data", hint: "Browse bundles", icon: Wifi, to: "/shop" as const, search: { q: "data" } },
-                { title: "Find a store", hint: "MTC locations", icon: MapPin, to: "/stores" as const, search: undefined },
-                { title: "eSIM guide", hint: "How it works", icon: QrCode, to: "/esim" as const, search: undefined },
-              ] as const).map(({ title, hint, icon: Icon, to, search }) => (
-                <Link key={title} to={to} search={search} className="flex min-h-[124px] min-w-0 flex-col items-center justify-center gap-2 rounded-[19px] border border-white/[0.07] bg-[#151C23] px-2 py-4 text-center transition-colors hover:bg-[#1E2A35]">
-                  <Icon aria-hidden="true" className="size-6 text-[#DD2A1B]" strokeWidth={1.9} />
-                  <span className="text-[12px] font-semibold leading-4">{title}</span>
-                  <span className="text-[11px] leading-4 text-[#AAB6C0]">{hint}</span>
-                </Link>
-              ))}
+              <Link to="/shop" search={{ q: "data" }} className="flex min-h-[124px] min-w-0 flex-col items-center justify-center gap-2 rounded-[19px] border border-white/[0.07] bg-[#151C23] px-2 py-4 text-center transition-colors hover:bg-[#1E2A35]">
+                <Wifi aria-hidden="true" className="size-6 text-[#DD2A1B]" strokeWidth={1.9} />
+                <span className="text-[12px] font-semibold leading-4">Explore data</span>
+                <span className="text-[11px] leading-4 text-[#AAB6C0]">Browse bundles</span>
+              </Link>
+              <Link to="/stores" className="flex min-h-[124px] min-w-0 flex-col items-center justify-center gap-2 rounded-[19px] border border-white/[0.07] bg-[#151C23] px-2 py-4 text-center transition-colors hover:bg-[#1E2A35]">
+                <MapPin aria-hidden="true" className="size-6 text-[#DD2A1B]" strokeWidth={1.9} />
+                <span className="text-[12px] font-semibold leading-4">Find a store</span>
+                <span className="text-[11px] leading-4 text-[#AAB6C0]">MTC locations</span>
+              </Link>
+              <Link to="/esim" className="flex min-h-[124px] min-w-0 flex-col items-center justify-center gap-2 rounded-[19px] border border-white/[0.07] bg-[#151C23] px-2 py-4 text-center transition-colors hover:bg-[#1E2A35]">
+                <QrCode aria-hidden="true" className="size-6 text-[#DD2A1B]" strokeWidth={1.9} />
+                <span className="text-[12px] font-semibold leading-4">eSIM guide</span>
+                <span className="text-[11px] leading-4 text-[#AAB6C0]">How it works</span>
+              </Link>
             </div>
           </section>
 
