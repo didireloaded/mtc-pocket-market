@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Minus, Plus, Trash2, Truck, Wifi, CheckCircle2, CreditCard, Building2, Wallet, Info } from "lucide-react";
+import { Minus, Plus, Trash2, Truck, Wifi, CheckCircle2, CreditCard, Building2, Wallet, Info, ShoppingBag, ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { nad, products } from "@/lib/data";
@@ -12,7 +12,7 @@ const accessories = accessoryIds.map((id) => getProduct(id)!);
 
 
 export const Route = createFileRoute("/cart")({
-  head: () => ({ meta: [{ title: "Your Bag — MTC Pocket Market" }, { name: "description", content: "Review devices, digital services and your Namibian delivery details before submitting an account request." }, { property: "og:title", content: "Your Bag — MTC Pocket Market" }, { property: "og:description", content: "Review products, estimate costs and prepare a Pocket Market request." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Cart — MTC Pocket Market" }, { name: "description", content: "Review devices, digital services and your Namibian delivery details before submitting an account request." }, { property: "og:title", content: "Cart — MTC Pocket Market" }, { property: "og:description", content: "Review products, estimate costs and prepare a Pocket Market request." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: Cart,
 });
 function Row({ i }: { i: CartItem }) {
@@ -39,6 +39,7 @@ function Row({ i }: { i: CartItem }) {
 function Cart() {
   const { cart, clear, kycDone, placeOrder, user, extra, setExtra, add } = useStore();
   const submittedRef = useRef(false);
+  const addressDetailsRef = useRef<HTMLDetailsElement>(null);
   const [saveAs, setSaveAs] = useState("");
   const [orderId, setOrderId] = useState("");
   const [addr, setAddr] = useState<Address>(() => { const a = extra.addresses[0]; return a ? { name: a.name, street: a.street, town: a.town, region: a.region ?? "", phone: a.phone } : { name: "", street: "", town: "", region: "", phone: "" }; });
@@ -49,7 +50,11 @@ function Cart() {
   const { shipped, digital } = s;
   const savePreview = () => {
     setTried(true);
-    if (s.errors.length || submittedRef.current) return;
+    if (s.errors.length) {
+      if (shipped.items.length > 0) addressDetailsRef.current?.setAttribute("open", "");
+      return;
+    }
+    if (submittedRef.current) return;
     submittedRef.current = true;
     setOrderId(placeOrder({ items: cart.map((i) => ({ name: i.name, qty: i.qty, kind: i.kind })), total: s.total, shippedTotal: shipped.total, digitalTotal: digital.total, esimEmail, address: shipped.items.length ? `${addr.street}, ${addr.town}, ${addr.region}` : "" }));
     setSavedPreview({ hasEsim: digital.hasEsim, hasShipped: shipped.items.length > 0, email: esimEmail }); clear();
@@ -59,22 +64,36 @@ function Cart() {
       <p className="mt-1 text-xs text-muted-foreground">Local reference {orderId}. No payment was made or MTC order submitted.</p>
       {savedPreview.hasShipped && <p className="mt-3 text-muted-foreground">This is a demonstration order saved in this browser. No real delivery or fulfilment has been requested.</p>}
       {savedPreview.hasEsim && <div className="mt-6 space-y-3"><p className="rounded-2xl bg-card p-4 text-xs leading-5 text-muted-foreground">No activation email has been sent. Digital fulfilment requires a live MTC integration.</p><Link to="/esim" className="block h-14 rounded-full bg-mint pt-4 font-semibold text-mint-foreground">Learn about eSIM activation</Link></div>}
-      {savedPreview.hasShipped && <Link to="/orders" className="mt-4 block h-14 rounded-full border pt-4 font-semibold text-mint">View demo history</Link>}
+      {savedPreview.hasShipped && <Link to="/orders" search={{ tab: "previews" }} className="mt-4 block h-14 rounded-full border pt-4 font-semibold text-mint">View saved preview</Link>}
       <Link to="/" className="mt-3 block text-sm text-muted-foreground">Back home</Link></div></Shell>
   );
   const Line = ({ k, v, cls = "text-muted-foreground" }: { k: string; v: string; cls?: string }) => <div className={"flex justify-between " + cls}><span>{k}</span><span>{v}</span></div>;
   return (
     <Shell>
-      <div className="px-5 pt-8"><h1 className="text-3xl font-bold">Your bag</h1><p className="text-sm text-muted-foreground">{cart.length} item{cart.length !== 1 && "s"}{shipped.items.length > 0 && digital.items.length > 0 && " · physical and digital items"}</p><CloudOrderRequest /></div>
-      {!cart.length ? <div className="px-5 py-20 text-center text-muted-foreground">Your bag is empty.<Link to="/shop" className="mt-4 block font-semibold text-mint">Start shopping</Link></div> : (
+      <div className="px-5 pt-8"><h1 className="text-[34px] font-bold tracking-[-0.055em]">Cart</h1><p className="mt-1 text-[14px] text-muted-foreground">{cart.reduce((count, item) => count + item.qty, 0)} item{cart.reduce((count, item) => count + item.qty, 0) !== 1 && "s"}{shipped.items.length > 0 && digital.items.length > 0 && " · devices and digital services"}</p></div>
+      {!cart.length ? <div className="px-5 py-16 text-center">
+    <span className="mx-auto grid size-20 place-items-center rounded-full bg-white"><ShoppingBag className="size-9 text-[#202E39]" /></span>
+    <h2 className="mt-5 text-[20px] font-semibold">Your cart is empty</h2>
+    <p className="mt-2 text-[14px] text-muted-foreground">Find something you like and add it here.</p>
+    <Link to="/shop" className="mt-6 inline-flex min-h-12 items-center rounded-full bg-[#202E39] px-6 text-[14px] font-semibold text-white">Explore devices</Link>
+  </div> : (
         <div className="space-y-6 px-5 pt-5 pb-6">
           {shipped.items.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Physical devices</p><span className="text-xs text-muted-foreground">Delivery not arranged</span></div><div className="space-y-3">{shipped.items.map((i) => <Row key={i.key} i={i} />)}</div>
-            <div className="mt-3 space-y-2 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">Delivery details</p>
+            <details ref={addressDetailsRef} id="cart-address" className="group mt-3 rounded-[20px] bg-white p-4">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+                <span className="text-[15px] font-semibold">Delivery details</span>
+                <span className="flex items-center gap-2 text-[12px] text-muted-foreground">
+                  {addr.street && addr.region ? "Address entered" : "Add address"}
+                  <ChevronDown aria-hidden="true" className="size-5 transition-transform group-open:rotate-180" />
+                </span>
+              </summary>
+              <div className="mt-3 space-y-3">
               <div className="flex flex-wrap gap-2">{extra.addresses.map((a) => <button key={a.label} onClick={() => setAddr({ name: a.name, street: a.street, town: a.town, region: a.region ?? "", phone: a.phone })} className={"rounded-full border px-3 py-1 text-xs " + (a.street === addr.street && a.name === addr.name ? "border-mint text-mint" : "text-muted-foreground")}>{a.label}</button>)}</div>
               <NamibiaAddressFields prefix="bag" value={addr} onChange={setAddr} />
               <div className="flex gap-2"><input aria-label="Save address as" value={saveAs} onChange={(e) => setSaveAs(e.target.value)} placeholder="Save this address as (e.g. Work)" className="h-12 min-w-0 flex-1 rounded-xl bg-surface-2 px-3 text-[16px] outline-none" />
                 <button disabled={!saveAs.trim() || !addr.street.trim() || !addr.town.trim() || !addr.region} onClick={() => { setExtra((e) => ({ ...e, addresses: [...e.addresses.filter((a) => a.label !== saveAs.trim()), { label: saveAs.trim(), ...addr }] })); setSaveAs(""); }} className="min-h-12 rounded-xl border px-4 text-[14px] font-semibold text-mint disabled:opacity-40">Save</button></div>
             </div>
+            </details>
             {shipped.items.some((i) => products.find((p) => p.id === i.id)?.category === "Phones") && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">Add accessories</p>
               <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto">{accessories.map((a) => { const inCart = cart.some((i) => i.id === a.id); return <button key={a.id} disabled={inCart} onClick={() => add({ id: a.id, name: a.name, image: a.image, variant: "Accessory", price: a.cash, kind: "physical", mode: "cash" })} className="w-32 shrink-0 rounded-xl bg-surface-2 p-2 text-left disabled:opacity-50"><img src={a.image} alt={a.name} className="h-16 w-full rounded-lg bg-stage object-contain p-1" /><p className="mt-1 truncate text-xs font-medium">{a.name}</p><p className="text-xs"><span className="font-bold">{nad(a.cash)}</span></p><p className="text-[10px] text-mint">{inCart ? "Added" : "+ Add"}</p></button>; })}</div></div>}
             <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Delivery fee" v="To be confirmed" /><p className="text-xs leading-5 text-muted-foreground">No delivery fee is included. An actual fee requires official confirmation.</p><Line k="Physical items subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
@@ -89,8 +108,15 @@ function Cart() {
             {s.recurringMonthly > 0 && <div className="flex justify-between gap-3 text-sm text-muted-foreground"><span>Estimated contract payments (not charged now)</span><span>{nad(s.recurringMonthly)}/month</span></div>}
             <div className="flex justify-between border-t pt-3 text-lg font-bold"><span>Items subtotal</span><span>{nad(s.total)}</span></div>
           </section>
-          <section className="rounded-[22px] bg-[#151C23] p-5 text-white">
-            <h2 className="text-[18px] font-semibold">Payment options</h2>
+          <CloudOrderRequest />
+          <details className="group rounded-[22px] bg-[#151C23] p-5 text-white">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+              <span className="text-[17px] font-semibold">Payment options</span>
+              <span className="flex items-center gap-1.5 text-[12px] text-[#BAC5CE]">Not connected
+                <ChevronDown aria-hidden="true" className="size-5 transition-transform group-open:rotate-180" />
+              </span>
+            </summary>
+            <div className="mt-3">
             <p className="mt-2 text-[13px] leading-5 text-[#BAC5CE]">
               Payments will be available only after an approved checkout integration. You cannot pay or reserve stock here yet.
             </p>
@@ -107,7 +133,8 @@ function Cart() {
                 </div>;
               })}
             </div>
-          </section>
+          </div>
+          </details>
           <p className="flex items-start gap-2 rounded-[17px] border border-[#BACAD4] bg-[#E9F1F6] p-4 text-[13px] leading-5 text-[#254B63]">
             <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
             Independent retail concept. Saving a shopping preview does not place an MTC order, collect payment, reserve stock, arrange delivery or activate an eSIM.

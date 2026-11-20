@@ -5,6 +5,7 @@ const source = (path: string) => readFileSync(new URL(path, import.meta.url), "u
 const card = source("../components/ProductCard.tsx");
 const shop = source("../routes/shop.tsx");
 const home = source("../routes/index.tsx");
+const hero = source("../components/FeaturedDeviceHero.tsx");
 const css = source("../styles.css");
 
 describe("floating product-card retail treatment", () => {
@@ -29,6 +30,7 @@ describe("floating product-card retail treatment", () => {
     expect(css).toContain("--background: #F4F5F7;");
     expect(css).toContain("--primary: #DD2A1B;");
     expect(shop).toContain('c === name ? "bg-primary text-white"');
-    expect(home).toContain("from-[#263842]");
+    expect(home).toContain("<FeaturedDeviceHero product={featured} />");
+    expect(hero).toContain("radial-gradient");
   });
 });

@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, QrCode, Search, ShoppingBag } from "lucide-react";
+import { ArrowRight, QrCode, Search, ShoppingBag } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
 import { useStore } from "@/lib/store";
-import { products, nad, getProduct } from "@/lib/data";
+import { products, getProduct } from "@/lib/data";
+import { FeaturedDeviceHero } from "@/components/FeaturedDeviceHero";
 import { MtcLogo } from "@/components/MtcLogo";
 
 export const Route = createFileRoute("/")({
@@ -46,30 +47,7 @@ function Home() {
       </header>
 
       <div className="space-y-9 px-6 pb-8 pt-6">
-        <section aria-label="Featured device">
-          <div className="relative isolate min-h-[540px] overflow-hidden rounded-[28px] bg-gradient-to-b from-[#263842] via-[#202E39] to-[#0A0F14] px-5 pt-6 pb-5 text-white">
-            <div className="flex items-center justify-center gap-2">
-              <span className="size-2 rounded-full bg-[#DD2A1B]" />
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80">Featured on Pocket Market</p>
-            </div>
-            <h1 className="mx-auto mt-5 max-w-[290px] text-center text-[30px] font-bold leading-[1.08] tracking-[-0.055em] min-[390px]:text-[34px]">
-              Make space for something better.
-            </h1>
-
-            <div className="absolute inset-x-5 bottom-[89px] h-[252px] rounded-[27px] bg-white shadow-[0_12px_28px_rgba(0,0,0,0.12)] text-[#202E39]">
-              <img src={featured.image} alt={featured.name} loading="eager" decoding="async"
-                className="pointer-events-none absolute inset-x-0 -top-8 mx-auto h-[195px] w-[85%] object-contain drop-shadow-[0_18px_15px_rgba(32,46,57,0.12)]" />
-              <div className="absolute inset-x-3 bottom-5 text-center">
-                <p className="line-clamp-2 text-[15px] font-semibold leading-[20px]">{featured.name}</p>
-                <p className="mt-2 text-[21px] font-bold tracking-[-0.04em] tabular-nums">{nad(featured.cash)}</p>
-              </div>
-            </div>
-            <Link to="/product/$id" params={{ id: featured.id }}
-              className="absolute inset-x-5 bottom-5 flex h-[52px] items-center justify-center gap-2 rounded-full bg-white text-[14px] font-semibold text-[#202E39] transition-colors hover:bg-[#F0F1F0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-              Explore this device <ArrowUpRight aria-hidden="true" className="size-[18px]" />
-            </Link>
-          </div>
-        </section>
+        <FeaturedDeviceHero product={featured} />
 
         <section aria-labelledby="quick-categories-heading">
           <h2 id="quick-categories-heading" className="text-[20px] font-bold tracking-[-0.04em]">Shop by category</h2>

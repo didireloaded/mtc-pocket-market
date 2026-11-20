@@ -7,12 +7,14 @@ const shop = readSource("../routes/shop.tsx");
 const product = readSource("../routes/product.$id.tsx");
 const card = readSource("../components/ProductCard.tsx");
 const shell = readSource("../components/Shell.tsx");
+const hero = readSource("../components/FeaturedDeviceHero.tsx");
 
 describe("reference-led device retail screens", () => {
   it("keeps Home focused on a single featured device and one discovery carousel", () => {
-    expect((home.match(/<section\b/g) ?? [])).toHaveLength(3);
-    expect(home).toContain('aria-label="Featured device"');
-    expect(home).toContain("Make space for something better.");
+    expect((home.match(/<section\b/g) ?? [])).toHaveLength(2);
+    expect((hero.match(/<section\b/g) ?? [])).toHaveLength(1);
+    expect(home).toContain("<FeaturedDeviceHero product={featured} />");
+    expect(hero).toContain("Make space for something better.");
     expect(home).toContain('id="arrivals-heading"');
     expect(home).not.toContain('to="/find"');
     expect(home).not.toContain('to="/adviser"');
@@ -40,7 +42,8 @@ describe("reference-led device retail screens", () => {
   it("keeps five accessible navigation destinations", () => {
     expect(shell).toContain("grid-cols-5");
     expect(shell).toContain('aria-label="Main navigation"');
-    expect(shell).toContain('to: "/mymtc"');
+    expect(shell).toContain('to: "/cart"');
+    expect(shell).toContain('label: "Cart"');
     expect(shell).toContain('to: "/orders"');
     expect(shell).toContain('to: "/settings"');
   });

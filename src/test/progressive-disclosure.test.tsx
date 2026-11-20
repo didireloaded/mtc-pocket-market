@@ -17,6 +17,7 @@ vi.mock("@/lib/store", () => ({
 
 const homeSource = readFileSync(new URL("../routes/index.tsx", import.meta.url), "utf8");
 const shopSource = readFileSync(new URL("../routes/shop.tsx", import.meta.url), "utf8");
+const heroSource = readFileSync(new URL("../components/FeaturedDeviceHero.tsx", import.meta.url), "utf8");
 
 describe("progressive-disclosure retail experience", () => {
   it("renders a minimal Home product tile without shopping controls and specs", () => {
@@ -30,8 +31,10 @@ describe("progressive-disclosure retail experience", () => {
   });
 
   it("keeps exactly three editorial sections on the Home page", () => {
-    expect((homeSource.match(/<section\b/g) ?? [])).toHaveLength(3);
-    expect(homeSource).toContain('aria-label="Featured device"');
+    expect((homeSource.match(/<section\b/g) ?? [])).toHaveLength(2);
+    expect((heroSource.match(/<section\b/g) ?? [])).toHaveLength(1);
+    expect(homeSource).toContain("<FeaturedDeviceHero product={featured} />");
+    expect(heroSource).not.toContain("Featured on Pocket Market");
     expect(homeSource).toContain('id="quick-categories-heading"');
     expect(homeSource).toContain('id="arrivals-heading"');
     expect(homeSource).not.toContain('<Link to="/find"');
