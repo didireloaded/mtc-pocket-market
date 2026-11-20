@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Search, ShoppingBag, ArrowUpRight, ArrowRight, Smartphone, Laptop, Tablet, Watch, Router, Cable, SlidersHorizontal, Wifi, MapPin, Bookmark } from "lucide-react";
+import { Bell, Search, ShoppingBag, ArrowUpRight, ArrowRight, Smartphone, Laptop, Tablet, Watch, Router, Cable, SlidersHorizontal, Wifi, MapPin, Bookmark, ShieldCheck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Eyebrow, SectionHeading, ProductStage } from "@/components/retail/RetailPrimitives";
 import { Shell } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
 import { products, nad, getProduct } from "@/lib/data";
@@ -10,143 +14,150 @@ export const Route = createFileRoute("/")({
     { title: "MTC Pocket Market — Devices, contracts and services" },
     { name: "description", content: "Discover devices, explore contracts, and manage your shopping journey in one place." },
     { property: "og:title", content: "MTC Pocket Market" },
-    { property: "og:description", content: "A connected mobile retail experience for Namibia." },
+    { property: "og:description", content: "A connected mobile retail concept for Namibia." },
     { property: "og:type", content: "website" },
   ] }),
   component: Home,
 });
 
 const categories = [
-  { name: "Phones", Icon: Smartphone },
-  { name: "Laptops", Icon: Laptop },
-  { name: "Tablets", Icon: Tablet },
-  { name: "Wearables", Icon: Watch },
-  { name: "Data devices", Icon: Router },
-  { name: "Accessories", Icon: Cable },
+  { name: "Phones", Icon: Smartphone }, { name: "Laptops", Icon: Laptop },
+  { name: "Tablets", Icon: Tablet }, { name: "Wearables", Icon: Watch },
+  { name: "Data devices", Icon: Router }, { name: "Accessories", Icon: Cable },
 ] as const;
 
 function Home() {
   const { user, extra, saved, cart, notices, setAuthOpen } = useStore();
   const featured = products.find((p) => p.featured) ?? products[0]!;
   const recent = extra.recent.map(getProduct).filter((p) => !!p).slice(0, 5);
-  const favorites = saved.map(getProduct).filter((p) => !!p).slice(0, 4);
+  const favourites = saved.map(getProduct).filter((p) => !!p).slice(0, 5);
   const unread = notices.filter((n) => !n.read).length;
   const bagCount = cart.reduce((count, item) => count + item.qty, 0);
   const h = new Date().getHours();
   const greeting = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
   const firstName = user?.label?.split("@")[0]?.split(/[ ._-]/)[0];
-  return (
-    <Shell>
-      <div className="px-5 pt-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-mint">MTC Pocket Market</p>
-            <h1 className="mt-1 text-[30px] font-bold leading-tight tracking-tight">{user ? `${greeting}, ${firstName || "there"}.` : "Find your next connection."}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">{user ? "Your shopping, all in one place." : "Explore devices and plans without signing in."}</p>
-          </div>
-          <div className="flex shrink-0 gap-2 pl-2">
-            <Link to="/notifications" aria-label="Notifications" className="relative grid size-11 place-items-center rounded-full bg-card">
-              <Bell className="size-[19px]" />
-              {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid size-[18px] place-items-center rounded-full bg-brand-red text-[10px] font-bold text-white">{unread}</span>}
-            </Link>
-            <Link to="/cart" aria-label={`Shopping bag with ${bagCount} items`} className="relative grid size-11 place-items-center rounded-full bg-card">
-              <ShoppingBag className="size-[19px]" />
-              {bagCount > 0 && <span className="absolute -right-0.5 -top-0.5 grid size-[18px] place-items-center rounded-full bg-primary text-[10px] font-bold text-white">{bagCount}</span>}
-            </Link>
-          </div>
+
+  return <Shell>
+    <header className="px-5 pt-8">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <Eyebrow>POCKET MARKET <span className="font-medium text-muted-foreground">/ MTC concept</span></Eyebrow>
+          <h1 className="mt-2 text-[29px] font-bold leading-[1.15] tracking-[-0.05em]">{user ? `${greeting}, ${firstName || "there"}.` : "Your next device starts here."}</h1>
+          <p className="mt-2 text-[14px] leading-5 text-muted-foreground">{user ? "Pick up where you left off." : "Compare. Choose. Make the connection."}</p>
         </div>
-
-        <Link to="/shop" className="mt-6 flex h-14 items-center gap-3 rounded-full bg-card px-5 text-sm text-muted-foreground shadow-card">
-          <Search className="size-5 text-foreground" />
-          <span className="flex-1">Search phones, laptops, plans...</span>
-          <ArrowUpRight className="size-4" />
-        </Link>
-
-        {user ? (
-          <div className="mt-5 rounded-[22px] border bg-card p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div><p className="font-semibold">Your MTC experience</p><p className="mt-1 max-w-[240px] text-xs leading-5 text-muted-foreground">You're signed in to Pocket Market. Network balances and contracts need a verified MTC account connection.</p></div>
-              <span className="rounded-full bg-surface-2 px-2.5 py-1 text-[10px] font-semibold text-muted-foreground">Not linked</span>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <Link to="/orders" className="flex-1 rounded-full bg-primary px-3 py-3 text-center text-xs font-semibold text-primary-foreground">My orders</Link>
-              <Link to="/mymtc" className="flex-1 rounded-full bg-surface-2 px-3 py-3 text-center text-xs font-semibold">Explore My MTC</Link>
-            </div>
-          </div>
-        ) : (
-          <button onClick={() => setAuthOpen(true)} className="mt-5 flex w-full items-center justify-between rounded-[20px] border bg-card px-4 py-3 text-left">
-            <span><span className="block text-sm font-semibold">Already an MTC customer?</span><span className="block text-xs text-muted-foreground">Sign in to save your shopping journey.</span></span>
-            <ArrowRight className="size-5 text-mint" />
-          </button>
-        )}
+        <div className="flex shrink-0 items-center gap-1">
+          <Button asChild variant="ghost" size="icon" className="relative size-11 rounded-full" >
+            <Link to="/notifications" aria-label="Notifications"><Bell className="size-5" />
+              {unread > 0 && <span className="absolute right-0 top-0 grid size-[18px] place-items-center rounded-full bg-brand-red text-[11px] font-bold text-white">{unread}</span>}
+            </Link>
+          </Button>
+          <Button asChild variant="secondary" size="icon" className="relative size-11 rounded-full bg-card shadow-none">
+            <Link to="/cart" aria-label={`Shopping bag with ${bagCount} items`}><ShoppingBag className="size-5" />
+              {bagCount > 0 && <span className="absolute -right-1 -top-1 grid size-[18px] place-items-center rounded-full bg-primary text-[11px] font-bold text-white">{bagCount}</span>}
+            </Link>
+          </Button>
+        </div>
       </div>
+      <Button asChild variant="outline" className="mt-6 h-14 w-full justify-start gap-3 rounded-[18px] border-border/60 bg-card px-4 text-[14px] font-medium text-muted-foreground shadow-none">
+        <Link to="/shop"><Search className="size-5 text-mint" /><span className="flex-1 text-left">Find phones, laptops or data devices</span><ArrowUpRight className="size-4" /></Link>
+      </Button>
+    </header>
 
-      <section className="mt-6 px-5">
-        <div className="relative min-h-[210px] overflow-hidden rounded-[26px] bg-[#DDEBF7]">
-          <div className="relative z-10 flex min-h-[210px] w-[63%] flex-col items-start justify-between p-5">
-            <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#235C89]">Device spotlight</p>
-              <h2 className="mt-2 text-[22px] font-bold leading-[1.1] tracking-tight text-[#152D43]">{featured.name}</h2>
-              <p className="mt-2 text-sm font-semibold text-[#235C89]">Outright {nad(featured.cash)}</p></div>
-            <Link to="/product/$id" params={{ id: featured.id }} className="inline-flex items-center gap-2 rounded-full bg-[#152D43] px-4 py-2.5 text-xs font-semibold text-white">
-              Explore device <ArrowUpRight className="size-4" />
-            </Link>
+    <section className="retail-section px-5">
+      <Card className="relative overflow-hidden rounded-[26px] border-0 bg-[#deebf7] shadow-none">
+        <div className="relative z-10 flex min-h-[230px] w-[64%] flex-col justify-between p-5">
+          <div>
+            <Badge variant="outline" className="rounded-full border-[#aacbe4] bg-white/70 text-[12px] font-semibold text-[#245a82]">Featured device</Badge>
+            <h2 className="mt-4 max-w-[210px] text-[25px] font-bold leading-[1.12] tracking-[-0.05em] text-[#172f43]">{featured.name}</h2>
+            <p className="mt-3 text-[13px] font-semibold text-[#315976]">Outright {nad(featured.cash)}</p>
           </div>
-          <img src={featured.image} alt={featured.name} className="absolute -right-3 bottom-0 h-[92%] w-[49%] object-contain" />
+          <Button asChild className="h-11 w-fit rounded-full bg-[#172f43] px-4 text-[13px] font-semibold shadow-none hover:bg-[#315976]">
+            <Link to="/product/$id" params={{ id: featured.id }}>Explore device <ArrowUpRight className="size-4" /></Link>
+          </Button>
         </div>
-      </section>
+        <img src={featured.image} alt={featured.name} loading="eager" decoding="async" className="pointer-events-none absolute -right-5 bottom-0 h-[90%] w-[48%] object-contain" />
+      </Card>
+    </section>
 
-      <section className="mt-6 px-5">
-        <Link to="/find" className="flex items-center gap-4 rounded-[24px] bg-primary p-5 text-primary-foreground">
-          <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/15"><SlidersHorizontal className="size-6" /></div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-white/65">Find my contract</p>
-            <h2 className="mt-0.5 text-lg font-bold leading-6">Start with your budget.</h2>
-            <p className="mt-1 text-xs text-white/70">Compare devices and plans in a few steps.</p>
-          </div>
-          <ArrowUpRight className="size-5 shrink-0" />
+    <section className="retail-section px-5">
+      <SectionHeading title="Find what fits." description="Choose a device and a monthly budget." />
+      <Link to="/find" className="mt-4 flex items-center gap-4 rounded-[22px] bg-primary p-5 text-primary-foreground focus-visible:outline-offset-4">
+        <div className="grid size-12 shrink-0 place-items-center rounded-[16px] bg-white/15"><SlidersHorizontal className="size-6" /></div>
+        <div className="min-w-0 flex-1"><p className="text-[12px] font-semibold uppercase tracking-wide text-white/65">Contract finder</p>
+          <p className="mt-1 text-[18px] font-bold leading-6">Start with your budget</p>
+          <p className="mt-1 text-[13px] leading-5 text-white/70">Explore plans and estimated monthly costs.</p></div>
+        <ArrowUpRight className="size-5 shrink-0" />
+      </Link>
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        <Button asChild variant="outline" className="h-auto min-h-16 justify-start gap-2 rounded-[19px] border-border/70 bg-card px-3 text-[13px] shadow-none">
+          <Link to="/compare"><Smartphone className="size-[18px] text-mint" />Compare devices <ArrowRight className="ml-auto size-4 text-muted-foreground" /></Link>
+        </Button>
+        <Button asChild variant="outline" className="h-auto min-h-16 justify-start gap-2 rounded-[19px] border-border/70 bg-card px-3 text-[13px] shadow-none">
+          <Link to="/orders"><ShoppingBag className="size-[18px] text-mint" />Your orders <ArrowRight className="ml-auto size-4 text-muted-foreground" /></Link>
+        </Button>
+      </div>
+    </section>
+
+    {user ? <section className="retail-section px-5">
+      <Card className="rounded-[22px] border-border/70 bg-card p-4 shadow-none">
+        <div className="flex items-start gap-3">
+          <ShieldCheck className="mt-1 size-5 shrink-0 text-mint" />
+          <div className="min-w-0 flex-1"><p className="text-[15px] font-semibold">Your Pocket Market account</p>
+            <p className="mt-1 text-[13px] leading-5 text-muted-foreground">You're signed in. Actual MTC balances and services need a verified account connection.</p></div>
+          <Badge variant="secondary" className="shrink-0 rounded-full text-[11px]">Not linked</Badge>
+        </div>
+        <Button asChild variant="secondary" className="mt-3 h-11 w-full rounded-full shadow-none"><Link to="/mymtc">Explore My MTC <ArrowRight className="size-4" /></Link></Button>
+      </Card>
+    </section> : <section className="retail-section px-5">
+      <button type="button" onClick={() => setAuthOpen(true)} className="flex w-full min-h-[72px] items-center gap-4 rounded-[20px] border border-border/70 bg-card p-4 text-left">
+        <div className="min-w-0 flex-1"><p className="text-[15px] font-semibold">Already have an account?</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">Sign in to save your shopping journey.</p></div>
+        <ArrowRight className="size-5 shrink-0 text-mint" />
+      </button>
+    </section>}
+
+    <section className="retail-section">
+      <div className="px-5"><SectionHeading title="Browse categories" to="/shop" action="Shop all" /></div>
+      <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto px-5 pb-2">
+        {categories.map(({ name, Icon }) => {
+          const image = products.find((p) => p.category === name)?.image;
+          return <Link key={name} to="/shop" search={{ c: name }} className="flex w-[82px] shrink-0 flex-col items-center gap-2">
+            <div className="grid size-[76px] place-items-center rounded-[20px] border border-border/60 bg-card p-2">
+              {image ? <img src={image} alt="" loading="lazy" decoding="async" className="size-full object-contain" /> : <Icon className="size-6 text-mint" />}
+            </div>
+            <span className="text-center text-[13px] font-medium leading-[1.3]">{name}</span>
+          </Link>;
+        })}
+      </div>
+    </section>
+
+    <section className="retail-section px-5">
+      <div className="grid grid-cols-2 gap-3">
+        <Link to="/shop" search={{ c: "Data devices" }} className="flex min-h-32 flex-col rounded-[20px] bg-card p-4">
+          <Wifi className="size-6 text-mint" /><p className="mt-auto text-[15px] font-semibold">Stay connected</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">Routers and data devices</p>
         </Link>
-      </section>
+        <Link to="/stores" className="flex min-h-32 flex-col rounded-[20px] bg-card p-4">
+          <MapPin className="size-6 text-mint" /><p className="mt-auto text-[15px] font-semibold">MTC locations</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">Explore collection branches</p>
+        </Link>
+      </div>
+    </section>
 
-      <section className="mt-7">
-        <div className="flex items-center justify-between px-5"><h2 className="text-lg font-bold">Shop by category</h2><Link to="/shop" className="text-xs font-semibold text-mint">View all</Link></div>
-        <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto px-5 pb-1">
-          {categories.map(({ name, Icon }) => {
-            const photo = products.find((p) => p.category === name)?.image;
-            return <Link key={name} to="/shop" search={{ c: name }} className="flex w-[76px] shrink-0 flex-col items-center gap-2 text-center">
-              <div className="grid size-[72px] place-items-center rounded-[20px] bg-card p-2 shadow-card">{photo ? <img src={photo} alt="" loading="lazy" className="size-full object-contain" /> : <Icon className="size-6 text-mint" />}</div>
-              <span className="text-[11px] font-medium leading-4">{name}</span>
-            </Link>;
-          })}
-        </div>
-      </section>
+    {favourites.length > 0 && <section className="retail-section">
+      <div className="px-5"><SectionHeading title="Saved for later" description="The devices you've bookmarked." /></div>
+      <div className="no-scrollbar mt-4 flex snap-x gap-3 overflow-x-auto px-5 pb-2">
+        {favourites.map((p) => <div key={p.id} className="w-[190px] shrink-0 snap-start"><ProductCard p={p} /></div>)}
+      </div>
+    </section>}
 
-      <section className="mt-7 px-5">
-        <div className="grid grid-cols-2 gap-3">
-          <Link to="/shop" search={{ c: "Data devices" }} className="rounded-[22px] bg-card p-4 shadow-card">
-            <Wifi className="size-6 text-mint" />
-            <p className="mt-5 text-sm font-bold">Stay connected</p>
-            <p className="mt-1 text-xs text-muted-foreground">Explore internet devices</p>
-          </Link>
-          <Link to="/stores" className="rounded-[22px] bg-card p-4 shadow-card">
-            <MapPin className="size-6 text-mint" />
-            <p className="mt-5 text-sm font-bold">Find an MTC store</p>
-            <p className="mt-1 text-xs text-muted-foreground">See branch locations</p>
-          </Link>
-        </div>
-      </section>
-
-      {favorites.length > 0 && <section className="mt-7">
-        <div className="flex items-center gap-2 px-5"><Bookmark className="size-4 text-mint" /><h2 className="text-lg font-bold">Saved for later</h2></div>
-        <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto px-5">{favorites.map((p) => <div key={p.id} className="w-40 shrink-0"><ProductCard p={p} /></div>)}</div>
-      </section>}
-
-      <section className="mt-7">
-        <div className="flex items-center justify-between px-5"><h2 className="text-lg font-bold">{recent.length ? "Continue exploring" : "New arrivals"}</h2><Link to="/shop" className="text-xs font-semibold text-mint">Browse all</Link></div>
-        <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto px-5">
-          {(recent.length ? recent : products.filter((p) => p.isNew)).slice(0, 6).map((p) => <div key={p.id} className="w-40 shrink-0"><ProductCard p={p} /></div>)}
-        </div>
-      </section>
-      <p className="px-6 pb-8 pt-7 text-center text-[11px] leading-5 text-muted-foreground">Independent MTC retail concept. Services, stock and contract prices require official verification.</p>
-    </Shell>
-  );
+    <section className="retail-section pb-5">
+      <div className="px-5"><SectionHeading title={recent.length ? "Continue exploring" : "Just arrived"} to="/shop" action="See all" /></div>
+      <div className="no-scrollbar mt-4 flex snap-x gap-3 overflow-x-auto px-5 pb-2">
+        {(recent.length ? recent : products.filter((p) => p.isNew)).slice(0, 6).map((p) =>
+          <div key={p.id} className="w-[190px] shrink-0 snap-start"><ProductCard p={p} /></div>)}
+      </div>
+    </section>
+    <p className="px-6 pb-7 pt-3 text-center text-[12px] leading-5 text-muted-foreground">Independent retail concept. Stock, contract estimates and services need official MTC verification.</p>
+  </Shell>;
 }
