@@ -9,8 +9,7 @@ import { UpfrontControl } from "@/components/retail/ContractControls";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { motion, useReducedMotion } from "framer-motion";
-import { revealGroup, revealItem, pressClass } from "@/lib/retail-motion";
+import { pressClass } from "@/lib/retail-motion";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
 
 export const Route = createFileRoute("/product/$id")({
@@ -26,7 +25,6 @@ export const Route = createFileRoute("/product/$id")({
 });
 
 function ProductDetail() {
-  const reduceMotion = useReducedMotion();
   const p = Route.useLoaderData();
   const router = useRouter();
   const { mode, setMode, add, saved, toggleSave, viewProduct } = useStore();
@@ -213,9 +211,9 @@ function ProductDetail() {
             </div>
 
             <div className="no-scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-6">
-              <motion.div variants={revealGroup} initial={reduceMotion ? false : "hidden"} animate="visible" className="space-y-2">
-                {availablePlans.map((item) => (
-                  <motion.div key={item.id} variants={revealItem}>
+              <div className="space-y-2">
+                {availablePlans.map((item, index) => (
+                  <div key={item.id} style={{ animationDelay: `${index * 45}ms` }} className="pocket-reveal">
                     <button type="button" onClick={() => {
                       setSelectedPlan(item.id);
                       if (!(item.terms as readonly number[]).includes(months)) setMonths(item.terms[0]!);
@@ -231,9 +229,9 @@ function ProductDetail() {
                         <span className="block text-[11px] font-medium text-[#BAC5CE]">/mo estimated</span>
                       </span>
                     </button>
-                  </motion.div>
+                  </div>
                 ))}
-              </motion.div>
+              </div>
 
               <div className="rounded-[20px] bg-white p-4 text-[#202E39]">
                 <p className="mb-3 text-[13px] font-semibold">Contract duration</p>
