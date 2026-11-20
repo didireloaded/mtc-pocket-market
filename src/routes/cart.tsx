@@ -21,14 +21,14 @@ function Row({ i }: { i: CartItem }) {
       <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-surface-2">{i.image ? <img src={i.image} alt={i.name} className="size-full bg-stage object-contain p-1.5" /> : <Wifi className="text-mint" />}</div>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-2"><p className="truncate font-semibold">{i.name}</p>
-          <button aria-label="Remove" onClick={() => remove(i.key)} className="text-muted-foreground hover:text-primary"><Trash2 className="size-4" /></button></div>
+          <button type="button" aria-label={`Remove ${i.name}`} onClick={() => remove(i.key)} className="grid size-11 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-surface-2 hover:text-primary"><Trash2 className="size-5" /></button></div>
         <p className="truncate text-xs text-muted-foreground">{i.variant}{i.mode === "contract" && " · contract"}</p>
         <div className="mt-auto flex items-center justify-between pt-2">
           <p className="font-bold">{nad(i.price * i.qty)}{i.mode === "contract" && <span className="text-xs font-normal text-muted-foreground">/mo</span>}</p>
-          <div className="flex items-center gap-3 rounded-full bg-surface-2 px-2 py-1">
-            <button aria-label="Decrease" onClick={() => setQty(i.key, i.qty - 1)}><Minus className="size-4" /></button>
-            <span className="w-4 text-center text-sm font-semibold">{i.qty}</span>
-            <button aria-label="Increase" onClick={() => setQty(i.key, i.qty + 1)}><Plus className="size-4" /></button>
+          <div className="flex items-center gap-1 rounded-full bg-surface-2 px-1">
+            <button type="button" aria-label={`Decrease quantity of ${i.name}`} onClick={() => setQty(i.key, i.qty - 1)} className="grid size-11 place-items-center rounded-full"><Minus className="size-4" /></button>
+            <span aria-label={`Quantity ${i.qty}`} className="min-w-5 text-center text-[14px] font-semibold tabular-nums">{i.qty}</span>
+            <button type="button" aria-label={`Increase quantity of ${i.name}`} onClick={() => setQty(i.key, i.qty + 1)} className="grid size-11 place-items-center rounded-full"><Plus className="size-4" /></button>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ function Cart() {
       {shipped.items.length > 0 && (() => { const got = shipped.sub - shipped.disc; const pct = Math.min(100, (got / FREE_SHIPPING_OVER) * 100); return (
         <div className="mx-5 mt-4 flex items-center gap-4 rounded-[20px] bg-success/10 p-4">
           <Truck className="size-8 shrink-0 text-success" />
-          <div className="flex-1"><p className="text-sm font-semibold text-success">{pct >= 100 ? "You've unlocked free delivery!" : `Add ${nad(FREE_SHIPPING_OVER - got)} for free delivery`}</p>
+          <div className="flex-1"><p className="text-sm font-semibold text-success">{pct >= 100 ? "Sample delivery threshold reached" : `Demo example: ${nad(FREE_SHIPPING_OVER - got)} below a sample delivery threshold`}</p>
             <div className="mt-2 h-2 rounded-full bg-success/20"><div className="h-full rounded-full bg-success" style={{ width: pct + "%" }} /></div></div>
         </div>); })()}
       {!cart.length ? <div className="px-5 py-20 text-center text-muted-foreground">Your bag is empty.<Link to="/shop" className="mt-4 block font-semibold text-mint">Start shopping</Link></div> : (
@@ -77,22 +77,22 @@ function Cart() {
           {shipped.items.length > 0 && <section className="rounded-[24px] border p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"><Truck className="size-4" />Physical items (demo)</p><span className="text-xs text-muted-foreground">No shipment arranged</span></div><div className="space-y-3">{shipped.items.map((i) => <Row key={i.key} i={i} />)}</div>
             <div className="mt-3 space-y-2 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">Delivery details</p>
               <div className="flex flex-wrap gap-2">{extra.addresses.map((a) => <button key={a.label} onClick={() => setAddr({ name: a.name, street: a.street, town: a.town, phone: a.phone })} className={"rounded-full border px-3 py-1 text-xs " + (a.street === addr.street && a.name === addr.name ? "border-mint text-mint" : "text-muted-foreground")}>{a.label}</button>)}</div>
-              {([["name", "Recipient name"], ["street", "Street address"], ["town", "Town"], ["phone", "Contact number"]] as const).map(([k, ph]) => <input key={k} aria-label={ph} placeholder={ph} value={addr[k]} onChange={(e) => setAddr({ ...addr, [k]: e.target.value })} className="h-11 w-full rounded-xl bg-surface-2 px-3 text-sm outline-none" />)}
-              <div className="flex gap-2"><input aria-label="Save address as" value={saveAs} onChange={(e) => setSaveAs(e.target.value)} placeholder="Save as (e.g. Work)" className="h-9 flex-1 rounded-xl bg-surface-2 px-3 text-xs outline-none" />
-                <button disabled={!saveAs.trim() || !addr.street.trim()} onClick={() => { setExtra((e) => ({ ...e, addresses: [...e.addresses.filter((a) => a.label !== saveAs.trim()), { label: saveAs.trim(), ...addr }] })); setSaveAs(""); }} className="rounded-xl border px-3 text-xs font-semibold text-mint disabled:opacity-40">Save</button></div>
+              {([["name", "Recipient name"], ["street", "Street address"], ["town", "Town"], ["phone", "Contact number"]] as const).map(([k, ph]) => <input key={k} aria-label={ph} placeholder={ph} value={addr[k]} onChange={(e) => setAddr({ ...addr, [k]: e.target.value })} className="h-12 w-full rounded-xl bg-surface-2 px-3 text-[16px] outline-none" />)}
+              <div className="flex gap-2"><input aria-label="Save address as" value={saveAs} onChange={(e) => setSaveAs(e.target.value)} placeholder="Save as (e.g. Work)" className="h-12 min-w-0 flex-1 rounded-xl bg-surface-2 px-3 text-[16px] outline-none" />
+                <button disabled={!saveAs.trim() || !addr.street.trim()} onClick={() => { setExtra((e) => ({ ...e, addresses: [...e.addresses.filter((a) => a.label !== saveAs.trim()), { label: saveAs.trim(), ...addr }] })); setSaveAs(""); }} className="min-h-12 rounded-xl border px-4 text-[14px] font-semibold text-mint disabled:opacity-40">Save</button></div>
             </div>
             {shipped.items.some((i) => products.find((p) => p.id === i.id)?.category === "Phones") && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">Add accessories</p>
               <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto">{accessories.map((a) => { const inCart = cart.some((i) => i.id === a.id); return <button key={a.id} disabled={inCart} onClick={() => add({ id: a.id, name: a.name, image: a.image, variant: "Accessory", price: a.cash, kind: "physical", mode: "cash" })} className="w-32 shrink-0 rounded-xl bg-surface-2 p-2 text-left disabled:opacity-50"><img src={a.image} alt={a.name} className="h-16 w-full rounded-lg bg-stage object-contain p-1" /><p className="mt-1 truncate text-xs font-medium">{a.name}</p><p className="text-xs"><span className="font-bold">{nad(a.cash)}</span></p><p className="text-[10px] text-mint">{inCart ? "Added" : "+ Add"}</p></button>; })}</div></div>}
-            <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Shipping" v={shipped.ship ? nad(shipped.ship) : "Free"} />{shipped.ship > 0 && <p className="text-xs text-mint">Add {nad(FREE_SHIPPING_OVER - (shipped.sub - shipped.disc))} more for free shipping</p>}<Line k="Shipped subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
+            <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Devices" v={nad(shipped.sub)} />{shipped.disc > 0 && <Line k="Discount" v={"-" + nad(shipped.disc)} cls="text-mint" />}<Line k="Illustrative delivery" v={shipped.ship ? nad(shipped.ship) : "N$0 (demo)"} />{shipped.ship > 0 && <p className="text-xs text-muted-foreground">Example figures only. Actual delivery fees require MTC confirmation.</p>}<Line k="Physical preview subtotal" v={nad(shipped.total)} cls="font-semibold" /></div>
           </section>}
           {digital.items.length > 0 && <section className="rounded-[24px] border border-mint/40 p-3"><div className="mb-3 flex items-center justify-between px-1"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-mint"><Wifi className="size-4" />Digital · eSIM & bundles</p><span className="text-xs text-mint">Activation not connected</span></div><div className="space-y-3">{digital.items.map((i) => <Row key={i.key} i={i} />)}</div>
-            {digital.hasEsim && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">eSIM delivery email</p><input type="email" aria-label="eSIM delivery email" placeholder="you@example.com" value={esimEmail} onChange={(e) => setEsimEmail(e.target.value)} className="mt-2 h-11 w-full rounded-xl bg-surface-2 px-3 text-sm outline-none" /><p className="mt-2 text-xs text-muted-foreground">No QR code or activation email is issued in this demo.</p></div>}
+            {digital.hasEsim && <div className="mt-3 rounded-[20px] bg-card shadow-card p-4"><p className="text-sm font-semibold">eSIM delivery email</p><input type="email" inputMode="email" autoComplete="email" aria-label="Email for eSIM demonstration" placeholder="you@example.com" value={esimEmail} onChange={(e) => setEsimEmail(e.target.value)} className="mt-2 h-12 w-full rounded-xl bg-surface-2 px-3 text-[16px] outline-none" /><p className="mt-2 text-xs text-muted-foreground">No QR code or activation email is issued in this demo.</p></div>}
             <div className="mt-3 space-y-1 px-1 text-sm"><Line k="Digital items" v={nad(digital.sub)} />{digital.disc > 0 && <Line k="Discount" v={"-" + nad(digital.disc)} cls="text-mint" />}<Line k="Delivery" v="N$0" /><Line k="Digital subtotal" v={nad(digital.total)} cls="font-semibold" /></div>
           </section>}
           <section className="rounded-[20px] bg-card shadow-card p-4">
             <div className="flex gap-2"><label className="flex flex-1 items-center gap-2 rounded-2xl bg-surface-2 px-3"><Tag className="size-4 text-muted-foreground" />
-              <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Demo promo code" className="h-11 flex-1 bg-transparent text-sm outline-none" /></label>
-              <button onClick={() => { if (PROMOS[code]) { setPromo(PROMOS[code]!); setErr(""); } else { setPromo(null); setErr("Invalid code"); } }} className="rounded-2xl bg-mint px-5 text-sm font-bold text-mint-foreground">Apply</button></div>
+              <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Demo promo code" className="h-12 min-w-0 flex-1 bg-transparent text-[16px] outline-none" /></label>
+              <button onClick={() => { if (PROMOS[code]) { setPromo(PROMOS[code]!); setErr(""); } else { setPromo(null); setErr("Invalid code"); } }} className="min-h-12 rounded-2xl bg-mint px-5 text-sm font-bold text-mint-foreground">Apply</button></div>
             {err && <p className="mt-2 text-xs text-primary">{err}</p>}{promo && <p className="mt-2 text-xs text-mint">Sample discount applied for this local preview: {Math.round(promo * 100)}%.</p>}
           </section>
           <section className="space-y-2 rounded-[20px] bg-card shadow-card p-4 text-sm">
