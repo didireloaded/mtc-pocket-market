@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "framer-motion";
 import { Home, ShoppingBag, Store, UserRound, Package } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
@@ -17,7 +18,8 @@ export function Shell({ children, nav = true }: { children: ReactNode; nav?: boo
 
 /** Five destinations cover the complete customer journey. The bag stays accessible from Home and Shop. */
 function BottomNav() {
-  const { cart } = useStore();
+  const reduceMotion = useReducedMotion();
+  const { cart, cartPulse } = useStore();
   const cartCount = cart.reduce((count, item) => count + item.qty, 0);
   const [editing, setEditing] = useState(false);
   useEffect(() => {
@@ -45,14 +47,21 @@ function BottomNav() {
       <div className="pointer-events-auto grid grid-cols-5 gap-1 rounded-full border border-[#E5E7E5] bg-white p-2 shadow-[0_5px_24px_rgba(32,46,57,0.10)]">
         {items.map(({ to, label, icon: Icon }) => (
           <Link key={to} to={to} activeOptions={{ exact: to === "/" }} aria-label={to === "/cart" ? `Cart, ${cartCount} items` : label}
-            className="group flex h-12 min-w-0 items-center justify-center rounded-full text-[#202E39] transition-colors hover:bg-[#F2F3F0] data-[status=active]:bg-[#202E39] data-[status=active]:text-white">
-            <span className="relative grid size-8 place-items-center">
+            className="group flex h-12 min-w-0 items-center justify-center rounded-full text-[#202E39] transition-[background-color,transform] duration-150 ease-out hover:bg-[#F2F3F0] active:scale-[0.96] motion-reduce:transform-none data-[status=active]:bg-[#202E39] data-[status=active]:text-white">
+            <motion.span key={to === "/cart" ? `cart-${cartPulse}` : to}
+              initial={to === "/cart" && cartPulse > 0 && !reduceMotion ? { scale: 0.78, rotate: -8 } : false}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 620, damping: 19 }}
+              className="relative grid size-8 place-items-center">
               <Icon aria-hidden="true" className="size-[21px]" strokeWidth={1.9} />
-              {to === "/cart" && cartCount > 0 && <span aria-label={`${cartCount} items`}
+              {to === "/cart" && cartCount > 0 && <motion.span key={cartCount}
+                initial={reduceMotion ? false : { scale: 0.65, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.18, ease: "easeOut" }}
+                aria-label={`${cartCount} items`}
                 className="absolute -right-2 -top-1 grid min-h-[17px] min-w-[17px] place-items-center rounded-full bg-[#DD2A1B] px-1 text-[10px] font-bold text-white ring-2 ring-white">
                 {cartCount > 99 ? "99+" : cartCount}
-              </span>}
-            </span>
+              </motion.span>}
+            </motion.span>
             <span className="sr-only">{label}</span>
           </Link>
         ))}
