@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 export type CartItem = { key: string; id: string; name: string; image?: string; variant: string; price: number; qty: number; kind: "physical" | "digital"; mode?: "cash" | "contract" };
 export type User = { label: string; method: "phone" | "email" };
@@ -8,7 +9,9 @@ type Store = {
   user: User | null; guest: boolean; login: (u: User) => void; orders: Order[]; placeOrder: (o: Omit<Order, "id" | "placedAt">) => string; browseGuest: () => void; logout: () => void; authOpen: boolean; setAuthOpen: (b: boolean) => void;
   saved: string[]; toggleSave: (id: string) => void; kycDone: boolean; setKycDone: (b: boolean) => void;
 };
-const Ctx = createContext<Store | null>(null);
+// Keep one context across hot reloads so a reloaded hook never loses its provider.
+const g = globalThis as { __mtcStoreCtx?: React.Context<Store | null> };
+const Ctx = (g.__mtcStoreCtx ??= createContext<Store | null>(null));
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [mode, setMode] = useState<"cash" | "contract">("cash");
