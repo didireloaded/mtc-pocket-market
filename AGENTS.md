@@ -124,3 +124,13 @@ The bottom navigation is exactly **Home, Shop, Cart, Orders, Profile**, in that 
 - **Orders:** separate account-linked server requests from locally saved previews using two tabs. Keep cards brief and show detailed timeline/notes only on expansion. Do not fabricate shipment events.
 - **Profile:** account status, working Cart and Orders shortcuts, real saved product images, addresses, saved numbers, notification preferences and support. Avoid empty generic dashboard cards and unconnected MTC balance widgets as primary content.
 - Match the user's three-screen reference by **composition, scale, overlap and spacing**, not merely corner radius or colour. Do not add generated photos or unverifiable promotional claims. Keep 44px touch controls, safe area/keyboard behaviour and truthful integration boundaries.
+
+## Premium motion system (November 2026)
+
+- The app uses `framer-motion` for short product-card reveals, restrained Home entrance and Cart dock feedback. The small shared variants live in `src/lib/retail-motion.ts`. Keep the animation budget under approximately 300 ms, with no endless loops or large scroll effects.
+- Stagger at most the first eight Shop cards during initial loading or category changes. Do not reanimate every card on every search keystroke. The Home discovery carousel may reveal once upon coming into view.
+- Use `useReducedMotion()` or appropriate CSS `motion-reduce:` to suppress entry movements and bouncing when the visitor requests reduced motion. Keep the UI usable before animation completes.
+- The Cart icon pulse is triggered by `StoreProvider.add()` via a non-persisted `cartPulse` counter. Do not animate existing browser cart contents on initial hydration, and never fake a successful add.
+- The plan selector uses existing **Vaul** accessibility, focus management and draggable sheet semantics. Framer Motion staggers the plan choices inside it; do not replace Vaul with an inaccessible overlay built from generic divs. The confirmed choice updates the existing quote builder, not a new pricing formula.
+- Prefer skeleton placeholders only while actual server data is loading. The local MTC product catalogue loads from imported data and does not need fake timed loading states.
+- Continue to treat payments, courier statuses and stock as unconnected. Visual polish must never imply an actual completed transaction.
