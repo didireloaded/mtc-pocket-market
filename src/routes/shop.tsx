@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search, LayoutGrid, List, Clock, Wifi, X, Plus } from "lucide-react";
+import { Search, LayoutGrid, List, Clock, Wifi, X, ShoppingBag } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Shell, PriceToggle } from "@/components/Shell";
 import { ProductCard } from "@/components/ProductCard";
@@ -89,7 +89,7 @@ function Shop() {
       {services.length > 0 && (
         <div className="px-5 pt-5"><p className="mb-2 text-xs font-semibold uppercase tracking-widest text-mint">Services</p>
           <div className="space-y-2">{services.map((b) => <div key={b.id} className="flex items-center gap-3 rounded-[20px] bg-card shadow-card p-3"><Wifi className="size-5 text-mint" /><div className="flex-1"><p className="text-sm font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
-            <button onClick={() => add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" })} className="flex items-center gap-1 rounded-full bg-mint px-3 py-1.5 text-xs font-bold text-mint-foreground"><Plus className="size-3" />{nad(b.price)}</button></div>)}</div></div>)}
+            <Button aria-label={`Add ${b.name} to bag`} onClick={() => { add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" }); void nav({ to: "/cart" }); }} className="h-11 shrink-0 gap-2 rounded-full px-3 text-xs"><ShoppingBag className="size-4" />{nad(b.price)}</Button></div>)}</div></div>)}
       <p className="px-5 pt-4 text-xs text-muted-foreground">{list.length} product{list.length !== 1 && "s"}{mode === "contract" ? " · monthly values are illustrative" : ""}</p>
       {view === "grid" ? <div className="grid grid-cols-2 gap-3 px-5 pt-3">{list.map((p) => <ProductCard key={p.id} p={p} />)}</div> : (
         <div className="space-y-2 px-5 pt-2">{list.map((p) => { const st = stockLabel(p); return (

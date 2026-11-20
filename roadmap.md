@@ -1,4 +1,7 @@
 # Roadmap
+## Add-to-bag polish
+- [x] Replace cramped product-card plus controls with clear bag buttons
+- [x] Open the bag after adding from catalog, product details and top-ups; verify mobile flow
 ## AI shopping adviser
 - [x] Add a needs-based adviser using AI Gateway, grounded in catalog products and contract plans
 - [x] Verify catalog-only recommendations, errors, and mobile shopping flow

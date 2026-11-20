@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Bookmark, Share2, Check, ShieldCheck, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Bookmark, Share2, ShieldCheck, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { getProduct, nad, plansFor, quote, stockLabel, TERMS, MTC_STORES, fromMonthly, CONNECTION_FEE } from "@/lib/data";
@@ -31,7 +31,6 @@ function PDP() {
   const [color, setColor] = useState(p.colors[0]!);
   const avail = plansFor(p);
   const [plan, setPlan] = useState<string>(avail[0]!.id);
-  const [added, setAdded] = useState(false);
   const sel = avail.find((x) => x.id === plan) ?? avail[0]!;
   const contract = mode === "contract" && p.contractable;
   const opt = { months, upfrontPct: upPct };
@@ -110,16 +109,13 @@ function PDP() {
           </div>
         )}
       </div>
-      <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md gap-3 border-t bg-background/90 p-4 backdrop-blur-xl">
+      <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md gap-3 border-t bg-background/90 p-4 pb-[max(16px,env(safe-area-inset-bottom))] backdrop-blur-xl">
         <Button type="button" aria-label={saved.includes(p.id) ? "Remove saved device" : "Save device"} aria-pressed={saved.includes(p.id)}
           variant="secondary" size="icon" onClick={() => toggleSave(p.id)}
           className={"size-14 rounded-[16px] bg-card shadow-none " + (saved.includes(p.id) ? "text-mint" : "")}>
           <Bookmark className="size-5" fill={saved.includes(p.id) ? "currentColor" : "none"} /></Button>
-        <Button asChild variant="secondary" size="icon" className="size-14 rounded-[16px] bg-card shadow-none">
-          <Link to="/cart" aria-label="View shopping bag"><ShoppingBag className="size-5" /></Link>
-        </Button>
-        <Button type="button" onClick={() => { add({ id: p.id, name: p.name, image: p.image, variant: contract ? `${color} · ${sel.name} · ${months} mo · ${sel.data}` + (q.upfront ? ` · ${nad(q.upfront)} upfront` : "") : color, price, kind: "physical", mode: contract ? "contract" : "cash" }); setAdded(true); setTimeout(() => setAdded(false), 1500); }}
-          disabled={st.tone === "out"} className="h-14 min-w-0 flex-1 rounded-full px-2 text-[13px] font-semibold shadow-none">{st.tone === "out" ? "Out of stock" : added ? <><Check className="size-5" /> Added</> : contract ? "Select plan & add" : "Add to Cart"}</Button>
+        <Button type="button" onClick={() => { add({ id: p.id, name: p.name, image: p.image, variant: contract ? `${color} · ${sel.name} · ${months} mo · ${sel.data}` + (q.upfront ? ` · ${nad(q.upfront)} upfront` : "") : color, price, kind: "physical", mode: contract ? "contract" : "cash" }); void router.navigate({ to: "/cart" }); }}
+          disabled={st.tone === "out"} className="h-14 min-w-0 flex-1 rounded-full px-4 text-sm font-semibold shadow-none"><ShoppingBag className="size-5 shrink-0" />{st.tone === "out" ? "Out of stock" : contract ? "Add selected plan to bag" : "Add to bag"}</Button>
       </div>
     </Shell>
   );

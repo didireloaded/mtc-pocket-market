@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Settings as Cog, LifeBuoy, Smartphone, Package, MapPin, FileText, QrCode, ShieldCheck, LogOut, Plus } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Settings as Cog, LifeBuoy, Smartphone, Package, MapPin, FileText, QrCode, ShieldCheck, LogOut, ShoppingBag } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { bundles, nad } from "@/lib/data";
 import { useStore } from "@/lib/store";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/mymtc")({
   head: () => ({ meta: [{ title: "MyMTC — Account Dashboard" }, { name: "description", content: "Check your data balance and airtime, manage contracts and top up bundles." }, { property: "og:title", content: "MyMTC — Account Dashboard" }, { property: "og:description", content: "Check your data balance and airtime, manage contracts and top up bundles." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/mymtc")({
 });
 function MyMTC() {
   const { user, add, setAuthOpen, logout, extra, orders } = useStore();
+  const navigate = useNavigate();
   const kycSteps = ["Submitted", "Under review", "Approved"] as const;
   const kycIdx = -1; // No MTC verification integration is available.
   const usage = [1.2, 0.8, 2.1, 1.6, 0.9, 2.4, 1.3, 0.6, 1.8, 2.2, 1.1, 0.7];
@@ -48,10 +50,10 @@ function MyMTC() {
         <h2 className="text-lg font-bold">Quick top-up</h2>
         <div className="mt-3 space-y-2">
           {bundles.map((b) => (
-            <div key={b.id} className="flex items-center justify-between rounded-[20px] bg-card shadow-card p-4">
-              <div><p className="font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
-              <button onClick={() => add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" })}
-                className="flex items-center gap-1 rounded-full bg-mint px-3 py-2 text-xs font-bold text-mint-foreground"><Plus className="size-3" />{nad(b.price)}</button>
+            <div key={b.id} className="flex items-center justify-between gap-3 rounded-[20px] bg-card shadow-card p-4">
+              <div className="min-w-0"><p className="font-semibold">{b.name}</p><p className="text-xs text-muted-foreground">{b.data} · {b.validity}</p></div>
+              <Button aria-label={`Add ${b.name} to bag`} onClick={() => { add({ id: b.id, name: b.name, variant: b.id === "esim" ? "eSIM · QR delivery" : "Data bundle", price: b.price, kind: "digital" }); void navigate({ to: "/cart" }); }}
+                className="h-11 shrink-0 gap-2 rounded-full px-3 text-xs"><ShoppingBag className="size-4" />{nad(b.price)}</Button>
             </div>
           ))}
         </div>

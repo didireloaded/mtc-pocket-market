@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Heart, Plus } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ArrowUpRight, Heart, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,13 +11,17 @@ import { cn } from "@/lib/utils";
 /** One consistent product tile for Home, Shop and recommendation surfaces. */
 export function ProductCard({ p }: { p: Product }) {
   const { mode, add, saved, toggleSave } = useStore();
+  const navigate = useNavigate();
   const isSaved = saved.includes(p.id);
   const estimate = mode === "contract" && p.contractable;
 
-  const addOutright = () => add({
+  const addOutright = () => {
+    add({
     id: p.id, name: p.name, image: p.image, variant: p.colors[0] ?? "Standard",
     price: p.cash, kind: "physical", mode: "cash",
-  });
+    });
+    void navigate({ to: "/cart" });
+  };
   return (
     <Card className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-[22px] border-border/60 bg-card p-2.5 shadow-none transition-colors hover:border-mint/30">
       <Link to="/product/$id" params={{ id: p.id }} className="block rounded-[18px] outline-offset-2">
@@ -38,13 +42,15 @@ export function ProductCard({ p }: { p: Product }) {
             {estimate && <span className="ml-1 text-xs font-medium text-muted-foreground">/mo</span>}
           </p>
         </div>
-        <div className="mt-3 flex items-center gap-2 border-t border-border/70 pt-2.5">
-          <Button type="button" variant="secondary" size="icon" onClick={addOutright}
-            aria-label={`Add ${p.name} to bag at cash price`} className="size-11 shrink-0 rounded-full bg-surface-2 shadow-none">
-            <Plus className="size-[18px]" />
-          </Button>
-          <Button asChild className="h-11 min-w-0 flex-1 rounded-full px-3 text-xs font-semibold shadow-none">
-            <Link to="/product/$id" params={{ id: p.id }}>Explore <ArrowUpRight className="size-4" /></Link>
+        <div className="mt-3 flex flex-col gap-1 border-t border-border/70 pt-2.5">
+          {estimate ? <Button asChild className="h-11 w-full rounded-full px-2 text-xs font-semibold shadow-none">
+            <Link to="/product/$id" params={{ id: p.id }}>Choose plan <ArrowUpRight className="size-4" /></Link>
+          </Button> : <Button type="button" onClick={addOutright}
+            aria-label={`Add ${p.name} to bag at cash price`} className="h-11 w-full rounded-full px-2 text-xs font-semibold shadow-none">
+            <ShoppingBag className="size-4 shrink-0" /> Add to bag
+          </Button>}
+          <Button asChild variant="ghost" className="h-9 w-full rounded-full px-2 text-xs text-muted-foreground">
+            <Link to="/product/$id" params={{ id: p.id }}>View details</Link>
           </Button>
         </div>
       </div>
